@@ -1,0 +1,12 @@
+---
+- name: Create an Ubuntu instance
+  hosts: localhost
+  tasks:
+  - name: start the instance
+    ec2:
+      image: ami-d05e75b8
+      region: us-east-1
+      instance_type: t2.micro
+      key_name: jsmkey
+      group: [ska]
+      instance_tags: { Name: ansiblebook, type: ska, env: production }
