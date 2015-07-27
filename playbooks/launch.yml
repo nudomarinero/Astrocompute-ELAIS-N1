@@ -10,3 +10,9 @@
       key_name: jsmkey
       group: [ska]
       instance_tags: { Name: ansiblebook, type: ska, env: production }
+
+#- name: configure LOFAR machine
+  #hosts: ska:&production
+  #sudo: True
+  #roles:
+    #- lofar
