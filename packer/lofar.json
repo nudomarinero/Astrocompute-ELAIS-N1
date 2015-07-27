@@ -1,0 +1,30 @@
+{
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "us-east-1",
+      "source_ami": "ami-d05e75b8",
+      "instance_type": "m3.medium",
+      "ssh_username": "ubuntu",
+      "ami_name": "lofar-{{timestamp}}",
+      "tags": {
+        "Name": "lofar"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sleep 30",
+        "sudo apt-get update",
+        "sudo apt-get install -y build-essential python-pip python-dev libyaml-dev",
+        "sudo pip install --upgrade ansible"
+      ]
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "lofar.yml"
+    }
+  ]
+} 
