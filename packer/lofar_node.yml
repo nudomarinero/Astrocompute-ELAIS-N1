@@ -1,0 +1,6 @@
+---
+- name: Install LOFAR software
+  hosts: localhost
+  roles:
+    - casa
+    - lofar
