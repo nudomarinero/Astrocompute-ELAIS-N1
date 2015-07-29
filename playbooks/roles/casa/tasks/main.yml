@@ -1,0 +1,15 @@
+---
+# tasks file for casa
+- name: download casa tar file
+  get_url: url=https://svn.cv.nrao.edu/casa/linux_distro/old/casapy-42.2.30986-1-64b.tar.gz dest=/tmp/casapy-42.2.30986-1-64b.tar.gz sha256sum=e178b8005efeb9eee60f809f1eef6d55a5cd29b9b62b1a5a3103277635188f0c
+  
+- name: unpack the casa tar file
+  unarchive: src=/tmp/casapy-42.2.30986-1-64b.tar.gz dest=/opt copy=no
+  sudo: True
+
+- name: create symbolic link in /opt
+  file: src=/opt/casapy-42.2.30986-1-64b dest=/opt/casapy state=link
+  sudo: True
+
+- name: Remove temporary package
+  command: /bin/rm /tmp/casapy-42.2.30986-1-64b.tar.gz removes=/tmp/casapy-42.2.30986-1-64b.tar.gz
