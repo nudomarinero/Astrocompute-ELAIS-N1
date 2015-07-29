@@ -1,0 +1,7 @@
+---
+- name: Install LOFAR and auxiliary software
+  hosts: localhost
+  roles:
+    - casa
+    - lofar
+    - grid
