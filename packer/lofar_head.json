@@ -24,7 +24,7 @@
     },
     {
       "type": "ansible-local",
-      "playbook_file": "lofar_node.yml",
+      "playbook_file": "lofar_head.yml",
       "playbook_dir": "/home/jsm/trabajo/repos/SKA/astrocompute-elais-n1/playbooks",
       "role_paths": [ 
           "/home/jsm/trabajo/repos/SKA/astrocompute-elais-n1/playbooks/roles" 
