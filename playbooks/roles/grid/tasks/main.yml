@@ -1,0 +1,98 @@
+---
+# tasks file for grid
+- name: update box
+  apt: upgrade=dist update_cache=yes cache_valid_time=3600
+  sudo: True
+
+- name: install dependencies
+  apt: pkg={{ item }}
+  sudo: True
+  with_items:
+    - globus-gass-copy-progs 
+    - voms-clients
+    - openjdk-6-jre
+
+- name: correct java version selected
+  alternatives: name=java path=/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java
+  sudo: True
+
+- name: install GPG key for the EGI IGTF repository
+  apt_key: url=https://dist.eugridpma.info/distribution/igtf/current/GPG-KEY-EUGridPMA-RPM-3 state=present
+  sudo: True
+  
+- name: install EGI IGTF repository
+  apt_repository: repo='deb http://repository.egi.eu/sw/production/cas/1/current egi-igtf core' state=present
+  sudo: True
+  
+- name: install ca
+  apt: pkg=ca-policy-egi-core update_cache=yes
+  sudo: True
+
+## This is not working due to a BUG in Ansible. Corrected only in the 
+##  latest versions.
+#- name: Update voms sara 
+  #lineinfile: >
+    #dest=/etc/vomses 
+    #line='\"lofar\" \"voms.grid.sara.nl\" \"30019\" \"/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl\" \"lofar\"'
+    #regexp='^"lofar" "voms\.grid\.sara\.nl" "30019" "/O=dutchgrid/O=hosts/OU=sara\.nl/CN=voms\.grid\.sara\.nl" "lofar"'
+    #owner=root
+    #state=present
+    #insertafter=EOF
+    #create=True
+  #sudo: True
+  
+- name: copy vomses file
+  copy: src=vomses dest=/etc/vomses owner=root group=root mode=0644
+  sudo: True
+  
+- name: Update certificates for voms sara line 1
+  lineinfile: >
+    dest=/etc/grid-security/vomsdir/lofar/voms.grid.sara.nl.lsc 
+    line="/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl"
+    regexp='^/O=dutchgrid/O=hosts/OU=sara\.nl/CN=voms\.grid\.sara\.nl'
+    owner=root
+    state=present
+    insertafter=EOF
+    create=True
+  sudo: True
+
+- name: Update certificates for voms sara line 2
+  lineinfile: >
+    dest=/etc/grid-security/vomsdir/lofar/voms.grid.sara.nl.lsc 
+    line="/C=NL/O=NIKHEF/CN=NIKHEF medium-security certification auth"
+    regexp='^/C=NL/O=NIKHEF/CN=NIKHEF medium-security certification auth'
+    owner=root
+    state=present
+    insertafter=EOF
+    create=True
+  sudo: True
+
+- name: download SRM package
+  get_url: >
+    url=http://www.lofar.org/operations/lib/exe/fetch.php?media=public:srmclient-2.2.25.tar.gz 
+    dest=/tmp/srmclient-2.2.25.tar.gz
+    
+- name: unpack the SRM tar file
+  unarchive: src=/tmp/srmclient-2.2.25.tar.gz dest=/opt copy=no
+  sudo: True
+
+- name: create symbolic link in /opt
+  file: src=/opt/srmclient-2.2.25 dest=/opt/srm state=link
+  sudo: True
+
+# BUG in SRM
+- name: create symbolic link in /opt
+  file: src=/opt/srm/usr/share/srm dest=/usr/share/srm state=link
+  sudo: True
+  
+- name: Remove SRM temporary package
+  command: /bin/rm /tmp/srmclient-2.2.25.tar.gz removes=/tmp/srmclient-2.2.25.tar.gz
+
+- name: add /opt/srm/usr/bin to system path
+  lineinfile: >
+    dest=/etc/environment
+    state=present
+    backrefs=yes
+    regexp='PATH=(["]*)((?!.*?/opt/srm/usr/bin).*?)(["]*)$'
+    line="PATH=\1\2:/opt/srm/usr/bin\3"
+  sudo: True
