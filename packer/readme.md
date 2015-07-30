@@ -4,8 +4,25 @@ Packer
 Files to pack the Amazon intances (AMIs) using packer (from 
 https://www.packer.io/). 
 
-The lofar.yml is a simple complete playbook that is used to install the
-LOFAR software. We will use a role in the future.
+Usage
+-----
+
+There are two definition files:
+* lofar_node.json - with the CASA and LOFAR software
+* lofar_head.json - Like a node but includes also the Grid utilities
+
+To check if there are mistakes in the definition files:
+```packer validate lofar_node.json```
+
+To build the AMI:
+```packer build lofar_node.json```
+
+TODO
+----
+* Include the custom version of Postgres that is needed in the head 
+node
+* Check that all the Python dependencies for the final pipeline are 
+installed
 
 Tips
 ----

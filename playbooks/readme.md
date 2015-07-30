@@ -10,10 +10,33 @@ to process the data.
 * lofar.yml - Is a simple playbook to test the role LOFAR which 
 installs the LOFAR software (not used yet).
 
+The inventory file contains the EC2 inventory scripts to maintain a 
+dynamic inventory.
+
 Roles
 -----
-The roles to be defined are related to the installation of LOFAR 
-software and the dependencies needed to gather the data.
+
+Currently, there are three roles defined.
+
+CASA
+++++
+Installs the version 4.2 of casapy.
+
+LOFAR
++++++
+Installs the releade 2.10 of LOFAR.
+
+Grid
+++++
+Installs some software required to download LOFAR data from the Grid.
+
+TODO
+----
+* Define with a variable the version of casa
+* Define with a variable the version of LOFAR
+* Role to install the required version of Postgresql
+* Role with just the dependencies to build and package LOFAR from 
+scratch
 
 
 Tips
