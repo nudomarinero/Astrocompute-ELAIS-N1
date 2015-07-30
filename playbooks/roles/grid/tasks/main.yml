@@ -4,13 +4,27 @@
   apt: upgrade=dist update_cache=yes cache_valid_time=3600
   sudo: True
 
+- name: Get globus repository
+  get_url: >
+    url=http://toolkit.globus.org/ftppub/gt6/installers/repo/globus-toolkit-repo_latest_all.deb 
+    dest=/tmp/globus-toolkit-repo_latest_all.deb
+
+- name: install globus repository
+  apt: deb=/tmp/globus-toolkit-repo_latest_all.deb
+  sudo: True
+  
+- name: Remove globus temporary package
+  command: /bin/rm /tmp/globus-toolkit-repo_latest_all.deb
+
 - name: install dependencies
-  apt: pkg={{ item }}
+  apt: pkg={{ item }} update_cache=yes
   sudo: True
   with_items:
     - globus-gass-copy-progs 
     - voms-clients
     - openjdk-6-jre
+    - globus-data-management-client
+    #- globus-ftp-client-progs
 
 - name: correct java version selected
   alternatives: name=java path=/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java
@@ -39,8 +53,7 @@
     #state=present
     #insertafter=EOF
     #create=True
-  #sudo: True
-  
+  #sudo: True 
 - name: copy vomses file
   copy: src=vomses dest=/etc/vomses owner=root group=root mode=0644
   sudo: True
@@ -79,11 +92,6 @@
 - name: create symbolic link in /opt
   file: src=/opt/srmclient-2.2.25 dest=/opt/srm state=link
   sudo: True
-
-# BUG in SRM
-- name: create symbolic link in /opt
-  file: src=/opt/srm/usr/share/srm dest=/usr/share/srm state=link
-  sudo: True
   
 - name: Remove SRM temporary package
   command: /bin/rm /tmp/srmclient-2.2.25.tar.gz removes=/tmp/srmclient-2.2.25.tar.gz
@@ -96,3 +104,22 @@
     regexp='PATH=(["]*)((?!.*?/opt/srm/usr/bin).*?)(["]*)$'
     line="PATH=\1\2:/opt/srm/usr/bin\3"
   sudo: True
+
+## Possible BUG in this version of SRM
+#- name: add SRM_PATH to system environment variables
+  #lineinfile: >
+    #dest=/etc/environment
+    #state=present
+    #regexp='^SRM_PATH="/opt/srm"'
+    #line="SRM_PATH=\"/opt/srm\""
+  #sudo: True
+- name: create symbolic link in /opt
+  file: src=/opt/srm/usr/share/srm dest=/usr/share/srm state=link
+  sudo: True
+
+## Possible environment variables to set ?
+#X509_USER_CERT=$HOME/.globus/usercert.pem
+#X509_USER_KEY=$HOME/.globus/userkey.pem
+#X509_CERT_DIR=/etc/grid-security/certificates
+#X509_VOMS_DIR=/etc/grid-security/vomsdir
+#VOMS_USERCONF=$HOME/.glite
