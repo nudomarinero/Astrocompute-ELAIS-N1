@@ -99,3 +99,7 @@
 
 - name: Remove temporary package
   command: /bin/rm /tmp/lofar_2.10-1trusty_amd64.deb removes=/tmp/lofar_2.10-1trusty_amd64.deb
+
+- name: copy LOFAR profile file
+  copy: src=lofar_profile dest=/etc/profile.d/Z98-lofar.sh owner=root group=root mode=0755
+  sudo: True

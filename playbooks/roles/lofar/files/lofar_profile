@@ -1,0 +1,7 @@
+#!/bin/sh
+#    Z98-lofar.sh - allow any user to use the LOFAR software
+#
+#    Authors: Jose Sabater <jsm@iaa.es>
+#    License: MIT
+#
+. /opt/LofIm/lofarinit.sh
