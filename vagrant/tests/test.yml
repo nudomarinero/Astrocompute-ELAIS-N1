@@ -1,0 +1,17 @@
+---
+- name: Test the quotes in inline
+  hosts: default
+  tasks:
+    - name: Update voms sara 
+      lineinfile: >
+        dest=/etc/vomses 
+        line='"lofar\" \"voms.grid.sara.nl\" \"30019\" \"/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl\" \"lofar"'
+        regexp='^"lofar" "voms\.grid\.sara\.nl" "30019" "/O=dutchgrid/O=hosts/OU=sara\.nl/CN=voms\.grid\.sara\.nl" "lofar"'
+        owner=root
+        state=present
+        insertafter=EOF
+        create=True
+      sudo: True
+    - name: copy
+      copy: src=./vomses2 dest=/etc/vomses2 owner=root group=root mode=0644
+      sudo: True

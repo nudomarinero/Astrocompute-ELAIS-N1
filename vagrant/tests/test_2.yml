@@ -1,0 +1,15 @@
+---
+- name: Test the quotes in inline
+  hosts: default
+  tasks:
+    ## Possible BUG in SRM
+    - name: add SRM_PATH to system environment variables
+      lineinfile: >
+        dest=/etc/environment
+        state=present
+        regexp='^SRM_PATH="/opt/srm"'
+        line="SRM_PATH=\"/opt/srm\""
+      sudo: True
+    #- name: create symbolic link in /opt
+      #file: src=/opt/srm/usr/share/srm dest=/usr/share/srm state=link
+      #sudo: True
