@@ -13,3 +13,24 @@
 
 - name: Remove temporary package
   command: /bin/rm /tmp/casapy-42.2.30986-1-64b.tar.gz removes=/tmp/casapy-42.2.30986-1-64b.tar.gz
+
+- name: add /opt/casa/bin to system path
+  lineinfile: >
+    dest=/etc/environment
+    state=present
+    backrefs=yes
+    regexp='PATH=(["]*)((?!.*?/opt/casa/bin).*?)(["]*)$'
+    line="PATH=\1\2:/opt/casa/bin\3"
+  sudo: True
+
+- name: copy casarc file
+  copy: src=casarc dest=/etc/casarc owner=root group=root mode=0644
+  sudo: True
+  
+- name: add CASARCFILES to system environment variables
+  lineinfile: >
+    dest=/etc/environment
+    state=present
+    regexp='^CASARCFILES="/etc/casarc"'
+    line="CASARCFILES=\"/etc/casarc\""
+  sudo: True
