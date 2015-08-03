@@ -47,6 +47,8 @@
     - liblog4cplus-dev
     - libgsl0-dev
     - xvfb
+    - libffi-dev
+    - libssl-dev
       
 - name: install Python packages
   apt: pkg={{ item }}
@@ -74,7 +76,27 @@
     - python-pandas
     - ipython-notebook 
     - ipython-qtconsole
-      
+    - python-h5py
+
+- name: Update pip to the last version
+  script: update_pip.sh
+  sudo: True
+  
+- name: install additional Python packages with pip
+  pip: name={{ item }} extra_args="--upgrade"
+  sudo: True
+  with_items:  
+    - astropy
+    - aplpy
+    - unittest-xml-reporting
+    - psutil
+    - progressbar
+    - wcsaxes
+    - fabric
+    - pyopenssl 
+    - ndg-httpsclient
+    - pyasn1
+    
 - name: install LOFAR dependencies repository
   apt_repository: repo='ppa:jsm-8/lofar-deps'
   sudo: True
@@ -89,7 +111,15 @@
     - casarest 
     - libcasarest-dev
     - casacore-data
-      
+
+- name: install LSMTool
+  pip: name='https://github.com/darafferty/LSMTool/archive/master.zip' extra_args='--allow-external --upgrade'
+  sudo: True
+  
+- name: install LoSoTo
+  pip: name='https://github.com/revoltek/losoto/archive/module.zip' extra_args='--allow-external --upgrade'
+  sudo: True
+  
 - name: download LOFAR package
   get_url: url=http://www.roe.ac.uk/~jsm/lofar_dist/trusty/lofar_2.10-1trusty_amd64.deb dest=/tmp/lofar_2.10-1trusty_amd64.deb
 
