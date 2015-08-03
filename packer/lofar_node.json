@@ -6,9 +6,9 @@
       "source_ami": "ami-d05e75b8",
       "instance_type": "m3.medium",
       "ssh_username": "ubuntu",
-      "ami_name": "lofar-{{timestamp}}",
+      "ami_name": "lofar-node-{{timestamp}}",
       "tags": {
-        "Name": "lofar"
+        "Name": "lofar-node"
       }
     }
   ],
