@@ -1,0 +1,29 @@
+---
+- name: Create a LOFAR-node instances
+  hosts: localhost
+  vars:
+    count: 2
+  tasks:
+  - name: start the instances
+    ec2:
+      image: ami-57f2513c
+      region: us-east-1
+      instance_type: t2.micro
+      key_name: jsmkey
+      group: [ska]
+      instance_tags: { type: node, env: production }
+      wait: yes
+      exact_count: "{{ count }}"
+      count_tag: { type: node }
+    register: ec2
+      
+  - name: add the instance to the inventory
+    add_host: name={{ item.public_ip }} groups=node,production
+    with_items: ec2.tagged_instances
+    when: item.public_ip is defined
+    
+  - name: wait for the ssh server
+    wait_for: host={{ item.public_dns_name }} port=22 search_regex=OpenSSH
+    with_items: ec2.tagged_instances
+    when: item.public_dns_name is defined
+  
