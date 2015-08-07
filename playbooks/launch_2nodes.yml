@@ -33,13 +33,11 @@
   
   - name: tag instances
     no_log: true
-    local_action: >
-      ec2_tag
-      resource={{ item.0.id }}
-      region=us-east-1
-    args:
+    ec2_tag:
+      resource: "{{ item.0.id }}"
+      region: us-east-1
       tags:        
-        Name: "Worker {{ item.1.msg }}"
+        Name: "worker{{ item.1.msg }}"
         env: "production"
         type: node
         ID: "{{ item.1.msg }}"
@@ -50,14 +48,14 @@
       - tag
   
   - name: update dns records
-    route53: >
-      command=create
-      zone=lofarcloud.uk
-      record=worker.{{ item.1.msg }}.lofarcloud.uk
-      type=CNAME
-      ttl=300
-      value={{ item.0.public_dns_name }}
-      overwrite=true
+    route53:
+      command: create
+      zone: "lofarcloud.uk"
+      record: "worker{{ item.1.msg }}.lofarcloud.uk"
+      type: CNAME
+      ttl: 300
+      value: "{{ item.0.public_dns_name }}"
+      overwrite: True
     with_together:
       - ec2.tagged_instances
       - sequence.results
