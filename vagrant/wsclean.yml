@@ -1,0 +1,6 @@
+---
+- name: Install WSClean software
+  hosts: default
+  roles:
+    - wsclean
+

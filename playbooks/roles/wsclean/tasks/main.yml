@@ -1,0 +1,9 @@
+---
+# tasks file for wsclean
+- name: Download source of WSClean
+  get_url: >
+    url=http://sourceforge.net/projects/wsclean/files/wsclean-1.8/wsclean-1.8.tar.bz2/download?use_mirror=heanet 
+    dest=/tmp/wsclean-1.8.tar.bz2
+- name: Compile and install WSClean
+  script: wsclean.sh
+  sudo: True
