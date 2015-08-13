@@ -86,6 +86,9 @@
   pip: name={{ item }} extra_args="--upgrade"
   sudo: True
   with_items:  
+    - pyopenssl 
+    - ndg-httpsclient
+    - pyasn1
     - astropy
     - aplpy
     - unittest-xml-reporting
@@ -93,9 +96,6 @@
     - progressbar
     - wcsaxes
     - fabric
-    - pyopenssl 
-    - ndg-httpsclient
-    - pyasn1
     
 - name: install LOFAR dependencies repository
   apt_repository: repo='ppa:jsm-8/lofar-deps'
@@ -117,13 +117,14 @@
   sudo: True
   
 - name: install LoSoTo
-  pip: name='https://github.com/revoltek/losoto/archive/module.zip' extra_args='--allow-external --upgrade'
+  pip: name='https://github.com/revoltek/losoto/archive/master.zip' extra_args='--allow-external --upgrade'
   sudo: True
   
 - name: Download source of WSClean
   get_url: >
-    url=http://sourceforge.net/projects/wsclean/files/wsclean-1.8/wsclean-1.8.tar.bz2/download?use_mirror=heanet 
+    url=http://sourceforge.net/projects/wsclean/files/wsclean-1.8/wsclean-1.8.tar.bz2/download 
     dest=/tmp/wsclean-1.8.tar.bz2
+# Alternative http://www.roe.ac.uk/~jsm/lofar_dist/src/wsclean-1.8.tar.bz2
     
 - name: Compile and install WSClean
   script: wsclean.sh
