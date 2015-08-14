@@ -16,7 +16,7 @@ dynamic inventory.
 Roles
 -----
 
-Currently, there are three roles defined.
+Currently, there are four roles defined.
 
 CASA
 ++++
@@ -29,6 +29,10 @@ Installs the releade 2.10 of LOFAR.
 Grid
 ++++
 Installs some software required to download LOFAR data from the Grid.
+
+WSClean
++++++++
+Compiles and installs the WSClean imager.
 
 TODO
 ----
