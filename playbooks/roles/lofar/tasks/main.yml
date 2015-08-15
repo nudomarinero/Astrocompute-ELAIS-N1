@@ -96,6 +96,9 @@
     - progressbar
     - wcsaxes
     - fabric
+    - jupyter
+    - ipython
+    - ipyparallel
     
 - name: install LOFAR dependencies repository
   apt_repository: repo='ppa:jsm-8/lofar-deps'
