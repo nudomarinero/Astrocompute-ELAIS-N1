@@ -8,6 +8,7 @@
   apt: pkg={{ item }}
   sudo: True
   with_items:
+    - fail2ban
     - gfortran 
     - cmake 
     - scons 
