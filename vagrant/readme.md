@@ -20,3 +20,7 @@ If the VMm is up and you would like to run only Ansible use:
 
 To completely remove the VM use:
 ```vagrant destroy```
+
+When the base box, in this case Ubuntu 14.04 LTS, gets outdated, it 
+is possible to update it with:
+```vagrant box update```
