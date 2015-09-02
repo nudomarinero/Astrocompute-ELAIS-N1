@@ -1,0 +1,48 @@
+---
+# tasks file for postgres8
+- name: Install the dependencies to build Postgres 8.4.10
+  apt: pkg={{ item }}
+  sudo: True
+  with_items:
+    - build-essential
+    - clang
+
+- name: Download Postgres 8.4.10
+  get_url: >
+    url=https://ftp.postgresql.org/pub/source/v8.4.10/postgresql-8.4.10.tar.gz
+    dest=/tmp/postgresql-8.4.10.tar.gz
+
+- name: Extract the tar
+  unarchive: >
+    src=/tmp/postgresql-8.4.10.tar.gz
+    dest=/tmp
+    copy=no
+
+- name: Compile and install
+  command: "{{ item }}"
+  args:
+    chdir: "/tmp/postgresql-8.4.10"
+    creates: "/opt/postgres/bin/psql"
+  sudo: True
+  with_items:
+    - ./configure CC='clang' --prefix=/opt/postgres
+    - make
+    - make install
+
+- name: Remove temporary files
+  command: "/bin/rm -rf {{ item }}"
+  args:
+    removes: "/tmp/postgresql-8.4.10"
+  sudo: True
+  with_items:
+    - "/tmp/postgresql-8.4.10"
+    - "/tmp/postgresql-8.4.10.tar.gz"
+    
+- name: Add /opt/postgres/bin to system path
+  lineinfile: >
+    dest=/etc/environment
+    state=present
+    backrefs=yes
+    regexp='PATH=(["]*)((?!.*?/opt/postgres/bin).*?)(["]*)$'
+    line="PATH=\1\2:/opt/postgres/bin\3"
+  sudo: True

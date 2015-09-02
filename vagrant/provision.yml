@@ -4,4 +4,5 @@
 #- include: grid.yml
 #- include: tests/test_2.yml
 #- include: wsclean.yml
-- include: head_postgres.yml
+#- include: head_postgres.yml
+- include: postgres8.yml

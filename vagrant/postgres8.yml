@@ -1,0 +1,5 @@
+---
+- name: Install Postgres 8.4.10 software
+  hosts: default
+  roles:
+    - postgres8 
