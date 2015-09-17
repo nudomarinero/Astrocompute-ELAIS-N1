@@ -1,8 +1,8 @@
 ---
 #- include: lofar.yml
 #- include: casa.yml
-#- include: grid.yml
+- include: grid.yml
 #- include: tests/test_2.yml
 #- include: wsclean.yml
 #- include: head_postgres.yml
-- include: postgres8.yml
+#- include: postgres8.yml

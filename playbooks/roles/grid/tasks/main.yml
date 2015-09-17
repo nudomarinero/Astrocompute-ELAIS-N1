@@ -123,3 +123,10 @@
 #X509_CERT_DIR=/etc/grid-security/certificates
 #X509_VOMS_DIR=/etc/grid-security/vomsdir
 #VOMS_USERCONF=$HOME/.glite
+
+- name: install AWS tools with pip
+  pip: name={{ item }} extra_args="--upgrade"
+  sudo: True
+  with_items:
+    - boto
+    - awscli
