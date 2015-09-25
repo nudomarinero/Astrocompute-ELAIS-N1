@@ -6,7 +6,7 @@
       "source_ami": "ami-d05e75b8",
       "instance_type": "m3.medium",
       "ssh_username": "ubuntu",
-      "ami_name": "lofar-node-{{timestamp}}",
+      "ami_name": "lofar-node-2.12-{{timestamp}}",
       "tags": {
         "Name": "lofar-node"
       }
