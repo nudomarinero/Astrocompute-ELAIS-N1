@@ -1,5 +1,5 @@
 ---
-# tasks file for lofar
+# tasks file for lofar_base
 - name: update box
   apt: upgrade=dist update_cache=yes
   sudo: True
@@ -50,6 +50,7 @@
     - xvfb
     - libffi-dev
     - libssl-dev
+    - software-properties-common
       
 - name: install Python packages
   apt: pkg={{ item }}
@@ -100,91 +101,22 @@
     - jupyter
     - ipython
     - ipyparallel
+    - montage-wrapper
+    - pyFFTW
     
 - name: install LOFAR dependencies repository
-  apt_repository: repo='ppa:jsm-8/lofar-deps'
+  apt_repository: repo='ppa:radio-astro/main'
   sudo: True
 
 - name: install LOFAR dependencies
   apt: pkg={{ item }} update_cache=yes
   sudo: True
   with_items:
-    - casacore
-    - libcasacore-dev
-    - python-pyrap
-    - casarest 
-    - libcasarest-dev
+    - casacore2
+    - libcasacore2-dev
+    - python-casacore
+    - casarest
     - casacore-data
+    - montage
+    - sagecal
 
-    
-- name: install LSMTool
-  pip: name='https://github.com/darafferty/LSMTool/archive/master.zip' extra_args='--allow-external --upgrade'
-  sudo: True
-  
-  
-- name: install LoSoTo
-  pip: name='https://github.com/revoltek/losoto/archive/master.zip' extra_args='--allow-external --upgrade'
-  sudo: True
-  
-  
-- name: Download source of WSClean
-  get_url: >
-    url=http://sourceforge.net/projects/wsclean/files/wsclean-1.8/wsclean-1.8.tar.bz2/download 
-    dest=/tmp/wsclean-1.8.tar.bz2
-# Alternative http://www.roe.ac.uk/~jsm/lofar_dist/src/wsclean-1.8.tar.bz2
-    
-- name: Compile and install WSClean
-  script: wsclean.sh creates=/usr/bin/wsclean
-  sudo: True
-
-  
-- name: Download the source code of Montage
-  get_url: >
-    url=http://montage.ipac.caltech.edu/download/Montage_v3.3.tar.gz
-    dest=/tmp/Montage_v3.3.tar.gz
-
-- name: Unarchive Montage in /opt
-  unarchive: >
-    src=/tmp/Montage_v3.3.tar.gz 
-    dest=/opt
-    copy=no
-  sudo: True
-
-- name: Compile Montage
-  command: make
-  args:
-    chdir: /opt/Montage_v3.3/
-    creates: /opt/Montage_v3.3/bin/mProject
-  sudo: True
-#    creates: /path/to/database
-
-- name: Add /opt/Montage_v3.3/bin to system path
-  lineinfile: >
-    dest=/etc/environment
-    state=present
-    backrefs=yes
-    regexp='PATH=(["]*)((?!.*?/opt/Montage_v3.3/bin).*?)(["]*)$'
-    line="PATH=\1\2:/opt/Montage_v3.3/bin\3"
-  sudo: True
-
-- name: install montage-wrapper
-  pip: name=montage-wrapper extra_args="--upgrade"
-  sudo: True
-  
-- name: Remove temporary package
-  command: /bin/rm /tmp/Montage_v3.3.tar.gz removes=/tmp/Montage_v3.3.tar.gz
-  
-  
-- name: download LOFAR package
-  get_url: url=http://www.roe.ac.uk/~jsm/lofar_dist/trusty/lofar_2.10-1trusty_amd64.deb dest=/tmp/lofar_2.10-1trusty_amd64.deb
-
-- name: Install LOFAR package
-  apt: deb=/tmp/lofar_2.10-1trusty_amd64.deb
-  sudo: True
-
-- name: Remove temporary package
-  command: /bin/rm /tmp/lofar_2.10-1trusty_amd64.deb removes=/tmp/lofar_2.10-1trusty_amd64.deb
-
-- name: copy LOFAR profile file
-  copy: src=lofar_profile dest=/etc/profile.d/Z98-lofar.sh owner=root group=root mode=0755
-  sudo: True

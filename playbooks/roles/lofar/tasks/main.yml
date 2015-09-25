@@ -1,0 +1,34 @@
+---
+# tasks file for lofar
+
+- name: install LSMTool
+  pip: name='https://github.com/darafferty/LSMTool/archive/master.zip' extra_args='--allow-external --upgrade'
+  sudo: True
+  
+- name: install LoSoTo
+  pip: name='https://github.com/revoltek/losoto/archive/master.zip' extra_args='--allow-external --upgrade'
+  sudo: True
+  
+- name: Download source of WSClean
+  get_url: >
+    url=http://sourceforge.net/projects/wsclean/files/wsclean-1.8/wsclean-1.8.tar.bz2/download 
+    dest=/tmp/wsclean-1.8.tar.bz2
+# Alternative http://www.roe.ac.uk/~jsm/lofar_dist/src/wsclean-1.8.tar.bz2
+    
+- name: Compile and install WSClean
+  script: wsclean.sh creates=/usr/bin/wsclean
+  sudo: True
+  
+- name: download LOFAR package
+  get_url: url=http://www.roe.ac.uk/~jsm/lofar_dist/trusty/lofar_2.12-1trusty_amd64.deb dest=/tmp/lofar_2.12-1trusty_amd64.deb
+
+- name: Install LOFAR package
+  apt: deb=/tmp/lofar_2.12-1trusty_amd64.deb
+  sudo: True
+
+- name: Remove temporary package
+  command: /bin/rm /tmp/lofar_2.12-1trusty_amd64.deb removes=/tmp/lofar_2.12-1trusty_amd64.deb
+
+- name: copy LOFAR profile file
+  copy: src=lofar_profile dest=/etc/profile.d/Z98-lofar.sh owner=root group=root mode=0755
+  sudo: True
