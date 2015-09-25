@@ -61,3 +61,7 @@ Session.vim
 notes.txt
 .vagrant
 packer/cr.sh
+vagrant/package_LOFAR/description-pak
+vagrant/package_LOFAR/lofar_*.deb
+vagrant/package_LOFAR/package.sh
+vagrant/package_LOFAR/postinstall-pak
