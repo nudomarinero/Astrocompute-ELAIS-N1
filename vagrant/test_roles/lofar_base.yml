@@ -1,0 +1,5 @@
+---
+- name: Install LOFAR software
+  hosts: default
+  roles:
+    - lofar_base
