@@ -131,3 +131,6 @@
     - boto
     - awscli
     - FileChunkIO
+    
+- name: Byobu default configuration
+  unarchive: src=byobu.tar.gz dest=~/
