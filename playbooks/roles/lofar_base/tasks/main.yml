@@ -79,6 +79,8 @@
     - ipython-notebook 
     - ipython-qtconsole
     - python-h5py
+    - shapely
+    - descartes
 
 - name: Update pip to the last version
   script: update_pip.sh
