@@ -51,6 +51,7 @@
     - libffi-dev
     - libssl-dev
     - software-properties-common
+    - libgeos-dev
       
 - name: install Python packages
   apt: pkg={{ item }}
@@ -79,8 +80,6 @@
     - ipython-notebook 
     - ipython-qtconsole
     - python-h5py
-    - shapely
-    - descartes
 
 - name: Update pip to the last version
   script: update_pip.sh
@@ -105,6 +104,8 @@
     - ipyparallel
     - montage-wrapper
     - pyFFTW
+    - shapely
+    - descartes
     
 - name: install LOFAR dependencies repository
   apt_repository: repo='ppa:radio-astro/main'

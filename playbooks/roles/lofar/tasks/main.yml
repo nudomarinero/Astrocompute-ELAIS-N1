@@ -38,3 +38,11 @@
   sudo: True
   
 # TODO: Patch pipeline here
+- name: patch pipeline file to use factor
+  copy: >
+    src=utilities.py 
+    dest=/opt/LofIm-2_12/lib/python2.7/dist-packages/lofarpipe/support/utilities.py
+    owner=root 
+    group=root 
+    mode=0644
+  sudo: True
