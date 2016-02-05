@@ -11,9 +11,9 @@
 
 - name: Download source of WSClean
   get_url: >
-    url=http://sourceforge.net/projects/wsclean/files/wsclean-1.9/wsclean-1.9.tar.bz2/download 
-    dest=/tmp/wsclean-1.9.tar.bz2
-# Alternative http://www.roe.ac.uk/~jsm/lofar_dist/src/wsclean-1.8.tar.bz2
+    url=http://sourceforge.net/projects/wsclean/files/wsclean-1.10/wsclean-1.10.tar.bz2/download 
+    dest=/tmp/wsclean-1.10.tar.bz2
+# Alternative http://www.roe.ac.uk/~jsm/lofar_dist/src/wsclean-1.10.tar.bz2
     
 - name: Compile and install WSClean
   script: wsclean.sh creates=/usr/bin/wsclean
