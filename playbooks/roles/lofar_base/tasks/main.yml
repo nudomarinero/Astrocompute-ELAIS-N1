@@ -92,6 +92,7 @@
     - pyopenssl 
     - ndg-httpsclient
     - pyasn1
+    - pp
     - astropy
     - aplpy
     - unittest-xml-reporting
