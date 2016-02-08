@@ -52,6 +52,7 @@
     - libssl-dev
     - software-properties-common
     - libgeos-dev
+    - libxml++2.6-dev
       
 - name: install Python packages
   apt: pkg={{ item }}
@@ -92,7 +93,8 @@
     - pyopenssl 
     - ndg-httpsclient
     - pyasn1
-    - pp
+    - http://www.parallelpython.com/downloads/pp/pp-1.6.4.tar.gz
+    - numpy==1.9.3
     - astropy
     - aplpy
     - unittest-xml-reporting
@@ -118,9 +120,11 @@
   with_items:
     - casacore2
     - libcasacore2-dev
+    - libcasasynthesis-dev
     - python-casacore
     - casarest
     - casacore-data
+    - aoflagger
     - montage
     - sagecal
 
