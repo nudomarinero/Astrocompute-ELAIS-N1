@@ -55,25 +55,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #
   # View the documentation for the provider you're using for more
   # information on available options.
-
-  # Enable provisioning with CFEngine. CFEngine Community packages are
-  # automatically installed. For example, configure the host as a
-  # policy server and optionally a policy file to run:
-  #
-  # config.vm.provision "cfengine" do |cf|
-  #   cf.am_policy_hub = true
-  #   # cf.run_file = "motd.cf"
-  # end
-  #
-  # You can also configure and bootstrap a client to an existing
-  # policy server:
-  #
-  # config.vm.provision "cfengine" do |cf|
-  #   cf.policy_server_address = "10.0.2.15"
-  # end
-
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "provision.yml"
-  end
+  
+    config.vm.provision "ansible" do |ansible|
+        ansible.playbook = "provision.yml"
+    end
   
 end
