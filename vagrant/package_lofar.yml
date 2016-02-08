@@ -1,0 +1,11 @@
+---
+- name: Compile LOFAR software
+  hosts: default
+  roles:
+    - lofar_base
+  post_tasks:
+  - name: Prepare compilation of LOFAR
+    command: /usr/bin/python /vagrant/package_LOFAR/package_LOFAR.py
+  - name: Compile LOFAR
+    command: /vagrant/package_LOFAR/package.sh
+    sudo: True
