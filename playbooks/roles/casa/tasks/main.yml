@@ -12,7 +12,7 @@
   sudo: True
 
 - name: Remove temporary package
-  command: /bin/rm /tmp/casapy-42.2.30986-1-64b.tar.gz removes=/tmp/casapy-42.2.30986-1-64b.tar.gz
+  file: path=/tmp/casapy-42.2.30986-1-64b.tar.gz state=absent
 
 - name: add /opt/casapy/bin to system path
   lineinfile: >

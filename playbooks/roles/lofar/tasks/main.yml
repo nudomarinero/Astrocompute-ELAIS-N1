@@ -20,14 +20,14 @@
   sudo: True
   
 - name: download LOFAR package
-  get_url: url=http://www.roe.ac.uk/~jsm/lofar_dist/trusty/lofar_2.12-1trusty_amd64.deb dest=/tmp/lofar_2.12-1trusty_amd64.deb
+  get_url: url=http://www.roe.ac.uk/~jsm/lofar_dist/trusty/lofar_2.15-1trusty_amd64.deb dest=/tmp/lofar_2.15-1trusty_amd64.deb
 
 - name: Install LOFAR package
-  apt: deb=/tmp/lofar_2.12-1trusty_amd64.deb
+  apt: deb=/tmp/lofar_2.15-1trusty_amd64.deb
   sudo: True
 
 - name: Remove temporary package
-  command: /bin/rm /tmp/lofar_2.12-1trusty_amd64.deb removes=/tmp/lofar_2.12-1trusty_amd64.deb
+  file: path=/tmp/lofar_2.15-1trusty_amd64.deb state=absent
 
 - name: copy LOFAR profile file
   copy: src=lofar_profile dest=/etc/profile.d/Z98-lofar.sh owner=root group=root mode=0755
@@ -38,11 +38,11 @@
   sudo: True
   
 # TODO: Patch pipeline here
-- name: patch pipeline file to use factor
-  copy: >
-    src=utilities.py 
-    dest=/opt/LofIm-2_12/lib/python2.7/dist-packages/lofarpipe/support/utilities.py
-    owner=root 
-    group=root 
-    mode=0644
-  sudo: True
+#- name: patch pipeline file to use factor
+  #copy: >
+    #src=utilities.py 
+    #dest=/opt/LofIm-2_12/lib/python2.7/dist-packages/lofarpipe/support/utilities.py
+    #owner=root 
+    #group=root 
+    #mode=0644
+  #sudo: True
