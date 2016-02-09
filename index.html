@@ -20,14 +20,14 @@
 
     <section class="main-content">
       <h1>
-<a id="astrocompute-elais-n1" class="anchor" href="#astrocompute-elais-n1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Astrocompute ELAIS-N1</h1>
+<a id="astrocompute-elais-n1" class="anchor" href="#astrocompute-elais-n1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Astrocompute ELAIS-N1</h1>
 
 <p>Information about the <a href="https://www.skatelescope.org/">SKA</a>-<a href="http://aws.amazon.com/">AWS</a> <a href="https://www.skatelescope.org/ska-aws-astrocompute-call-for-proposals/">Astrocompute proposal</a> called: "Calibration of LOFAR ELAIS-N1 data in the Amazon cloud". Maintained by J. Sabater (Institute for Astronomy, University of Edinburgh).</p>
 
 <h2>
-<a id="lofar-amis" class="anchor" href="#lofar-amis" aria-hidden="true"><span class="octicon octicon-link"></span></a>LOFAR AMIs</h2>
+<a id="lofar-amis" class="anchor" href="#lofar-amis" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>LOFAR AMIs</h2>
 
-<p>We have created an AMI with the LOFAR 2.12 software pre-installed: <code>ami-431b6229</code>. It is based on the Ubuntu 14.04 LTS official AMI. There is also a legacy AMI with LOFAR 2.10: <code>ami-c7a3c3a2</code>.</p>
+<p>We have created an AMI with the LOFAR software pre-installed: <code>ami-63b89309</code>. It is based on the Ubuntu 14.04 LTS official AMI.</p>
 
 <p>Software installed:</p>
 
@@ -35,7 +35,7 @@
 <li>casacore libraries.</li>
 <li>casarest libraries.</li>
 <li>pyrap.</li>
-<li>LOFAR software (release 2.10 or 2.12).</li>
+<li>LOFAR software (release 2.15).</li>
 <li>
 <a href="http://casa.nrao.edu/">CASA</a>.</li>
 <li>
@@ -48,10 +48,11 @@
 <a href="https://sourceforge.net/projects/wsclean/">WSClean</a>.</li>
 <li>
 <a href="http://montage.ipac.caltech.edu/index.html">Montage</a>.</li>
+<li><a href="http://sourceforge.net/projects/sagecal/">Sagecal</a></li>
 <li>Some additional Python libraries like <a href="http://www.astropy.org/">astropy</a>, <a href="https://jupyter.org/">Jupyter</a>, etc.</li>
 </ul>
 
-<p>There is also an AMI (LOFAR 2.12: <code>ami-47156c2d</code>; LOFAR 2.10: <code>ami-69dfab0c</code>) with some more additional software installed that can be used as, for example, a head node. The additional software is:</p>
+<p>There is also an AMI (<code>ami-ccbd96a6</code>) with some more additional software installed that can be used as, for example, a head node. The additional software is:</p>
 
 <ul>
 <li>GRID certificates and tools.</li>
@@ -59,6 +60,28 @@
 <li>AWS tools and Python libraries.</li>
 <li>Postgresql 8.4.10 required by some LOFAR BBS tasks.</li>
 </ul>
+
+<h3>
+<a id="legacy-amis" class="anchor" href="#legacy-amis" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Legacy AMIs</h3>
+
+<p>We keep some old AMIs for compatibility reasons:</p>
+
+<ul>
+<li>LOFAR 2.12 node: <code>ami-431b6229</code>
+</li>
+<li>LOFAR 2.12 head: <code>ami-47156c2d</code>
+</li>
+<li>LOFAR 2.10 node: <code>ami-c7a3c3a2</code>
+</li>
+<li>LOFAR 2.10 head: <code>ami-69dfab0c</code>
+</li>
+</ul>
+
+<h3>
+<a id="packaging-of-lofar" class="anchor" href="#packaging-of-lofar" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Packaging of LOFAR</h3>
+
+<p>The <a href="https://launchpad.net/%7Eradio-astro/+archive/ubuntu/main">radio-astro Ubuntu PPA</a> keeps all the LOFAR dependencies packaged and updated. However, we decided to independently generate the LOFAR package for each release to maintain control of the compilation process. 
+The generation of the packages is explained in: <a href="https://github.com/nudomarinero/Astrocompute-ELAIS-N1/tree/master/vagrant">https://github.com/nudomarinero/Astrocompute-ELAIS-N1/tree/master/vagrant</a></p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/nudomarinero/Astrocompute-ELAIS-N1">Astrocompute ELAIS-N1</a> is maintained by <a href="https://github.com/nudomarinero">nudomarinero</a>.</span>
