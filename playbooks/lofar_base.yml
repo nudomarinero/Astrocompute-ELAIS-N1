@@ -1,0 +1,5 @@
+---
+- name: Install LOFAR base
+  hosts: 54.86.108.182
+  roles:
+    - lofar_base
