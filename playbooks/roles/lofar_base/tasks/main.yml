@@ -94,14 +94,19 @@
     - ndg-httpsclient
     - pyasn1
     - http://www.parallelpython.com/downloads/pp/pp-1.6.4.tar.gz
-    - numpy==1.9.3
-    - astropy
-    - aplpy
     - unittest-xml-reporting
     - psutil
     - progressbar
-    - wcsaxes
     - fabric
+    - numpy==1.9.3
+
+- name: install additional Python packages with pip (no upgrade)
+  pip: name={{ item }} 
+  sudo: True
+  with_items:  
+    - astropy
+    - aplpy
+    - wcsaxes
     - jupyter
     - ipython
     - ipyparallel
@@ -120,6 +125,7 @@
   with_items:
     - casacore2
     - libcasacore2-dev
+    - libcasasynthesis1
     - libcasasynthesis-dev
     - python-casacore
     - casarest
@@ -127,4 +133,6 @@
     - aoflagger
     - montage
     - sagecal
+
+
 
