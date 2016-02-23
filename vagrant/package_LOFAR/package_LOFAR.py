@@ -5,11 +5,13 @@ import os
 config = {
     "source_dir" : "/vagrant/package_LOFAR",
     "version" : "2.15",
-    "pkgrelease" : "1trusty"
+    "pkgrelease" : "1trusty",
+    "platform" : "amd64"
     }
 ###
 
 config["release"] = config["version"].replace(".", "_")
+config["ext_version"] = config["version"]+".100"
 
 template_bash = """
 #!/bin/bash
@@ -43,14 +45,14 @@ liblapack-dev,libboost-all-dev,zlib1g-dev,libfreetype6-dev,libncurses5-dev,\
 libatlas-base-dev,wcslib-dev,hdf5-tools,libhdf5-dev,libhdf5-serial-dev,\
 libzmq-dev,liblzo2-dev,valgrind,libssh2-1-dev,libblitz0-dev,libpqxx3-dev,\
 libpq-dev,libunittest++-dev,liblog4cplus-dev,libgsl0-dev,xvfb,casacore2,\
-libcasacore2-dev,python-casacore,casarest" \
+libcasacore2-dev,python-casacore,aoflagger,libcasasynthesis1" \
 --maintainer="Jose Sabater Montes\ \<jsm@iaa.es\>" \
---pkgname=lofar --pkgversion={version} --pkgrelease={pkgrelease} \
+--pkgname=lofar --pkgversion={ext_version} --pkgrelease={pkgrelease} \
 --exclude=/home --showinstall=no -y --backup=no \
 make install
 
 # Copy the result back
-cp *.deb {source_dir} 
+cp lofar_{ext_version}-{pkgrelease}_{platform}.deb {source_dir}/lofar_{version}-{pkgrelease}_{platform}.deb
 
 cd
 sudo rm -rf LOFAR
@@ -69,7 +71,7 @@ fi
 """
 
 template_description = """
-LOFAR software compilation. Release {version}.
+LOFAR software compilation. Release {ext_version}.
 """
 
 file_template = {
