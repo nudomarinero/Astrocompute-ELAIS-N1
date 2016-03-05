@@ -75,8 +75,8 @@ dumb_smart_demixing_cal.argument.elevlimit      =  0deg
 # run NDPPP on the calibrator data
 # My data is raw, non pre-processed data, so the parset looks different!
 ndppp_prep_cal.control.type                    = dppp
-ndppp_prep_cal.control.max_per_node            = 8                    # \ feel free to adjust these two values to match your system
-ndppp_prep_cal.control.environment             = {OMP_NUM_THREADS: 5}  # / they should be reasonable for JURECA
+ndppp_prep_cal.control.max_per_node            = 5                    # \ feel free to adjust these two values to match your system
+ndppp_prep_cal.control.environment             = {OMP_NUM_THREADS: 3}  # / they should be reasonable for JURECA
 ndppp_prep_cal.control.error_tolerance         = {{ error_tolerance }}
 ndppp_prep_cal.control.mapfiles_in             = [createmap_cal.output.mapfile, demix-parmdbs_cal.output.mapfile, dumb_smart_demixing_cal.output.demixsources.mapfile]
 ndppp_prep_cal.control.inputkeys               = [msin,demix.instrumentmodel,demix.subtractsources]
