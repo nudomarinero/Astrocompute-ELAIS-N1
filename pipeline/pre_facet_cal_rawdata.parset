@@ -18,8 +18,8 @@ pipeline.steps=[createmap_cal, ndppp_prep_cal, predict4_cal, ateamclip_cal, cali
 ! num_ch_per_SB        = 64  # how many channels are there in one SB (A bit redundant, but I cannot do math here!)
 ! cal_input_path       = /mnt/scratch/data/raw
 ! cal_input_pattern    = L*MS
-! calibrator_skymodel  = /home/ubuntu/prefactor/skymodels/3c295-twocomp.skymodel
-! num_SBs_per_group    = 12   # make concatenated measurement-sets with that many subbands
+#! calibrator_skymodel  = /home/ubuntu/prefactor/skymodels/3c295-twocomp.skymodel
+! calibrator_skymodel  = /home/ubuntu/prefactor/skymodels/3C380_MSSS.skymodel
 
 # pathes to the scripts etc.
 # #### ToDo: get the scripts onto CEP3 and adjust the pathes here!
@@ -73,8 +73,8 @@ dumb_smart_demixing_cal.argument.elevlimit      =  0deg
 # run NDPPP on the calibrator data
 # My data is raw, non pre-processed data, so the parset looks different!
 ndppp_prep_cal.control.type                    = dppp
-ndppp_prep_cal.control.max_per_node            = 5                    # \ feel free to adjust these two values to match your system
-ndppp_prep_cal.control.environment             = {OMP_NUM_THREADS: 3}  # / they should be reasonable for JURECA
+ndppp_prep_cal.control.max_per_node            = 8                   
+ndppp_prep_cal.control.environment             = {OMP_NUM_THREADS: 2}  
 ndppp_prep_cal.control.error_tolerance         = {{ error_tolerance }}
 ndppp_prep_cal.control.mapfiles_in             = [createmap_cal.output.mapfile]
 ndppp_prep_cal.control.inputkeys               = [msin]
