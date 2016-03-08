@@ -27,7 +27,7 @@ pipeline.steps=[createmap_cal, ndppp_prep_cal, predict4_cal, ateamclip_cal, cali
 # #### ToDo: get the scripts onto CEP3 and adjust the pathes here!
 ! calib_cal_parset     = /home/ubuntu/prefactor/parsets/calibcal.parset
 ! Ateamclipper_script  = /home/ubuntu/prefactor/bin/Ateamclipper.py
-! predict4_cal         = /home/ubuntu/prefactor/parsets/ateamclip.parset
+! predict4_parset      = /home/ubuntu/prefactor/parsets/ateamclip.parset
 ! predict4_skymodel    = /home/ubuntu/prefactor/skymodels/Ateam_LBA_CC.skymodel
 ! cal_transfer_parset  = /home/ubuntu/prefactor/parsets/applyparmdb.parset
 ! demixing_sourceDB    = /home/ubuntu/prefactor/skymodels/Ateamhighresdemix.sourcedb
