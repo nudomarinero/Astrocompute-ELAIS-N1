@@ -1,0 +1,96 @@
+---
+- name: Setup scratch disk
+  hosts: cal
+  #vars:
+  #- volume_id: "vol-ec105345"
+  tasks:
+  - name: Create filesystem
+    filesystem: fstype=ext4 dev=/dev/xvdb
+    become: True
+    tags:
+    - create_disk
+
+  #- name: Get the ec2 instance id
+    #ec2_facts:
+    #tags:
+    #- mount_disk
+  
+  #- name: Attach data disk
+    #local_action: ec2_vol
+    #args:
+      #region: us-east-1
+      #instance: "{{ ansible_ec2_instance_id }}"
+      #id: "{{ volume_id }}"
+      #device_name: /dev/xvdb
+    #tags:
+    #- mount_disk
+  
+  - name: Mount scratch area
+    mount: name=/mnt 
+           src=/dev/xvdb 
+           fstype=ext4 
+           state=mounted
+    become: True
+    tags:
+    - disk
+    - create_disk
+    - mount_disk
+           
+  - name: Create data area
+    file: path=/mnt/scratch/data
+          state=directory 
+          owner=ubuntu 
+          group=ubuntu
+          recurse=True
+    become: True
+    tags:
+    - disk
+    - create_disk
+    - mount_disk
+  
+  - name: Install missing packages
+    apt: pkg=language-pack-en
+    become: True
+    tags:
+    - install
+  
+  - name: Get repo pre-factor
+    git: >
+      repo=https://github.com/nudomarinero/prefactor.git
+      dest=/home/ubuntu/prefactor
+      depth=1
+    tags:
+    - repos
+  
+  - name: Get repo AWS
+    git: >
+      repo=https://github.com/nudomarinero/Astrocompute-ELAIS-N1.git
+      dest=/home/ubuntu/astrocompute
+      depth=1
+    tags:
+    - repos
+
+  - name: Create data download directory
+    file: >
+      path=/mnt/scratch/data/raw
+      state=directory
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    tags:
+    - download
+  
+  - name: setup calibration pipeline
+    file: >
+      path=/mnt/scratch/data/{{ item }}
+      state=directory
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    with_items:
+    - log
+    - cal
+    - runtime
+    - process
+    tags:
+    - setup_pipeline

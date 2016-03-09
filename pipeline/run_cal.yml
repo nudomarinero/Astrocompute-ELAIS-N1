@@ -1,0 +1,27 @@
+---
+- name: Run the calibration process
+  hosts: cal
+  vars:
+  - cal_file: 3C196.txt
+  tasks:
+  
+  - name: launch profile process
+    command: "screen -dmS profile bash -c 'cd /mnt/scratch/data/log; python /home/ubuntu/astrocompute/pipeline/scripts/profile_node.py'; sleep 1"
+    async: 45
+    poll: 0
+    tags:
+    - profile
+    
+  ## NOT WORKING
+  - name: launch download
+    command: "screen -dmS download bash -c '/home/ubuntu/astrocompute/pipeline/scripts/parallel_download.sh /home/ubuntu/astrocompute/pipeline/data/{{ cal_file }}'; sleep 1"
+    async: 45
+    poll: 0
+    tags:
+    - download
+    
+  
+  
+  
+  
+  
