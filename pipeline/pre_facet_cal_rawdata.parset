@@ -11,13 +11,8 @@
 pipeline.steps=[createmap_cal, ndppp_prep_cal, predict4_cal, ateamclip_cal, calib_cal, h5_imp_map, h5imp_cal, fitclock, ampl, plots, phase]
 
 # parameters you will need to adjust.
-! avg_timestep_pre     = 2   # averaging in 1st NDPPP run  \  these two together should average
-! avg_timestep_2nd     = 2   # averaging in 2nd NDPPP run  /  the data to 4 seconds time resolution
-! avg_freqstep_pre     = 4   # averaging in 1st NDPPP run  \  these two together should average
-! avg_freqstep_2nd     = 2   # averaging in 2nd NDPPP run  /  the data to 4 ch/SB frequency resolution
-! avg_timestep         = 4
-! avg_freqstep         = 32
-! num_ch_per_SB        = 64  # how many channels are there in one SB (A bit redundant, but I cannot do math here!)
+! avg_timestep         = 4   # to 4 seconds
+! avg_freqstep         = 16  # to 4 channels
 ! cal_input_path       = /mnt/scratch/data/raw
 ! cal_input_pattern    = L*MS
 ! calibrator_skymodel  = /home/ubuntu/prefactor/skymodels/3c295-twocomp.skymodel
@@ -29,19 +24,11 @@ pipeline.steps=[createmap_cal, ndppp_prep_cal, predict4_cal, ateamclip_cal, cali
 ! Ateamclipper_script  = /home/ubuntu/prefactor/bin/Ateamclipper.py
 ! predict4_parset      = /home/ubuntu/prefactor/parsets/ateamclip.parset
 ! predict4_skymodel    = /home/ubuntu/prefactor/skymodels/Ateam_LBA_CC.skymodel
-! cal_transfer_parset  = /home/ubuntu/prefactor/parsets/applyparmdb.parset
-! demixing_sourceDB    = /home/ubuntu/prefactor/skymodels/Ateamhighresdemix.sourcedb
-! gsm_cal_parset       = /home/ubuntu/prefactor/parsets/gsmcal.parset
 ! losoto_importer      = /home/ubuntu/prefactor/bin/losotoImporter.py
-! dumb_smart_script    = /home/ubuntu/prefactor/bin/gen_demixing_sources.py
 ! fitclock_script      = /home/ubuntu/prefactor/bin/fit_clocktec_initialguess_losoto.py
 ! fitamps_script       = /home/ubuntu/prefactor/bin/amplitudes_losoto_3.py
 ! plotsols_script      = /home/ubuntu/prefactor/bin/examine_npys.py
 ! fit_XYoffset_script  = /home/ubuntu/prefactor/bin/find_cal_global_phaseoffset_losoto.py
-! transfer_script      = /home/ubuntu/prefactor/bin/transfer_amplitudes+clock+offset_toMS.py
-! sortmap_script       = /home/ubuntu/prefactor/bin/sort_times_into_freqGroups.py
-! plotphases_script    = /home/ubuntu/prefactor/bin/plot_solutions_all_stations.py
-
 
 # set this to True if you want the pipeline run to continue if single bands fail
 ! error_tolerance           =  False
