@@ -9,21 +9,6 @@
     become: True
     tags:
     - create_disk
-
-  #- name: Get the ec2 instance id
-    #ec2_facts:
-    #tags:
-    #- mount_disk
-  
-  #- name: Attach data disk
-    #local_action: ec2_vol
-    #args:
-      #region: us-east-1
-      #instance: "{{ ansible_ec2_instance_id }}"
-      #id: "{{ volume_id }}"
-      #device_name: /dev/xvdb
-    #tags:
-    #- mount_disk
   
   - name: Mount scratch area
     mount: name=/mnt 

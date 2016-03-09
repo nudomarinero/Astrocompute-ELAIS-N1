@@ -2,7 +2,7 @@
 - name: Run the calibration process
   hosts: cal
   vars:
-  - cal_file: 3C196.txt
+  - cal_file: cal1.txt
   tasks:
   
   - name: launch profile process

@@ -20,8 +20,8 @@ pipeline.steps=[createmap_cal, ndppp_prep_cal, predict4_cal, ateamclip_cal, cali
 ! num_ch_per_SB        = 64  # how many channels are there in one SB (A bit redundant, but I cannot do math here!)
 ! cal_input_path       = /mnt/scratch/data/raw
 ! cal_input_pattern    = L*MS
-#! calibrator_skymodel  = /home/ubuntu/prefactor/skymodels/3c295-twocomp.skymodel
-! calibrator_skymodel  = /home/ubuntu/prefactor/skymodels/3C380_MSSS.skymodel
+! calibrator_skymodel  = /home/ubuntu/prefactor/skymodels/3c295-twocomp.skymodel
+#! calibrator_skymodel  = /home/ubuntu/prefactor/skymodels/3C380_MSSS.skymodel
 
 # pathes to the scripts etc.
 # #### ToDo: get the scripts onto CEP3 and adjust the pathes here!
@@ -54,23 +54,6 @@ createmap_cal.control.mapfile_dir     =   input.output.mapfile_dir
 createmap_cal.control.filename        =   createmap_cal.mapfile
 createmap_cal.control.folder          =   {{ cal_input_path }}
 createmap_cal.control.pattern         =   {{ cal_input_pattern }}
-
-# I want to run demixing, for that I need a MS with names for the instrument tables
-demix-parmdbs_cal.control.kind               =  plugin
-demix-parmdbs_cal.control.type               =  createMapfile
-demix-parmdbs_cal.control.method             =  add_suffix_to_file
-demix-parmdbs_cal.control.mapfile_in         =  createmap_cal.output.mapfile
-demix-parmdbs_cal.control.add_suffix_to_file =  -demix-inst
-demix-parmdbs_cal.control.mapfile_dir        =  input.output.mapfile_dir  
-demix-parmdbs_cal.control.filename           =  demix-parmdbs_cal.mapfile
-
-# Get the sources to be demixed for each epoch
-dumb_smart_demixing_cal.control.type            =  pythonplugin
-dumb_smart_demixing_cal.control.executable      =  {{ dumb_smart_script }}
-dumb_smart_demixing_cal.control.error_tolerance =  {{ error_tolerance }}
-dumb_smart_demixing_cal.argument.flags          =  createmap_cal.output.mapfile
-dumb_smart_demixing_cal.argument.sourcelist     =  "CasA CygA VirA TauA"
-dumb_smart_demixing_cal.argument.elevlimit      =  0deg
 
 # run NDPPP on the calibrator data
 # My data is raw, non pre-processed data, so the parset looks different!
@@ -158,7 +141,7 @@ fitclock.control.type             = executable_args
 fitclock.control.mapfile_in       = h5imp_cal.output.h5parm.mapfile
 fitclock.control.executable       = {{ fitclock_script }}
 # order for arguments is: [<input-filename>,<output-filename-base>,<NumThreads>]
-fitclock.control.arguments        = [h5gvds,caldata_transfer,24] 
+fitclock.control.arguments        = [h5gvds,caldata_transfer,16] 
 fitclock.control.inputkey         = h5gvds
 
 # now run the script that filters the amplitudes
