@@ -1,0 +1,6 @@
+---
+# For an m4.4xlarge instance
+volume_size: 800
+key_name: "jsmkey"
+instance_type_v: "m4.4xlarge"
+spot_price_v: 1
