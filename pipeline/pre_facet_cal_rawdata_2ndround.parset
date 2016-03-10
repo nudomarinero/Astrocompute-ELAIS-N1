@@ -16,6 +16,7 @@ pipeline.steps=[createmap_h5, ampl, plots, phase]
 
 # pathes to the scripts etc.
 # #### ToDo: get the scripts onto CEP3 and adjust the pathes here!
+! fitclock_script      = /home/ubuntu/prefactor/bin/fit_clocktec_initialguess_losoto.py
 ! fitamps_script       = /home/ubuntu/prefactor/bin/amplitudes_losoto_3.py
 ! plotsols_script      = /home/ubuntu/prefactor/bin/examine_npys.py
 ! fit_XYoffset_script  = /home/ubuntu/prefactor/bin/find_cal_global_phaseoffset_losoto.py
@@ -32,10 +33,19 @@ createmap_h5.control.filename        =   createmap_cal.mapfile
 createmap_h5.control.folder          =   {{ h5_input_path }}
 createmap_h5.control.pattern         =   {{ h5_input_pattern }}
 
+# now run the script that does the clock-TEC fitting
+fitclock.control.kind             = recipe
+fitclock.control.type             = executable_args
+fitclock.control.mapfile_in       = createmap_h5.output.mapfile
+fitclock.control.executable       = {{ fitclock_script }}
+# order for arguments is: [<input-filename>,<output-filename-base>,<NumThreads>]
+fitclock.control.arguments        = [h5gvds,caldata_transfer,16] 
+fitclock.control.inputkey         = h5gvds
+
 # now run the script that filters the amplitudes
 ampl.control.kind             = recipe
 ampl.control.type             = executable_args
-ampl.control.mapfile_in       = createmap_h5.output.h5parm.mapfile
+ampl.control.mapfile_in       = createmap_h5.output.mapfile
 ampl.control.executable       = {{ fitamps_script }}
 # order for arguments is: [<input-filename>,<output-filename-base>,<num-ch/SB>,<subbans-to-flag>]
 # subbans-to-flag = semicolon-sperated list of integers in double-quotes 
@@ -46,7 +56,7 @@ ampl.control.inputkey         = h5gvds
 # and generate some output plots
 plots.control.kind             = recipe
 plots.control.type             = executable_args
-plots.control.mapfile_in       = createmap_h5.output.h5parm.mapfile
+plots.control.mapfile_in       = createmap_h5.output.mapfile
 plots.control.executable       = {{ plotsols_script }}
 plots.control.skip_infile      = True
 plots.control.arguments        = [caldata_transfer]   # Needs "<output-filename-base>" from the fitclock and ampl steps
@@ -55,4 +65,4 @@ plots.control.arguments        = [caldata_transfer]   # Needs "<output-filename-
 phase.control.type            = pythonplugin
 phase.control.executable      = {{ fit_XYoffset_script }}
 # order for flags is: [<input-filename>,<output-filename-base>]
-phase.argument.flags          = [h5imp_cal.output.h5parm.mapfile,caldata_transfer]
+phase.argument.flags          = [h5imp_cal.output.mapfile,caldata_transfer]
