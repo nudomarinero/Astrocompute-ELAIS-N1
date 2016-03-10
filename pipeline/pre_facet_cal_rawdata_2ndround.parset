@@ -1,0 +1,58 @@
+# Pre-Facet Calibration Pipeline for raw data
+#
+# Pre-Facet Calibration Pipeline: 
+# - first NDPPP run tailored to processing raw data
+# - figures out frequencies from SPECTRAL_WINDOW table in MSs
+# - expects shared filesystem, that all nodes can reach all files!
+#   (E.g. a single workstation or compute cluster with shared filesystem
+#   doesn't work on multiple nodes on CEP-2 or CEP3.)
+
+### First run this and check the generated plots! Modify and re-run if neccessary.
+pipeline.steps=[createmap_h5, ampl, plots, phase]
+
+# parameters you will need to adjust.
+! h5_input_path       = /mnt/scratch/data/cal/pre_facet_cal_rawdata
+! h5_input_pattern    = *.h5
+
+# pathes to the scripts etc.
+# #### ToDo: get the scripts onto CEP3 and adjust the pathes here!
+! fitamps_script       = /home/ubuntu/prefactor/bin/amplitudes_losoto_3.py
+! plotsols_script      = /home/ubuntu/prefactor/bin/examine_npys.py
+! fit_XYoffset_script  = /home/ubuntu/prefactor/bin/find_cal_global_phaseoffset_losoto.py
+
+# set this to True if you want the pipeline run to continue if single bands fail
+! error_tolerance           =  False
+
+# generate a mapfile of all the calibrator data
+createmap_h5.control.kind            =   plugin
+createmap_h5.control.type            =   createMapfile
+createmap_h5.control.method          =   mapfile_from_folder
+createmap_h5.control.mapfile_dir     =   input.output.mapfile_dir
+createmap_h5.control.filename        =   createmap_cal.mapfile
+createmap_h5.control.folder          =   {{ h5_input_path }}
+createmap_h5.control.pattern         =   {{ h5_input_pattern }}
+
+# now run the script that filters the amplitudes
+ampl.control.kind             = recipe
+ampl.control.type             = executable_args
+ampl.control.mapfile_in       = createmap_h5.output.h5parm.mapfile
+ampl.control.executable       = {{ fitamps_script }}
+# order for arguments is: [<input-filename>,<output-filename-base>,<num-ch/SB>,<subbans-to-flag>]
+# subbans-to-flag = semicolon-sperated list of integers in double-quotes 
+# e.g.: ampl.control.arguments   = [h5gvds,caldata_transfer,4,"205;206;207"] 
+ampl.control.arguments        = [h5gvds,caldata_transfer,4,"280;320;353"] 
+ampl.control.inputkey         = h5gvds
+
+# and generate some output plots
+plots.control.kind             = recipe
+plots.control.type             = executable_args
+plots.control.mapfile_in       = createmap_h5.output.h5parm.mapfile
+plots.control.executable       = {{ plotsols_script }}
+plots.control.skip_infile      = True
+plots.control.arguments        = [caldata_transfer]   # Needs "<output-filename-base>" from the fitclock and ampl steps
+
+# fit the phase difference between X and Y 
+phase.control.type            = pythonplugin
+phase.control.executable      = {{ fit_XYoffset_script }}
+# order for flags is: [<input-filename>,<output-filename-base>]
+phase.argument.flags          = [h5imp_cal.output.h5parm.mapfile,caldata_transfer]
