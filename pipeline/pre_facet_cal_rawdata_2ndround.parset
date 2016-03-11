@@ -8,7 +8,7 @@
 #   doesn't work on multiple nodes on CEP-2 or CEP3.)
 
 ### First run this and check the generated plots! Modify and re-run if neccessary.
-pipeline.steps=[createmap_h5, ampl, plots, phase]
+pipeline.steps=[createmap_h5, fitclock, ampl, plots, phase]
 
 # parameters you will need to adjust.
 ! h5_input_path       = /mnt/scratch/data/cal/pre_facet_cal_rawdata
@@ -65,4 +65,4 @@ plots.control.arguments        = [caldata_transfer]   # Needs "<output-filename-
 phase.control.type            = pythonplugin
 phase.control.executable      = {{ fit_XYoffset_script }}
 # order for flags is: [<input-filename>,<output-filename-base>]
-phase.argument.flags          = [h5imp_cal.output.mapfile,caldata_transfer]
+phase.argument.flags          = [createmap_h5.output.mapfile,caldata_transfer]
