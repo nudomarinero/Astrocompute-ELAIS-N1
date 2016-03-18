@@ -111,6 +111,7 @@ dpppaverage.control.error_tolerance      = {{ error_tolerance }}
 dpppaverage.argument.msin                = ndppp_prep_target.output.mapfile  # The input data.
 dpppaverage.argument.msin.datacolumn     = CORRECTED_DATA
 dpppaverage.argument.msout.datacolumn    = DATA
+dpppaverage.argument.msout.writefullresflag = false
 dpppaverage.argument.steps               = [count,flag,count,avg]
 dpppaverage.argument.flag.type           = aoflagger
 dpppaverage.argument.flag.keepstatistics = false
