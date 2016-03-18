@@ -1,0 +1,23 @@
+localhost ansible_connection=local ansible_python_interpreter=/home/jsm/programs/soft/anaconda/bin/python
+[ska:children]
+tag_type_ska
+
+[tag_type_ska]
+
+
+[node:children]
+tag_type_node
+
+[tag_type_node]
+
+
+[cal:children]
+tag_type_cal
+
+[tag_type_cal]
+
+
+[pretarget:children]
+tag_type_pretarget
+
+[tag_type_pretarget]
