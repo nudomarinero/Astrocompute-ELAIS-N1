@@ -81,7 +81,7 @@
   
   - name: Get repo AWS
     git: >
-      repo=https://nudomarinero@bitbucket.org/nudomarinero/tier1.git
+      repo=https://github.com/nudomarinero/Astrocompute-ELAIS-N1.git
       dest=/home/ubuntu/astrocompute
       depth=1
     tags:
