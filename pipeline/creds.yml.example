@@ -1,0 +1,28 @@
+---
+globus_key: |
+  Bag Attributes
+      friendlyName: jonh.doe's  ID #2
+      localKeyID: xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx  
+  Key Attributes: <No Attributes>
+  -----BEGIN ENCRYPTED PRIVATE KEY-----
+  XX....XXX=
+  -----END ENCRYPTED PRIVATE KEY-----
+
+globus_cert: |
+  Bag Attributes
+      friendlyName: jonh.doe's  ID #2
+      localKeyID: xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx 
+  subject=/DC=com/DC=example/O=www/CN=jonh.doe
+  issuer=/DC=com/DC=example/CN=ExampleCA
+  -----BEGIN CERTIFICATE-----
+  XX....XXX=
+  -----END CERTIFICATE-----
+
+aws_credentials: |
+  [default]
+  aws_access_key_id = AKxxxxxxxxxxxxxxxxx
+  aws_secret_access_key = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+aws_access_key_id: AKxxxxxxxxxxxxxxxxx
+aws_secret_access_key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+gpg_passphrase: xxxxxxxxxx
