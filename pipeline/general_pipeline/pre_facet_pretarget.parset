@@ -23,8 +23,8 @@ pipeline.steps=[createmap_target, ndppp_prep_target, trans, parmmap, calibtarget
 ! avg_timestep         = 2   # averaging step needed to average the data to 4 seconds time resolution
 ! avg_freqstep         = 1   # averaging step needed to average the data to 4 ch/SB frequency resolution; 3 in our case
 ! target_input_path       = /mnt/scratch/data/raw
-! target_input_pattern    = L*.MS
-! target_skymodel      = /home/ubuntu/astrocompute/data/models/mosaic.pybdsm.sky_in
+! target_input_pattern    = L*.MS.dppp
+! target_skymodel      = /home/ubuntu/astrocompute/pipeline/data/models/mosaic.pybdsm.sky_in
 ! num_SBs_per_group    = 10 # make concatenated measurement-sets with that many subbands
 ! results_directory    = /mnt/scratch/data/process
 
@@ -187,7 +187,7 @@ gsmcal_parmmap.control.method             =  add_suffix_to_file
 gsmcal_parmmap.control.mapfile_in         =  dpppconcat.output.mapfile
 gsmcal_parmmap.control.add_suffix_to_file =  /instrument_directionindependent
 gsmcal_parmmap.control.mapfile_dir        =  input.output.mapfile_dir
-gsmcal_parmmap.control.filename           =  gsmcal_parmdbs.mapfile
+gsmcal_parmmap.control.filename           =  gsmcal_parmdbs.mapfile # TODO: CHECK
 
 # plot the phase solutions from the phase-only calibration of the target
 plot_gsm_phases.control.kind               =  recipe
@@ -222,7 +222,7 @@ createmap_plots.control.kind            =   plugin
 createmap_plots.control.type            =   createMapfile
 createmap_plots.control.method          =   mapfile_from_folder
 createmap_plots.control.mapfile_dir     =   input.output.mapfile_dir
-createmap_plots.control.filename        =   diagnostic_plots.mapfile
+createmap_plots.control.filename        =   diagnostic_plots.mapfile  # TODO: CHECK
 createmap_plots.control.folder          =   input.output.working_directory/input.output.job_name
 createmap_plots.control.pattern         =   *.png
 
