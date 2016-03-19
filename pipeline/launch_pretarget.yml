@@ -51,6 +51,7 @@
       region: us-east-1
       instance: "{{ item.id }}"
       volume_size: "{{ volume_size }}"
+      volume_type: "{{ volume_type }}"
       name: "{{ instance_name }}"
       device_name: /dev/xvdb
     with_items: '{{ec2.tagged_instances}}'
