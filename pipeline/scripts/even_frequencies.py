@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Script to change the frequencies of an MS to make them even.
 This is a dangerous script that you should only use if you know what 
@@ -22,9 +23,15 @@ def even_ms(ms):
     # TODO: Check if the table exists
     msfr = tables.table(freq_table, readonly=False)
     frequencies = msfr.getcol('CHAN_FREQ')[0]
+    n_freqs = len(frequencies)
     even_freqs_init = np.linspace(frequencies[0],
                                   frequencies[-1],
-                                  len(frequencies))
+                                  n_freqs,
+                                  dtype="float64")
+    # Dirty hack to pass the strong assertion
+    step = even_freqs_init[1] - even_freqs_init[0]
+    even_freqs_aux = np.arange(n_freqs)*step + even_freqs_init[0]
+    
     # TODO: Check the deviation
     even_freqs = np.expand_dims(even_freqs_init, axis=0)
     msfr.putcol('CHAN_FREQ', even_freqs)

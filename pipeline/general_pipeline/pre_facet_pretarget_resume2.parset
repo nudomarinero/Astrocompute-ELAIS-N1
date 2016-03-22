@@ -3,7 +3,7 @@
 # Pre-Facet pretarget Calibration Pipeline
 # Pipeline to run if the pipeline fails after the Ateam-clipping
 
-pipeline.steps=[createmap_target_resume, sortmap_tar, dpppconcat, gsmcalibtarget, gsmcal_parmmap, plot_gsm_phases, make_results_mapfile, move_results, createmap_plots, copy_plots]
+pipeline.steps=[createmap_target_resume2, freqeven, gsmcalibtarget, gsmcal_parmmap, plot_gsm_phases, make_results_mapfile, move_results, createmap_plots, copy_plots]
 
 # parameters you will need to adjust.
 ! avg_timestep         = 2   # averaging step needed to average the data to 4 seconds time resolution
@@ -17,7 +17,7 @@ pipeline.steps=[createmap_target_resume, sortmap_tar, dpppconcat, gsmcalibtarget
 
 # pathes to the scripts etc.
 # #### ToDo: get the scripts onto CEP3 and adjust the pathes here!
-! freqeven_script      = /home/ubuntu/astrocompute/pipeline/bin/even_frequencies.py
+! freqeven_script      = /home/ubuntu/astrocompute/pipeline/scripts/even_frequencies.py
 ! calib_cal_parset     = /home/ubuntu/prefactor/parsets/calibcal.parset
 ! cal_transfer_parset  = /home/ubuntu/prefactor/parsets/applyparmdb.parset
 ! ATeam_predict_parset = /home/ubuntu/prefactor/parsets/ateamclip.parset
