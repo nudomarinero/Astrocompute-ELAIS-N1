@@ -1,0 +1,118 @@
+# Pre-Facet Calibration Pipeline
+#
+# Pre-Facet pretarget Calibration Pipeline
+# Pipeline to run if the pipeline fails after the Ateam-clipping
+
+pipeline.steps=[createmap_target_resume, sortmap_tar, dpppconcat, gsmcalibtarget, gsmcal_parmmap, plot_gsm_phases, make_results_mapfile, move_results, createmap_plots, copy_plots]
+
+# parameters you will need to adjust.
+! avg_timestep         = 2   # averaging step needed to average the data to 4 seconds time resolution
+! avg_freqstep         = 1   # averaging step needed to average the data to 4 ch/SB frequency resolution; 3 in our case
+! target_input_path       = /mnt/scratch/data/cal/pre_facet_pretarget
+! target_input_pattern    = L*SBgr*.MS.dpppaverage
+! target_skymodel      = /home/ubuntu/astrocompute/pipeline/data/models/mosaic.pybdsm.sky_in
+! num_SBs_per_group    = 10 # make concatenated measurement-sets with that many subbands
+! results_directory    = /mnt/scratch/data/process
+
+
+# pathes to the scripts etc.
+# #### ToDo: get the scripts onto CEP3 and adjust the pathes here!
+! freqeven_script      = /home/ubuntu/astrocompute/pipeline/bin/even_frequencies.py
+! calib_cal_parset     = /home/ubuntu/prefactor/parsets/calibcal.parset
+! cal_transfer_parset  = /home/ubuntu/prefactor/parsets/applyparmdb.parset
+! ATeam_predict_parset = /home/ubuntu/prefactor/parsets/ateamclip.parset
+! gsm_cal_parset       = /home/ubuntu/prefactor/parsets/gsmcal.parset
+! ATeam_skymodel       = /home/ubuntu/prefactor/skymodels/Ateam_LBA_CC.skymodel
+! losoto_importer      = /home/ubuntu/prefactor/bin/losotoImporter.py
+! fitclock_script      = /home/ubuntu/prefactor/bin/fit_clocktec_initialguess_losoto.py
+! fitamps_script       = /home/ubuntu/prefactor/bin/amplitudes_losoto_3.py
+! plotsols_script      = /home/ubuntu/prefactor/bin/examine_npys.py
+! fit_XYoffset_script  = /home/ubuntu/prefactor/bin/find_cal_global_phaseoffset_losoto.py
+! transfer_script      = /home/ubuntu/prefactor/bin/transfer_amplitudes+clock+offset_toMS.py
+! ATeam_Clipper        = /home/ubuntu/prefactor/bin/Ateamclipper.py
+! plotphases_script    = /home/ubuntu/prefactor/bin/plot_solutions_all_stations.py
+! flagging_strategy    = /opt/LofIm/share/rfistrategies/HBAdefault
+
+# set this to True if you want the pipeline run to continue if single bands fail
+! error_tolerance           =  False
+
+# generate a mapfile of all the target data
+createmap_target_resume2.control.kind            =   plugin
+createmap_target_resume2.control.type            =   createMapfile
+createmap_target_resume2.control.method          =   mapfile_from_folder
+createmap_target_resume2.control.mapfile_dir     =   input.output.mapfile_dir
+createmap_target_resume2.control.filename        =   createmap_target.mapfile
+createmap_target_resume2.control.folder          =   {{ target_input_path }}
+createmap_target_resume2.control.pattern         =   {{ target_input_pattern }}
+
+# Tweak the frequencies
+freqeven.control.type       = pythonplugin
+freqeven.control.executable = {{ freqeven_script }}
+freqeven.argument.flags     = createmap_target_resume2.output.mapfile   
+
+# phase calibration on the gsm skymodel
+gsmcalibtarget.control.type                            =  python-calibrate-stand-alone  
+gsmcalibtarget.control.max_per_node                    =  4  # feel free to adjust this to match your system  
+gsmcalibtarget.control.error_tolerance                 =  {{ error_tolerance }}
+gsmcalibtarget.argument.force                          =  True 
+gsmcalibtarget.argument.observation                    =  createmap_target_resume2.output.mapfile
+gsmcalibtarget.argument.parmdb-name                    =  instrument_directionindependent
+gsmcalibtarget.argument.parset                         =  {{ gsm_cal_parset }}  
+gsmcalibtarget.argument.catalog                        =  {{ target_skymodel }}     
+gsmcalibtarget.argument.Step.solve.Solve.CellSize.Freq =  0  # default: solution-cell spans all frequency channels
+gsmcalibtarget.argument.Step.solve.Solve.CellSize.Time =  1  # default: one solution per time-step
+
+# generate mapfile with the parmDBs that were created by BBS in the gsmcalibtarget step
+gsmcal_parmmap.control.kind               =  plugin
+gsmcal_parmmap.control.type               =  createMapfile
+gsmcal_parmmap.control.method             =  add_suffix_to_file
+gsmcal_parmmap.control.mapfile_in         =  createmap_target_resume2.output.mapfile
+gsmcal_parmmap.control.add_suffix_to_file =  /instrument_directionindependent
+gsmcal_parmmap.control.mapfile_dir        =  input.output.mapfile_dir
+gsmcal_parmmap.control.filename           =  gsmcal_parmdbs.mapfile # TODO: CHECK
+
+# plot the phase solutions from the phase-only calibration of the target
+plot_gsm_phases.control.kind               =  recipe
+plot_gsm_phases.control.type               =  executable_args
+plot_gsm_phases.control.executable         =  {{ plotphases_script }}
+plot_gsm_phases.control.max_per_node       =  15
+plot_gsm_phases.control.mapfiles_in        =  [gsmcal_parmmap.output.mapfile,createmap_target_resume2.output.mapfile]
+plot_gsm_phases.control.inputkeys          =  [infile,outbase]
+plot_gsm_phases.control.arguments          =  [-p,infile,outbase]
+
+# make mapfile with the filenames of the results that we want
+make_results_mapfile.control.kind            =  plugin
+make_results_mapfile.control.type            =  makeResultsMapfile
+make_results_mapfile.control.mapfile_dir     =  input.output.mapfile_dir
+make_results_mapfile.control.filename        =  make_results_mapfile.mapfile
+make_results_mapfile.control.mapfile_in      =  createmap_target_resume2.output.mapfile
+make_results_mapfile.control.target_dir      =  {{ results_directory }}
+make_results_mapfile.control.make_target_dir =  True
+make_results_mapfile.control.new_suffix      =  .pre-cal.ms
+
+# move the results to where we want them
+move_results.control.kind               =  recipe
+move_results.control.type               =  executable_args
+move_results.control.executable         =  /bin/mv
+move_results.control.max_per_node       =  15                                 # feel free to adjust this value to match your system
+move_results.control.mapfiles_in        =  [createmap_target_resume2.output.mapfile, make_results_mapfile.output.mapfile]
+move_results.control.inputkeys          =  [source,destination]
+move_results.control.arguments          =  [source,destination]
+
+# generate a mapfile of all the diagnostic plots
+createmap_plots.control.kind            =   plugin
+createmap_plots.control.type            =   createMapfile
+createmap_plots.control.method          =   mapfile_from_folder
+createmap_plots.control.mapfile_dir     =   input.output.mapfile_dir
+createmap_plots.control.filename        =   diagnostic_plots.mapfile  # TODO: CHECK
+createmap_plots.control.folder          =   input.output.working_directory/input.output.job_name
+createmap_plots.control.pattern         =   *.png
+
+# copy the diagnostic plots to the results_directory
+copy_plots.control.kind               =  recipe
+copy_plots.control.type               =  executable_args
+copy_plots.control.executable         =  /bin/cp
+copy_plots.control.max_per_node       =  15                                 # feel free to adjust this value to match your system
+copy_plots.control.mapfile_in         =  createmap_plots.output.mapfile
+copy_plots.control.inputkey           =  source
+copy_plots.control.arguments          =  [source,{{ results_directory }}]
