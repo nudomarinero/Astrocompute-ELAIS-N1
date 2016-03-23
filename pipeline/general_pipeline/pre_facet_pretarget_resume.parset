@@ -3,7 +3,7 @@
 # Pre-Facet pretarget Calibration Pipeline
 # Pipeline to run if the pipeline fails after the Ateam-clipping
 
-pipeline.steps=[createmap_target_resume, sortmap_tar, dpppconcat, gsmcalibtarget, gsmcal_parmmap, plot_gsm_phases, make_results_mapfile, move_results, createmap_plots, copy_plots]
+pipeline.steps=[createmap_target_resume, sortmap_tar, dpppconcat, freqeven, gsmcalibtarget, gsmcal_parmmap, plot_gsm_phases, make_results_mapfile, move_results, createmap_plots, copy_plots]
 
 # parameters you will need to adjust.
 ! avg_timestep         = 2   # averaging step needed to average the data to 4 seconds time resolution
@@ -17,6 +17,7 @@ pipeline.steps=[createmap_target_resume, sortmap_tar, dpppconcat, gsmcalibtarget
 
 # pathes to the scripts etc.
 # #### ToDo: get the scripts onto CEP3 and adjust the pathes here!
+! freqeven_script      = /home/ubuntu/astrocompute/pipeline/scripts/even_frequencies.py
 ! calib_cal_parset     = /home/ubuntu/prefactor/parsets/calibcal.parset
 ! cal_transfer_parset  = /home/ubuntu/prefactor/parsets/applyparmdb.parset
 ! ATeam_predict_parset = /home/ubuntu/prefactor/parsets/ateamclip.parset
@@ -49,7 +50,7 @@ sortmap_tar.control.kind            =   plugin
 sortmap_tar.control.type            =   groupMapfileObsSB
 sortmap_tar.control.mapfile_dir     =   input.output.mapfile_dir
 sortmap_tar.control.filename        =   sortmap_tar.mapfile
-sortmap_tar.control.mapfile_in      =   dpppaverage.output.mapfile
+sortmap_tar.control.mapfile_in      =   createmap_target_resume.output.mapfile
 sortmap_tar.control.numSB           =   {{ num_SBs_per_group }}
 sortmap_tar.control.NDPPPfill       =   True
 sortmap_tar.control.startFromZero   =   True   # This means that groups (and group-names) are done with SB000 as a reference
@@ -72,9 +73,14 @@ dpppconcat.argument.flag.keepstatistics =  false
 dpppconcat.argument.flag.memoryperc     =  10
 dpppconcat.argument.flag.strategy       =  {{ flagging_strategy }}
 
+# Tweak the frequencies
+freqeven.control.type       = pythonplugin
+freqeven.control.executable = {{ freqeven_script }}
+freqeven.argument.flags     = dpppconcat.output.mapfile   
+
 # phase calibration on the gsm skymodel
 gsmcalibtarget.control.type                            =  python-calibrate-stand-alone  
-gsmcalibtarget.control.max_per_node                    =  4  # feel free to adjust this to match your system  
+gsmcalibtarget.control.max_per_node                    =  2  # feel free to adjust this to match your system  
 gsmcalibtarget.control.error_tolerance                 =  {{ error_tolerance }}
 gsmcalibtarget.argument.force                          =  True 
 gsmcalibtarget.argument.observation                    =  dpppconcat.output.mapfile
