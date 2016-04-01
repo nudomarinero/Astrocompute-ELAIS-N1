@@ -2,7 +2,7 @@
 - name: Run the calibration process
   hosts: pretarget
   vars:
-  - cal_file: "target-BAND0.txt"
+  - band: "0"
   - pipeline_name: "pre_facet_pretarget"
   - bucket_name: "lofar-elais-n1-calibration"
   - dataset_name: "011"
@@ -46,9 +46,9 @@
     tags:
     - download_cal
   
-
+  # Adapt to gather band from facts !!!!
   - name: launch download of data
-    command: "screen -dmS download bash -c '/home/ubuntu/astrocompute/pipeline/scripts/parallel_download.sh /home/ubuntu/astrocompute/pipeline/data/{{ cal_file }}'; sleep 1"
+    command: "screen -dmS download bash -c '/home/ubuntu/astrocompute/pipeline/scripts/parallel_download.sh /home/ubuntu/astrocompute/pipeline/data/target-BAND{{ band }}.txt'; sleep 1"
     async: 45
     poll: 0
     tags:
