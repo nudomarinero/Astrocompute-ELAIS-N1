@@ -10,7 +10,7 @@ pipeline.steps=[createmap_target_resume2, freqeven, gsmcalibtarget, gsmcal_parmm
 ! avg_freqstep         = 1   # averaging step needed to average the data to 4 ch/SB frequency resolution; 3 in our case
 ! target_input_path       = /mnt/scratch/data/cal/pre_facet_pretarget
 ! target_input_pattern    = L*SBgr*.MS.dpppaverage
-! target_skymodel      = /home/ubuntu/astrocompute/pipeline/data/models/mosaic.pybdsm.sky_in
+! target_skymodel      = /home/ubuntu/astrocompute/pipeline/data/models/model30mJy.sky
 ! num_SBs_per_group    = 10 # make concatenated measurement-sets with that many subbands
 ! results_directory    = /mnt/scratch/data/process
 

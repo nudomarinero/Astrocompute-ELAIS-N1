@@ -10,7 +10,7 @@ pipeline.steps=[createmap_target_resume, sortmap_tar, dpppconcat, freqeven, gsmc
 ! avg_freqstep         = 1   # averaging step needed to average the data to 4 ch/SB frequency resolution; 3 in our case
 ! target_input_path       = /mnt/scratch/data/cal/pre_facet_pretarget
 ! target_input_pattern    = L*.MS.dpppaverage
-! target_skymodel      = /home/ubuntu/astrocompute/pipeline/data/models/mosaic.pybdsm.sky_in
+! target_skymodel      = /home/ubuntu/astrocompute/pipeline/data/models/model30mJy.sky
 ! num_SBs_per_group    = 10 # make concatenated measurement-sets with that many subbands
 ! results_directory    = /mnt/scratch/data/process
 
@@ -80,7 +80,7 @@ freqeven.argument.flags     = dpppconcat.output.mapfile
 
 # phase calibration on the gsm skymodel
 gsmcalibtarget.control.type                            =  python-calibrate-stand-alone  
-gsmcalibtarget.control.max_per_node                    =  2  # feel free to adjust this to match your system  
+gsmcalibtarget.control.max_per_node                    =  4  # feel free to adjust this to match your system  
 gsmcalibtarget.control.error_tolerance                 =  {{ error_tolerance }}
 gsmcalibtarget.argument.force                          =  True 
 gsmcalibtarget.argument.observation                    =  dpppconcat.output.mapfile
