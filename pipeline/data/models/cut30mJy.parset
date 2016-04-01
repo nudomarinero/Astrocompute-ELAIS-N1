@@ -1,0 +1,4 @@
+# Select individual sources with Stokes I fluxes above 30 mJy
+LSMTool.Steps.select.Operation = SELECT
+LSMTool.Steps.select.FilterExpression = I > 0.03 Jy
+LSMTool.Steps.select.OutFile = model30mJy.sky
