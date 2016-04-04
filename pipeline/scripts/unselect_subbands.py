@@ -44,7 +44,8 @@ def move_unselected(filenames, suffix=".original"):
     """
     for f in filenames:
         #path, name = os.path.basename(f)
-        os.rename(f, f+suffix)
+        if not f.endswith(suffix):
+            os.rename(f, f+suffix)
 
 def unselect_subbands(directory, threshold=0.001, suffix=".original"):
     """
@@ -52,7 +53,8 @@ def unselect_subbands(directory, threshold=0.001, suffix=".original"):
     """
     dir_size_list = list_filesizes_dir(directory)
     filenames = unselect(dir_size_list, threshold=threshold)
-    print(filenames)
+    #print(filenames)
+    move_unselected(filenames)
 
 if __name__ == "__main__":
     directory = str(sys.argv[1])
