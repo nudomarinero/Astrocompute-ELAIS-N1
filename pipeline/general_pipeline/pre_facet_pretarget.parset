@@ -1,22 +1,7 @@
 # Pre-Facet Calibration Pipeline
 #
-# Basic Pre-Facet Calibration Pipeline:
-# - no demixing but A-team flagging,
-# - only averaging target data after calibration transfer
-# - consecutive subband-numbers in the data need to be consecutive subband-frequencies
-# - the new "error_tolerance" option requires LOFAR software version >= 2.15
-#   (Comment out all lines with "error_tolerance" if you want to use an older version.)
-# - expects shared filesystem, that all nodes can reach all files!
-#   (E.g. a single workstation or compute cluster with shared filesystem
-#   doesn't work on multiple nodes on CEP-2 or CEP3.)
 
-### First run this and check the generated plots! Modify and re-run if neccessary.
-#pipeline.steps=[createmap_cal, ndppp_prep_cal, calib_cal, h5_imp_map, h5imp_cal, fitclock, ampl, plots, phase]
-### When calibrator processing is done, you can do the processing of the target data.
-### Either by using the same pipeline and running this:
-# pipeline.steps=[ createmap_cal, ndppp_prep_cal, calib_cal, h5_imp_map, h5imp_cal, fitclock, ampl, plots, phase, createmap_target, ndppp_prep_target, trans, parmmap, calibtarget, dpppaverage, ateamtarget, ateamcliptar, sortmap_tar, dpppconcat, gsmcalibtarget, gsmcal_parmmap, plot_gsm_phases, make_results_mapfile, move_results, createmap_plots, copy_plots]
-### Or by copying the *.npy files from the calibrator and running this:
-pipeline.steps=[createmap_target, ndppp_prep_target, trans, parmmap, calibtarget, dpppaverage, ateamtarget, ateamcliptar, sortmap_tar, dpppconcat, gsmcalibtarget, gsmcal_parmmap, plot_gsm_phases, make_results_mapfile, move_results, createmap_plots, copy_plots]
+pipeline.steps=[createmap_target, ndppp_prep_target, trans, parmmap, calibtarget, dpppaverage, ateamtarget, ateamcliptar, sortmap_tar, dpppconcat, freqeven, gsmcalibtarget, gsmcal_parmmap, plot_gsm_phases, make_results_mapfile, move_results, createmap_plots, copy_plots]
 
 
 # parameters you will need to adjust.
