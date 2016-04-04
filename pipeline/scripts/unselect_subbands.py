@@ -24,7 +24,7 @@ def unselect(dir_size_list, threshold=0.001):
     Select only the filenames with a deviation greater than 0.1% of the 
     value of the median
     """
-    sizes = np.array([a[0] for a in dir_size_list])
+    sizes = np.array([int(a[0]) for a in dir_size_list])
     filenames = np.array([a[1] for a in dir_size_list])
     median_sizes = np.median(sizes)
     return filenames[np.abs(sizes - median_sizes) > (median_sizes*0.001)]
