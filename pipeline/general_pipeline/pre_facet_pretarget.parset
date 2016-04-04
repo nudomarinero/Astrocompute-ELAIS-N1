@@ -31,6 +31,7 @@ pipeline.steps=[createmap_target, ndppp_prep_target, trans, parmmap, calibtarget
 
 # pathes to the scripts etc.
 # #### ToDo: get the scripts onto CEP3 and adjust the pathes here!
+! freqeven_script      = /home/ubuntu/astrocompute/pipeline/scripts/even_frequencies.py
 ! calib_cal_parset     = /home/ubuntu/prefactor/parsets/calibcal.parset
 ! cal_transfer_parset  = /home/ubuntu/prefactor/parsets/applyparmdb.parset
 ! ATeam_predict_parset = /home/ubuntu/prefactor/parsets/ateamclip.parset
@@ -167,6 +168,11 @@ dpppconcat.argument.flag.type           =  aoflagger
 dpppconcat.argument.flag.keepstatistics =  false
 dpppconcat.argument.flag.memoryperc     =  10
 dpppconcat.argument.flag.strategy       =  {{ flagging_strategy }}
+
+# Tweak the frequencies
+freqeven.control.type       = pythonplugin
+freqeven.control.executable = {{ freqeven_script }}
+freqeven.argument.flags     = dpppconcat.output.mapfile 
 
 # phase calibration on the gsm skymodel
 gsmcalibtarget.control.type                            =  python-calibrate-stand-alone  
