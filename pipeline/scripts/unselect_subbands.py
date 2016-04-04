@@ -10,6 +10,15 @@ import sys
 import subprocess
 
 
+def main(directory, threshold=0.001, suffix=".original"):
+    """
+    Function to be called from the pipeline
+    """
+    unselect_subbands(directory, 
+                      threshold=threshold,
+                      suffix=suffix)
+
+    
 def unselect(dir_size_list, threshold=0.001):
     """
     Select only the filenames with a deviation greater than 0.1% of the 
@@ -47,3 +56,4 @@ def unselect_subbands(directory, threshold=0.001, suffix=".original"):
 
 if __name__ == "__main__":
     directory = str(sys.argv[1])
+    unselect_subbands(directory)
