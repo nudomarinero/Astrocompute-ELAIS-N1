@@ -17,11 +17,11 @@
       key_name: "{{ key_name }}"
       group: [ska]
       instance_tags: 
-        - Name: "{{ calibration_type }}{{ band }}"
-        - type: "{{ calibration_type }}"
-        - env: production
-        - iname: "{{ calibration_type }}{{ band }}"
-        - band: "{{ band }}"
+        Name: "{{ calibration_type }}{{ band }}"
+        type: "{{ calibration_type }}"
+        env: production
+        iname: "{{ calibration_type }}{{ band }}"
+        band: "{{ band }}"
       wait: yes
       monitoring: yes
       exact_count: 1
@@ -31,7 +31,7 @@
     - launch
   
   - name: add the instance to the inventory
-    add_host: name={{ item.public_ip }} groups=cal,production
+    add_host: name={{ item.public_ip }} groups=cal,pretarget,production
     with_items: '{{ec2.tagged_instances}}'
     when: item.public_ip is defined
     tags:
