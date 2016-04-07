@@ -1,0 +1,20 @@
+#!/bin/bash
+# Copy the important data to a S3 bucket
+# Create bucket
+s3cmd mb s3://{{ bucket_name }}
+# Upload the logs
+s3cmd put /mnt/scratch/data/log/profile.log s3://{{ bucket_name }}/logs/pretarget_run{{ run | default("0") }}/
+s3cmd put /mnt/scratch/data/log/pipeline* s3://{{ bucket_name }}/logs/pretarget_run{{ run | default("0") }}/pipeline/
+# Upload the data
+#L339802_SBgr024-10_uv.dppp.pre-cal.ms
+cd /mnt/scratch/data
+for i in $(ls -d1 /mnt/scratch/data/process/*.ms)
+    do echo ${i}
+    j=$(basename "${i}")
+    echo ${j}
+    tar -cf ${j}.tar ${i}
+    s3cmd put ${j}.tar s3://{{ bucket_name }}/data/pretarget_run0/
+    rm ${j}.tar
+done
+# Upload the plots
+s3cmd put /mnt/scratch/data/process/*.png s3://{{ bucket_name }}/pretarget_run{{ run | default("0") }}/plots/png/

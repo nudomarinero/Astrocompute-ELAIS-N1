@@ -1,0 +1,25 @@
+---
+- name: Finish the calibration of the calibrator
+  hosts: pretarget
+  vars: 
+  - bucket_name: "lofar-elais-n1-calibration"
+  - run: "0"
+  tasks:
+  
+  - name: Generate upload script
+    template: >
+      src=templates/upload_data_pretarget.sh.j2 
+      dest=/home/ubuntu/upload_data_pretarget.sh
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    tags:
+    - upload
+
+  - name: Execute upload script
+    command: "screen -dmS upload bash -c 'cd /home/ubuntu; ./upload_data_pretarget.sh'; sleep 1"
+    async: 45
+    poll: 0
+    tags:
+    - upload
+    
