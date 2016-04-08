@@ -1,0 +1,9 @@
+---
+# For an m4.4xlarge instance
+volume_size: 2000
+volume_type: "gp2"
+key_name: "jsmkey"
+instance_type_v: "r3.2xlarge"
+spot_price_v: 1
+n_cores: 8
+memory: 61
