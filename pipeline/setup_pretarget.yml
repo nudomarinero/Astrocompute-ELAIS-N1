@@ -8,14 +8,14 @@
   tasks:
   
   - name: Create filesystem
-    filesystem: fstype=ext4 dev=/dev/xvdb
+    filesystem: fstype=ext4 dev=/dev/xvdf
     become: True
     tags:
     - create_disk
 
   - name: Mount scratch area
     mount: name=/mnt 
-           src=/dev/xvdb 
+           src=/dev/xvdf 
            fstype=ext4 
            state=mounted
     become: True

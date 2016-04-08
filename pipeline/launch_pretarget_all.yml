@@ -89,12 +89,12 @@
       volume_size: "{{ volume_size }}"
       volume_type: "{{ volume_type }}"
       name: "{{ calibration_type }}{{ item.1.msg }}"
-      device_name: /dev/xvdb
+      device_name: /dev/xvdf
     with_together:
       - '{{ec2.tagged_instances}}'
       - '{{sequence.results}}'
     tags:
-    - mount_disk
+      - mount_disk
 
     
     
