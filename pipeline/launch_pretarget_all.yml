@@ -4,7 +4,7 @@
   vars:
     count: 9
     startindex: 0
-    instance_type: "m4_4xlarge"
+    instance_type: "r3_2xlarge"
     calibration_type: "pretarget"
   vars_files:
   - "{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('pretarget') }}.yml"
@@ -42,6 +42,7 @@
     register: sequence
     tags:
       - tag
+      - mount_disk
       
   - name: tag instances
     no_log: true
@@ -71,9 +72,16 @@
       - '{{ec2.tagged_instances}}'
       - '{{sequence.results}}'
     tags:
-    - launch
-    - dns
+      - launch
+      - dns
 
+  - name: wait for ssh server to be running
+    wait_for: host={{ item.public_dns_name }} port=22 search_regex=OpenSSH
+    with_items: '{{ec2.tagged_instances}}'
+    when: item.public_dns_name is defined   
+    tags:
+      - mount_disk
+  
   - name: Attach data disk
     ec2_vol:
       region: us-east-1
