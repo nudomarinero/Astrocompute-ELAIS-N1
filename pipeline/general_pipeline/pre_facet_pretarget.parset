@@ -161,7 +161,7 @@ freqeven.argument.flags     = dpppconcat.output.mapfile
 
 # phase calibration on the gsm skymodel
 gsmcalibtarget.control.type                            =  python-calibrate-stand-alone  
-gsmcalibtarget.control.max_per_node                    =  4  # feel free to adjust this to match your system  
+gsmcalibtarget.control.max_per_node                    =  8  # feel free to adjust this to match your system  
 gsmcalibtarget.control.error_tolerance                 =  {{ error_tolerance }}
 gsmcalibtarget.argument.force                          =  True 
 gsmcalibtarget.argument.observation                    =  dpppconcat.output.mapfile
