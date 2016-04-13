@@ -9,3 +9,4 @@ Content:
 * packer - Creation of the Amazon EC2 AMIs using Packer
 * playbooks - Ansible playbooks and roles
 * vagrant - Tests with vagrant
+* pipeline - Facet calibration pipeline adapted to AWS (under development)

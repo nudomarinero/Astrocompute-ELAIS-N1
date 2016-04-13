@@ -32,7 +32,7 @@ using vagrant.
 
 At the moment the release number has to be manually edited in the file 
 ```package_LOFAR.py``` that is in the directory ```package_LOFAR```. 
-The output .deb package willl be located in this directory at the end.
+The output .deb package will be located in this directory at the end.
 
 To compile the package the following command has to be run:
 ```VAGRANT_VAGRANTFILE=Vagrantfile.build vagrant up```

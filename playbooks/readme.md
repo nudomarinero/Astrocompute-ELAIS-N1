@@ -16,22 +16,30 @@ dynamic inventory.
 Roles
 -----
 
-Currently, there are four roles defined.
+Currently, there are six roles defined.
 
-CASA
-++++
+=== CASA
+```casa```
 Installs the version 4.2 of casapy.
 
-LOFAR
-+++++
-Installs the releade 2.10 of LOFAR.
+=== LOFAR base
+```lofar_base```
+Installs the dependencies required by the releade 2.15 of LOFAR.
 
-Grid
-++++
+=== LOFAR
+```lofar```
+Installs the releade 2.15 of LOFAR.
+
+=== Grid
+```grid```
 Installs some software required to download LOFAR data from the Grid.
 
-WSClean
-+++++++
+=== Postgres8
+```postgres8```
+Install the PostgreSQL 8 database required by the Facet calibration pipeline.
+
+=== WSClean
+```wsclean```
 Compiles and installs the WSClean imager.
 
 TODO

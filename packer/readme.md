@@ -19,8 +19,6 @@ To build the AMI:
 
 TODO
 ----
-* Include the custom version of Postgres that is needed in the head 
-node
 * Check that all the Python dependencies for the final pipeline are 
 installed
 
