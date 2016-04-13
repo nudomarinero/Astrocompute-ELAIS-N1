@@ -19,27 +19,39 @@ Roles
 Currently, there are six roles defined.
 
 ### CASA
-```casa```
+```
+casa
+```
 Installs the version 4.2 of casapy.
 
 ### LOFAR base
-```lofar_base```
+```
+lofar_base
+```
 Installs the dependencies required by the releade 2.15 of LOFAR.
 
 ### LOFAR
-```lofar```
+```
+lofar
+```
 Installs the releade 2.15 of LOFAR.
 
 ### Grid
-```grid```
+```
+grid
+```
 Installs some software required to download LOFAR data from the Grid.
 
 ### Postgres8
-```postgres8```
+```
+postgres8
+```
 Install the PostgreSQL 8 database required by the Facet calibration pipeline.
 
 ### WSClean
-```wsclean```
+```
+wsclean
+```
 Compiles and installs the WSClean imager.
 
 TODO
