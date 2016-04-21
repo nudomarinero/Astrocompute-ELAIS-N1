@@ -13,7 +13,7 @@ for i in $(ls -d1 /mnt/scratch/data/process/*.ms)
     j=$(basename "${i}")
     echo ${j}
     tar -cf ${j}.tar ${i}
-    s3cmd put ${j}.tar s3://{{ bucket_name }}/data/pretarget_run0/
+    s3cmd put ${j}.tar s3://{{ bucket_name }}/data/pretarget_run{{ run | default("0") }}/
     rm ${j}.tar
 done
 # Upload the plots
