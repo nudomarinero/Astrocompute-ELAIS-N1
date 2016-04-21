@@ -18,3 +18,4 @@ for i in $(ls -d1 /mnt/scratch/data/process/*.ms)
 done
 # Upload the plots
 s3cmd put /mnt/scratch/data/process/*.png s3://{{ bucket_name }}/pretarget_run{{ run | default("0") }}/plots/png/
+s3cmd put /mnt/scratch/data/cal/{{ pipeline | default("pre_facet_pretarget") }}/*.png s3://{{ bucket_name }}/pretarget_run{{ run | default("0") }}/plots/png/
