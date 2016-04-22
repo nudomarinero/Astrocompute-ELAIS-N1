@@ -1,7 +1,8 @@
 ---
-- name: Finish the calibration of the calibrator
+- name: Finish the pre-calibration of the target
   hosts: pretarget
   vars: 
+  - dataset_name: "011"
   - bucket_name: "lofar-elais-n1-calibration"
   - run: "0"
   tasks:
@@ -15,9 +16,16 @@
       mode=0755
     tags:
     - upload
-
+  
+  - name: Create byobu session
+    command: "byobu new-session -d -s upload; sleep 1"
+    async: 45
+    poll: 0
+    tags:
+    - upload
+  
   - name: Execute upload script
-    command: "screen -dmS upload bash -c 'cd /home/ubuntu; ./upload_data_pretarget.sh'; sleep 1"
+    command: "byobu send-keys C-z './upload_data_pretarget.sh' Enter; sleep 1"
     async: 45
     poll: 0
     tags:
