@@ -1,6 +1,8 @@
 ---
 - name: Run the calibration process
   hosts: pretarget
+  vars:
+    pipeline: "pre_facet_pretarget_resume2.parset"
   tasks:
   - name: Rename bad subbands
     command: "python /home/ubuntu/astrocompute/pipeline/scripts/unselect_subbands.py /mnt/scratch/data/raw/"
@@ -8,7 +10,7 @@
     - rename
   
   - name: launch pipeline
-    command: "screen -dmS pipeline bash -c '/opt/LofIm/bin/genericpipeline.py -c /home/ubuntu/astrocompute/pipeline/general_pipeline/pipeline.cfg /home/ubuntu/astrocompute/pipeline/general_pipeline/pre_facet_pretarget.parset'; sleep 1"
+    command: "screen -dmS pipeline bash -c '/opt/LofIm/bin/genericpipeline.py -c /home/ubuntu/astrocompute/pipeline/generic_pipeline/pipeline.cfg /home/ubuntu/astrocompute/pipeline/generic_pipeline/{{ pipeline }}'; sleep 1"
     async: 45
     poll: 0
     tags:

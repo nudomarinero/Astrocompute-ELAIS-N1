@@ -36,7 +36,7 @@ ansible-playbook run_cal.yml
 
 At this point the pipeline have to be manually run from within the instance:
 ```
-cd ~/astrocompute/pipeline/general_pipeline/
+cd ~/astrocompute/pipeline/generic_pipeline/
 genericpipeline.py -c pipeline.cfg pre_facet_cal_rawdata.parset
 ```
 If there were problems with the first round or a subband was clearly bad, it is possible to edit the pipeline and run only the required part using the pipeline ```pre_facet_cal_rawdata_2ndround.parset```. This will be automated in the future.
