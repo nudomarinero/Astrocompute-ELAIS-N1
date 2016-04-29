@@ -74,3 +74,8 @@ ansible-playbook run_pretarget.yml
 ```
 
 After the data is downladed the pipeline can be run.
+
+TODO
+----
+
+* Remove dependency on s3cmd and use directly awscli
