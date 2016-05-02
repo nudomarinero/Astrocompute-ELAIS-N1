@@ -21,7 +21,7 @@ def get_band():
     Get the band number for the current instance.
     The band number should be stored in a tag called "band"
     """
-    get_tag("band")
+    return get_tag("band")
    
 if __name__ == "__main__":
     band = get_band()
