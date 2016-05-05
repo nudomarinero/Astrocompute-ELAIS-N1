@@ -22,5 +22,6 @@ Step.subtract.Model.Rotation.Enable           = F
 Step.subtract.Model.CommonScalarPhase.Enable  = F
 Step.subtract.Model.CommonRotation.Enable     = F
 Step.subtract.Operation                       = SUBTRACT
-Step.subtract.Model.Beam.Enable               = F
+Step.subtract.Model.Beam.Enable               = T
+Step.subtract.Model.Beam.UseChannelFreq       = T
 Step.subtract.Output.Column                   = SUBTRACTED_DATA_ALL
