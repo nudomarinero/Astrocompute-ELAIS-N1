@@ -1,0 +1,26 @@
+Strategy.InputColumn=SUBTRACTED_DATA_HIGH
+Strategy.ChunkSize=1000
+Strategy.UseSolver = F
+#Strategy.Steps=[correct0_beam,subtract]
+Strategy.Steps=[subtract]
+
+#Step.correct0_beam.Model.Sources                 = []
+#Step.correct0_beam.Model.DirectionalGain.Enable  = F
+#Step.correct0_beam.Model.Gain.Enable             = F
+#Step.correct0_beam.Model.Phasors.Enable          = F
+#Step.correct0_beam.Operation                     = CORRECT
+#Step.correct0_beam.Model.Beam.Enable             = T
+#Step.correct0_beam.Output.WriteCovariance        = F
+#Step.correct0_beam.Model.Beam.UseChannelFreq     = T
+
+Step.subtract.Model.Sources                   = []
+Step.subtract.Model.Cache.Enable              = T
+Step.subtract.Model.Phasors.Enable            = F
+Step.subtract.Model.DirectionalGain.Enable    = F
+Step.subtract.Model.Gain.Enable               = T
+Step.subtract.Model.Rotation.Enable           = F
+Step.subtract.Model.CommonScalarPhase.Enable  = F
+Step.subtract.Model.CommonRotation.Enable     = F
+Step.subtract.Operation                       = SUBTRACT
+Step.subtract.Model.Beam.Enable               = F
+Step.subtract.Output.Column                   = SUBTRACTED_DATA_ALL
