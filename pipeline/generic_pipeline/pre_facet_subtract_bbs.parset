@@ -300,11 +300,14 @@ parmdbs_to_realimag.argument.flags              =   [pdb_in, pdb_out]
 subtract_high.control.type                            =  python-calibrate-stand-alone  
 subtract_high.control.max_per_node                    =  1  
 subtract_high.control.error_tolerance                 =  {{ error_tolerance }}
+subtract_high.control.mapfiles_in                     =  [do_magic_maps.output.single_map, parmdbs_to_realimag.output.mapfile, casa_to_bbs_high.output.mapfile]
+subtract_high.control.inputkeys                       =  [msin,sourcedb,parmdb]
+subtract_high.control.inplace                         =  True
 subtract_high.argument.force                          =  True 
-subtract_high.argument.observation                    =  do_magic_maps.output.single_map
-subtract_high.argument.parmdb-name                    =  parmdbs_to_realimag.output.mapfile
+subtract_high.argument.observation                    =  msin
+subtract_high.argument.parmdb-name                    =  parmdb
 subtract_high.argument.parset                         =  {{ subtract_high_parset }}  
-subtract_high.argument.catalog                        =  casa_to_bbs_high.output.mapfile 
+subtract_high.argument.catalog                        =  sourcedb
 
 
 # Correct the SUBTRACTED_DATA_HIGH column and average to prepare for imaging, length = nfiles
@@ -469,15 +472,17 @@ expand_sourcedb_low.control.filename            =   expand_sourcedb_low.datamap
 #subtract_low.argument.subtract.operation        =   subtract
 #subtract_low.argument.subtract.applycal.parmdb  =   parmdb
 
-
 subtract_low.control.type                            =  python-calibrate-stand-alone  
 subtract_low.control.max_per_node                    =  1  # feel free to adjust this to match your system  
 subtract_low.control.error_tolerance                 =  {{ error_tolerance }}
+subtract_low.control.mapfiles_in                     =  [do_magic_maps.output.single_map, parmdbs_to_realimag.output.mapfile, casa_to_bbs_low.output.mapfile]
+subtract_low.control.inputkeys                       =  [msin,sourcedb,parmdb]
+subtract_low.control.inplace                         =  True
 subtract_low.argument.force                          =  True 
-subtract_low.argument.observation                    =  do_magic_maps.output.single_map
-subtract_low.argument.parmdb-name                    =  parmdbs_to_realimag.output.mapfile
+subtract_low.argument.observation                    =  msin
+subtract_low.argument.parmdb-name                    =  parmdb
 subtract_low.argument.parset                         =  {{ subtract_low_parset }}  
-subtract_low.argument.catalog                        =  casa_to_bbs_low.output.mapfile 
+subtract_low.argument.catalog                        =  sourcedb
 
 # merge the high-res and low-res skymodels, length = nbands
 merge.control.type                              =   pythonplugin
