@@ -292,6 +292,7 @@ subtract_high.argument.subtract.type            =   predict
 subtract_high.argument.subtract.sourcedb        =   sourcedb
 subtract_high.argument.subtract.operation       =   subtract
 subtract_high.argument.subtract.applycal.parmdb =   parmdb
+subtract_high.argument.subtract.applycal.timeslotsperparmupdate = 1
 
 # Correct the SUBTRACTED_DATA_HIGH column and average to prepare for imaging, length = nfiles
 correct_high.control.type                       =   dppp
@@ -454,6 +455,7 @@ subtract_low.argument.subtract.type             =   predict
 subtract_low.argument.subtract.sourcedb         =   sourcedb
 subtract_low.argument.subtract.operation        =   subtract
 subtract_low.argument.subtract.applycal.parmdb  =   parmdb
+subtract_low.argument.subtract.applycal.timeslotsperparmupdate = 1
 
 # merge the high-res and low-res skymodels, length = nbands
 merge.control.type                              =   pythonplugin
