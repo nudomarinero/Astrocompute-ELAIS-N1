@@ -4,21 +4,33 @@ import os
 ### Configuration
 config = {
     "source_dir" : "/vagrant/package_LOFAR",
-    "version" : "2.15",
+    "version" : "2.17",
+    "release" : "2_17_pre",
+    "trunk" : True,
+    "ext_version" : "2.17.100",
     "pkgrelease" : "1trusty",
     "platform" : "amd64"
     }
 ###
 
-config["release"] = config["version"].replace(".", "_")
-config["ext_version"] = config["version"]+".100"
+if "release" not in config.keys():
+    config["release"] = config["version"].replace(".", "_")
+    
+if "ext_version" not in config.keys():
+    config["ext_version"] = config["version"]+".100"
+
+if config.get("trunk", False):
+    config["svn"] = "https://svn.astron.nl/LOFAR/trunk"
+else:
+    config["svn"] = "https://svn.astron.nl/LOFAR/branches/LOFAR-Release-{release}".format(**config)
+    
 
 template_bash = """
 #!/bin/bash
 
 cd
 svn co --username "lofar" --password "M_OKZZJBTNuI" --non-interactive \
-https://svn.astron.nl/LOFAR/branches/LOFAR-Release-{release} LOFAR
+{svn} LOFAR
 cd LOFAR
 mkdir -p build/gnu_opt; cd build/gnu_opt
 
