@@ -53,6 +53,9 @@
     - software-properties-common
     - libgeos-dev
     - libxml++2.6-dev
+    - language-pack-en
+    - s3cmd
+    - htop
       
 - name: install Python packages
   apt: pkg={{ item }}
