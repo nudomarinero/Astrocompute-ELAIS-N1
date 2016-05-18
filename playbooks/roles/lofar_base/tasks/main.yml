@@ -98,12 +98,7 @@
     - psutil
     - progressbar
     - fabric
-    - numpy==1.9.3
-
-- name: install additional Python packages with pip (no upgrade)
-  pip: name={{ item }} 
-  sudo: True
-  with_items:  
+    - numpy
     - astropy
     - aplpy
     - wcsaxes
