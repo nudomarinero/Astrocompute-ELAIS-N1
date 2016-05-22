@@ -8,8 +8,8 @@ s3cmd put /mnt/scratch/data/log/profile.log s3://{{ bucket_name }}/{{ dataset_na
 s3cmd put /mnt/scratch/data/log/pipeline* s3://{{ bucket_name }}/{{ dataset_name }}/logs/pretarget_run{{ run | default("0") }}/band${band}/pipeline/
 # Upload the data
 #L339802_SBgr024-10_uv.dppp.pre-cal.ms
-cd /mnt/scratch/data
-for i in $(ls -d1 /mnt/scratch/data/process/*.ms)
+cd /mnt/scratch/data/process
+for i in $(ls -d1 *.ms)
     do echo ${i}
     j=$(basename "${i}")
     echo ${j}

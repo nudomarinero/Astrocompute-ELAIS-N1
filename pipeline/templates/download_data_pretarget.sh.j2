@@ -1,0 +1,18 @@
+#!/bin/bash
+# Copy the important data from a S3 bucket
+# FIXME: At the moment it just download one dataset
+# Download the data
+group=`python /home/ubuntu/astrocompute/pipeline/scripts/get_band.py`
+#for i in $(python /home/ubuntu/astrocompute/pipeline/scripts/get_groups.py)
+#    do echo $i
+s3cmd get s3://{{ bucket_name }}/{{ dataset_name }}/data/L*_SBgr${group}-10_uv.MS.pre-cal.ms.tar /mnt/scratch/data/raw
+cd /mnt/scratch/data/raw
+for i in $(ls -1 *.tar)
+    do echo ${i}
+    tar -xf ${i} && rm ${i}
+    if [ -d mnt ]; then
+        mv mnt/scratch/data/process/*.ms .
+        rm -r mnt/scratch/data/process
+    fi
+done
+touch /mnt/scratch/data/raw/downloaded.txt
