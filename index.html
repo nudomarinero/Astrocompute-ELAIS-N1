@@ -27,7 +27,7 @@
 <h2>
 <a id="lofar-amis" class="anchor" href="#lofar-amis" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>LOFAR AMIs</h2>
 
-<p>We have created an AMI with the LOFAR software pre-installed: <code>ami-5c261436</code>. It is based on the Ubuntu 14.04 LTS official AMI.</p>
+<p>We have created an AMI with the LOFAR software pre-installed: <code>ami-8be114e6</code>. It is based on the Ubuntu 14.04 LTS official AMI.</p>
 
 <p>Software installed:</p>
 
@@ -35,7 +35,7 @@
 <li>casacore libraries.</li>
 <li>casarest libraries.</li>
 <li>pyrap.</li>
-<li>LOFAR software (release 2.15).</li>
+<li>LOFAR software (release 2.17 pre-release).</li>
 <li>
 <a href="http://casa.nrao.edu/">CASA</a>.</li>
 <li>
@@ -50,11 +50,6 @@
 <a href="http://montage.ipac.caltech.edu/index.html">Montage</a>.</li>
 <li><a href="http://sourceforge.net/projects/sagecal/">Sagecal</a></li>
 <li>Some additional Python libraries like <a href="http://www.astropy.org/">astropy</a>, <a href="https://jupyter.org/">Jupyter</a>, etc.</li>
-</ul>
-
-<p>There is also an AMI (<code>ami-bf3507d5</code>) with some more additional software installed that can be used as, for example, a head node. The additional software is:</p>
-
-<ul>
 <li>GRID certificates and tools.</li>
 <li>SRM tools.</li>
 <li>AWS tools and Python libraries.</li>
@@ -67,6 +62,10 @@
 <p>We keep some old AMIs for compatibility reasons:</p>
 
 <ul>
+<li>LOFAR 2.15 node: <code>ami-5c261436</code>
+</li>
+<li>LOFAR 2.15 head: <code>ami-bf3507d5</code>
+</li>
 <li>LOFAR 2.12 node: <code>ami-431b6229</code>
 </li>
 <li>LOFAR 2.12 head: <code>ami-47156c2d</code>
@@ -77,11 +76,23 @@
 </li>
 </ul>
 
+<p>Note that the AMIs called <code>node</code> do not have the GRID, SRM, AWS or Postgresql packages installed. Since the version 2.17 all the images include the same software.</p>
+
 <h3>
 <a id="packaging-of-lofar" class="anchor" href="#packaging-of-lofar" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Packaging of LOFAR</h3>
 
 <p>The <a href="https://launchpad.net/%7Eradio-astro/+archive/ubuntu/main">radio-astro Ubuntu PPA</a> keeps all the LOFAR dependencies packaged and updated. However, we decided to independently generate the LOFAR package for each release to maintain control of the compilation process. 
 The generation of the packages is explained in: <a href="https://github.com/nudomarinero/Astrocompute-ELAIS-N1/tree/master/vagrant">https://github.com/nudomarinero/Astrocompute-ELAIS-N1/tree/master/vagrant</a></p>
+
+<h2>
+<a id="data-release" class="anchor" href="#data-release" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data release</h2>
+
+<p>The LOFAR data of the ELAIS-N1 field is released in the S3 bucket <code>lofar-elais-n1</code></p>
+
+<h2>
+<a id="calibration-pipeline" class="anchor" href="#calibration-pipeline" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Calibration pipeline</h2>
+
+<p>The calibration of the data is performed in two steps: a) the prefacet calibration and b) the facet calibration. A preliminary version of the prefacet calibration is already implemented in <a href="https://github.com/nudomarinero/Astrocompute-ELAIS-N1/tree/master/pipeline">https://github.com/nudomarinero/Astrocompute-ELAIS-N1/tree/master/pipeline</a></p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/nudomarinero/Astrocompute-ELAIS-N1">Astrocompute ELAIS-N1</a> is maintained by <a href="https://github.com/nudomarinero">nudomarinero</a>.</span>
