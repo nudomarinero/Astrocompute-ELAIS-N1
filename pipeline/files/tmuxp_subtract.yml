@@ -1,0 +1,18 @@
+---
+session_name: subtract
+windows:
+  - window_name: profile
+    panes:
+    - shell_command:
+      - cd /mnt/scratch/data/log
+      - python /home/ubuntu/astrocompute/pipeline/scripts/profile_node.py
+  - window_name: htop
+    panes:
+    - shell_command:
+      - htop
+  - window_name: pipeline
+    panes:
+    - shell_command:
+      - cd /home/ubuntu/astrocompute/pipeline/scripts
+      - python process_subtract.py
+

@@ -1,0 +1,234 @@
+---
+- name: Setup spot calibration instances subtract step
+  hosts: localhost
+  vars:
+  - band: "000"
+  - instance_type: "m4_4xlarge"
+  - calibration_type: "subtract"
+  - dataset_name: "011"
+  vars_files:
+  - "{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('subtract') }}.yml"
+  tasks:  
+  - name: Launch spot instances
+    ec2:
+      image: "{{ ami }}"
+      region: us-east-1
+      instance_type: "{{ instance_type_v }}"
+      spot_price: "{{ spot_price_v }}"
+      key_name: "{{ key_name }}"
+      group: [ska]
+      instance_tags: 
+        Name: "{{ calibration_type }}{{ band }}"
+        type: "{{ calibration_type }}"
+        env: production
+        iname: "{{ calibration_type }}{{ band }}"
+        band: "{{ band }}"
+        dataset: "{{ dataset_name }}"
+      wait: yes
+      monitoring: yes
+      exact_count: 1
+      count_tag: { type: "{{ calibration_type }}" }
+    register: ec2
+    tags:
+    - launch
+  
+  - name: add the instance to the inventory
+    add_host: name={{ item.public_ip }} groups=cal,subtract,production
+    with_items: '{{ec2.tagged_instances}}'
+    when: item.public_ip is defined
+    tags:
+    - launch
+  
+  - name: update dns records
+    route53:
+      command: create
+      zone: "lofarcloud.uk"
+      record: "{{ calibration_type }}{{ band }}.lofarcloud.uk"
+      type: A
+      ttl: 300
+      value: "{{ item.public_ip }}"
+      overwrite: True
+    with_items: '{{ec2.tagged_instances}}'
+    tags:
+    - launch
+    - dns
+
+  - name: Attach data disk
+    ec2_vol:
+      region: us-east-1
+      instance: "{{ item.id }}"
+      volume_size: "{{ volume_size }}"
+      volume_type: "{{ volume_type }}"
+      name: "{{ calibration_type }}{{ band }}"
+      device_name: '{{device_name}}'
+    with_items: '{{ec2.tagged_instances}}'
+    register: ec2_vol
+    tags:
+    - mount_disk
+
+- name: Setup scratch disk and libraries
+  hosts: subtract
+  vars: 
+  - credentials_file: creds.yml
+  vars_files:
+  - "{{ credentials_file }}"
+  - "{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('subtract') }}.yml"
+#  - "{{ calibration_type|default('subtract') }}_config.yml"
+     
+  tasks:
+  - name: Create filesystem
+    filesystem: >
+      fstype=ext4 
+      dev='{{device_name}}'
+    become: True
+    tags:
+    - create_disk
+
+  - name: Mount scratch area
+    mount: name=/mnt 
+           src='{{device_name}}'
+           fstype=ext4 
+           state=mounted
+    become: True
+    tags:
+    - disk
+    - create_disk
+    - mount_disk
+           
+  - name: Create data area
+    file: path=/mnt/scratch/data
+          state=directory 
+          owner=ubuntu 
+          group=ubuntu
+          recurse=True
+    become: True
+    tags:
+    - disk
+    - create_disk
+    - mount_disk
+    
+  - name: Create temporary area
+    file: path=/mnt/scratch/tmp
+          state=directory 
+          owner=ubuntu 
+          group=ubuntu
+          recurse=True
+    become: True
+    tags:
+    - disk
+    - create_disk
+    - mount_disk
+  
+  - name: Install missing packages
+    apt: pkg={{ item }}
+    become: True
+    with_items:
+    - language-pack-en
+    - s3cmd
+    - htop
+    tags:
+    - install
+    
+  - name: Install Python missing packages
+    pip: name={{ item }} extra_args="--upgrade"
+    become: True
+    with_items:
+    - tmuxp
+    - sh
+    #- "git+https://github.com/ericmandel/pyds9.git#egg=pyds9"
+    tags:
+    - install
+  
+  - name: Create AWS credentials directory
+    file: path=/home/ubuntu/.aws state=directory
+    tags:
+    - credentials
+    
+  - name: Update AWS credentials
+    copy: >
+      content="{{ aws_credentials }}" 
+      dest=/home/ubuntu/.aws/credentials
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0600
+    tags:
+    - credentials
+  
+  - name: Generate s3cmd configuration
+    template: >
+      src=templates/s3cfg.j2 
+      dest=/home/ubuntu/.s3cfg
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0600
+    tags:
+    - credentials
+  
+  - name: Get repo pre-factor
+    git: >
+      repo=https://github.com/lofar-astron/prefactor.git
+      dest=/home/ubuntu/prefactor
+      version=v2.0-devel
+      depth=1
+    tags:
+    - repos
+  
+  - name: Get repo AWS
+    git: >
+      repo=https://github.com/nudomarinero/Astrocompute-ELAIS-N1.git
+      dest=/home/ubuntu/astrocompute
+      depth=1
+    tags:
+    - repos
+
+  - name: Create data download directory
+    file: >
+      path=/mnt/scratch/data/raw
+      state=directory
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    tags:
+    - download
+  
+  - name: setup calibration pipeline
+    file: >
+      path=/mnt/scratch/data/{{ item }}
+      state=directory
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    with_items:
+    - log
+    - cal
+    - runtime
+    - process
+    tags:
+    - setup_pipeline
+
+  - name: Generate download script
+    template: >
+      src=templates/download_data_pretarget.sh.j2 
+      dest=/home/ubuntu/download_data_pretarget.sh
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    tags:
+    - download_create
+    
+  - name: Generate upload script
+    template: >
+      src=templates/upload_data_subtract.sh.j2 
+      dest=/home/ubuntu/upload_data_subtract.sh
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    tags:
+    - upload_create
+    
+  - name: Run the rest of the pipeline in a tmux session
+    command: "tmuxp load /home/ubuntu/astrocompute/pipeline/files/tmuxp_subtract.yml; sleep 1"
+    async: 45
+    poll: 0
+    tags:
+    - run
