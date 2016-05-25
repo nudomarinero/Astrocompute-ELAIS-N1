@@ -1,4 +1,5 @@
 from __future__ import print_function
+import os
 import boto.utils
 import boto.ec2
 import sh
@@ -19,7 +20,7 @@ if os.path.exists("/home/ubuntu/logging.conf"):
 else:
     # Start
     logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)   
+    logger.setLevel(logging.INFO)   
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     # Log to STDOUT
     ch = logging.StreamHandler()
