@@ -95,10 +95,10 @@ def run_pipeline():
     """
     Run the generic pipeline and send notification in case of error
     """
-    pipeline = sh.Command("/opt/LofIm/bin/genericpipeline.py",
-                          "-c",
-                          "/home/ubuntu/astrocompute/pipeline/generic_pipeline/pipeline.cfg")
-    for line in pipeline("/home/ubuntu/astrocompute/pipeline/generic_pipeline/pre_facet_subtract.parset",
+    pipeline = sh.Command("/opt/LofIm/bin/genericpipeline.py")
+    for line in pipeline("-c",
+                          "/home/ubuntu/astrocompute/pipeline/generic_pipeline/pipeline.cfg",
+                          "/home/ubuntu/astrocompute/pipeline/generic_pipeline/pre_facet_subtract.parset",
                          _iter=True):
         print(line)
 
