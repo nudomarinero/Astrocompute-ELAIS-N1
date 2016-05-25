@@ -9,10 +9,29 @@ import logging
 import traceback
 import ConfigParser
 
-
 #logging.basicConfig(
     #filename="pipeline.log", 
     #level=logging.DEBUG)
+    ## Logger configuration
+if os.path.exists("/home/ubuntu/logging.conf"):
+    logging.config.fileConfig('logging.conf')
+    logger = logging.getLogger()
+else:
+    # Start
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)   
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    # Log to STDOUT
+    ch = logging.StreamHandler()
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    # Log to file
+    file_name = "/home/ubuntu/pipeline_subtract.log"
+    fh = logging.FileHandler(file_name) 
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+    logging.info('\n')
+
 
 # General configuration
 config = ConfigParser.ConfigParser()
@@ -26,10 +45,10 @@ band = get_tag("band")
 dataset = get_tag("dataset")
 
 
-# Auxiliary functions
+## Auxiliary functions
 def notify(message, subject=None):
     """
-    Notify the user using sns
+    Notify the user using SNS
     """
     snsc = boto.sns.connect_to_region(region)
     if subject is None:
@@ -40,10 +59,12 @@ def launch(step):
     """
     Launch one of the steps but notify the user if there is an error
     """
+    fname = step.__name__
+    logging.info("Start step {}".format(fname))
     try:
         step()
     except:
-        fname = step.__name__
+        logging.error("Exception in step {}".format(fname))
         error_message = traceback.format_exc()
         message = ("Exception in LOFAR AWS subtract pipeline\n"+
             "Dataset: {}\n".format(dataset)+
@@ -55,6 +76,7 @@ def launch(step):
         notify(message, 
                subject="Exception LOFAR AWS subtract; step: {}; band: {}".format(fname, band))
         raise
+    logging.info("Finish step {}".format(fname))   
     
     
 ## Steps
@@ -102,9 +124,14 @@ def terminate_instance():
 
 
 if __name__ == "__main__":
+    logging.info("Subtract pipeline started")
     launch(download_data)
     launch(run_pipeline)
     launch(upload_data)
     #launch(umount_and_remove_disk) # Not implemented yet
+    message = "Subtract pipeline on band {} successfully finished".format(band)
+    notify(message, subject=message)
+    logging.info("Subtract pipeline finished; prepared to terminate")
     launch(terminate_instance)
+    
 
