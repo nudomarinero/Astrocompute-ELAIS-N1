@@ -1,0 +1,27 @@
+#!/bin/bash
+# Copy the important data to a S3 bucket
+band=`python /home/ubuntu/astrocompute/pipeline/scripts/get_band.py`
+# Create bucket
+s3cmd mb s3://{{ bucket_name }}
+# Upload the logs
+s3cmd put /mnt/scratch/data/log/profile.log s3://{{ bucket_name }}/{{ dataset_name }}/logs/subtract/gr${band}/
+s3cmd put /home/ubuntu/pipeline_subtract.log s3://{{ bucket_name }}/{{ dataset_name }}/logs/subtract/gr${band}/
+s3cmd put /mnt/scratch/data/log/pipeline* s3://{{ bucket_name }}/{{ dataset_name }}/logs/subtract/gr${band}/pipeline/
+# Upload the data
+#L339802_SBgr024-10_uv.dppp.pre-cal.ms
+cd /mnt/scratch/data/raw
+for i in $(ls -d1 *.ms)
+    do echo ${i}
+    j=$(basename "${i}")
+    echo ${j}
+    tar -cf ${j}.tar ${i}
+    s3cmd put ${j}.tar s3://{{ bucket_name }}/{{ dataset_name }}/data_subtracted/
+    rm ${j}.tar
+done
+# Upload the models
+s3cmd put /mnt/scratch/data/cal/{{ pipeline | default("pre_facet_subtract") }}/*.merge s3://{{ bucket_name }}/{{ dataset_name }}/subtract/models/
+# Upload the images
+s3cmd put /mnt/scratch/data/process/*.fits s3://{{ bucket_name }}/{{ dataset_name }}/subtract/images/
+s3cmd put /mnt/scratch/data/process/*.mask_high s3://{{ bucket_name }}/{{ dataset_name }}/subtract/images/
+# Upload the plots
+s3cmd put /mnt/scratch/data/process/*.png s3://{{ bucket_name }}/{{ dataset_name }}/subtract/plots/png/
