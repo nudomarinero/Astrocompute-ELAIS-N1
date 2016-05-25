@@ -52,7 +52,15 @@
     tags:
     - launch
     - dns
-
+    
+  - name: wait for ssh server to be running
+    wait_for: host={{ item.public_dns_name }} port=22 search_regex=OpenSSH
+    with_items: '{{ec2.tagged_instances}}'
+    when: item.public_dns_name is defined   
+    tags:
+    - launch
+    - mount_disk
+  
   - name: Attach data disk
     ec2_vol:
       region: us-east-1
@@ -64,12 +72,16 @@
     with_items: '{{ec2.tagged_instances}}'
     register: ec2_vol
     tags:
+    - launch
     - mount_disk
 
 - name: Setup scratch disk and libraries
   hosts: subtract
   vars: 
   - credentials_file: creds.yml
+  - pipeline_name: "pre_facet_subtract"
+  - bucket_name: "lofar-elais-n1-calibration"
+  - dataset_name: "011"
   vars_files:
   - "{{ credentials_file }}"
   - "{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('subtract') }}.yml"
@@ -82,6 +94,7 @@
       dev='{{device_name}}'
     become: True
     tags:
+    - setup
     - create_disk
 
   - name: Mount scratch area
@@ -91,6 +104,7 @@
            state=mounted
     become: True
     tags:
+    - setup
     - disk
     - create_disk
     - mount_disk
@@ -103,6 +117,7 @@
           recurse=True
     become: True
     tags:
+    - setup
     - disk
     - create_disk
     - mount_disk
@@ -115,6 +130,7 @@
           recurse=True
     become: True
     tags:
+    - setup
     - disk
     - create_disk
     - mount_disk
@@ -127,6 +143,7 @@
     - s3cmd
     - htop
     tags:
+    - setup
     - install
     
   - name: Install Python missing packages
@@ -137,11 +154,13 @@
     - sh
     #- "git+https://github.com/ericmandel/pyds9.git#egg=pyds9"
     tags:
+    - setup
     - install
   
   - name: Create AWS credentials directory
     file: path=/home/ubuntu/.aws state=directory
     tags:
+    - setup
     - credentials
     
   - name: Update AWS credentials
@@ -152,6 +171,7 @@
       group=ubuntu 
       mode=0600
     tags:
+    - setup
     - credentials
   
   - name: Generate s3cmd configuration
@@ -162,6 +182,18 @@
       group=ubuntu 
       mode=0600
     tags:
+    - setup
+    - credentials
+    
+  - name: Create topicarn SNS config
+    template: >
+      src=templates/sns_conf.j2 
+      dest=/home/ubuntu/.sns_conf
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0600
+    tags:
+    - setup
     - credentials
   
   - name: Get repo pre-factor
@@ -171,6 +203,7 @@
       version=v2.0-devel
       depth=1
     tags:
+    - setup
     - repos
   
   - name: Get repo AWS
@@ -179,6 +212,7 @@
       dest=/home/ubuntu/astrocompute
       depth=1
     tags:
+    - setup
     - repos
 
   - name: Create data download directory
@@ -189,6 +223,7 @@
       group=ubuntu 
       mode=0755
     tags:
+    - setup
     - download
   
   - name: setup calibration pipeline
@@ -204,6 +239,7 @@
     - runtime
     - process
     tags:
+    - setup
     - setup_pipeline
 
   - name: Generate download script
@@ -214,6 +250,7 @@
       group=ubuntu 
       mode=0755
     tags:
+    - setup
     - download_create
     
   - name: Generate upload script
@@ -224,11 +261,12 @@
       group=ubuntu 
       mode=0755
     tags:
+    - setup
     - upload_create
     
   - name: Run the rest of the pipeline in a tmux session
-    command: "tmuxp load /home/ubuntu/astrocompute/pipeline/files/tmuxp_subtract.yml; sleep 1"
-    async: 45
+    command: "bash -c 'tmuxp load /home/ubuntu/astrocompute/pipeline/files/tmuxp_subtract.yml'"
+    async: 15
     poll: 0
     tags:
     - run
