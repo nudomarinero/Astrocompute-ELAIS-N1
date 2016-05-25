@@ -26,3 +26,4 @@ aws_credentials: |
 aws_access_key_id: AKxxxxxxxxxxxxxxxxx
 aws_secret_access_key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 gpg_passphrase: xxxxxxxxxx
+topicarn: arn:aws:sns:us-east-1:123456789123:XXXXX
