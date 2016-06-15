@@ -12,7 +12,7 @@ for i in $(ls -1 *.tar)
     tar -xf ${i} && rm ${i}
     if [ -d mnt ]; then
         mv mnt/scratch/data/process/*.ms .
-        rm -r mnt/scratch/data/process
+        rm -r mnt
     fi
 done
 touch /mnt/scratch/data/raw/downloaded.txt

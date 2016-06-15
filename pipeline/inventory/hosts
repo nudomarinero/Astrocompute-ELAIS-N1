@@ -27,3 +27,9 @@ tag_type_pretarget
 tag_type_subtract
 
 [tag_type_subtract]
+
+
+[factor:children]
+tag_type_factor
+
+[tag_type_factor]

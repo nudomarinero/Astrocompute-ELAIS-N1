@@ -1,0 +1,139 @@
+---
+- name: Setup scratch disk
+  hosts: subtract
+  vars: 
+  - credentials_file: creds.yml
+  - instance_type: "m4_4xlarge"
+  vars_files:
+  - "{{ credentials_file }}"
+  - "{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('subtract') }}.yml"
+  tasks:
+  
+  - name: Create filesystem
+    filesystem: >
+      fstype=ext4 
+      dev='{{device_name}}'
+    become: True
+    tags:
+    - create_disk
+
+  - name: Mount scratch area
+    mount: name=/mnt 
+           src='{{device_name}}'
+           fstype=ext4 
+           state=mounted
+    become: True
+    tags:
+    - disk
+    - create_disk
+    - mount_disk
+           
+  - name: Create data area
+    file: path=/mnt/scratch/data
+          state=directory 
+          owner=ubuntu 
+          group=ubuntu
+          recurse=True
+    become: True
+    tags:
+    - disk
+    - create_disk
+    - mount_disk
+    
+  - name: Create temporary area
+    file: path=/mnt/scratch/tmp
+          state=directory 
+          owner=ubuntu 
+          group=ubuntu
+          recurse=True
+    become: True
+    tags:
+    - disk
+    - create_disk
+    - mount_disk
+  
+  - name: Install missing packages
+    apt: pkg={{ item }}
+    become: True
+    with_items:
+    - language-pack-en
+    - s3cmd
+    - htop
+    tags:
+    - install
+    
+  - name: Install Python missing packages
+    pip: name={{ item }} extra_args="--upgrade"
+    become: True
+    with_items:
+    - tmuxp
+    - sh
+    tags:
+    - install
+    
+  - name: Create AWS credentials directory
+    file: path=/home/ubuntu/.aws state=directory
+    tags:
+    - credentials
+    
+  - name: Update AWS credentials
+    copy: >
+      content="{{ aws_credentials }}" 
+      dest=/home/ubuntu/.aws/credentials
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0600
+    tags:
+    - credentials
+  
+  - name: Generate s3cmd configuration
+    template: >
+      src=templates/s3cfg.j2 
+      dest=/home/ubuntu/.s3cfg
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0600
+    tags:
+    - credentials
+  
+  - name: Get repo pre-factor
+    git: >
+      repo=https://github.com/lofar-astron/prefactor.git
+      dest=/home/ubuntu/prefactor
+      version=v2.0-devel
+      depth=1
+    tags:
+    - repos
+  
+  - name: Get repo AWS
+    git: >
+      repo=https://github.com/nudomarinero/Astrocompute-ELAIS-N1.git
+      dest=/home/ubuntu/astrocompute
+      depth=1
+    tags:
+    - repos
+
+  - name: Create data download directory
+    file: >
+      path=/mnt/scratch/data/raw
+      state=directory
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    tags:
+    - download
+  
+  - name: setup calibration pipeline
+    file: >
+      path=/mnt/scratch/data/{{ item }}
+      state=directory
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    with_items:
+    - log
+    - cal
+    - runtime
+    - process
+    tags:
+    - setup_pipeline
