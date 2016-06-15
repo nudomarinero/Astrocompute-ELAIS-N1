@@ -67,7 +67,7 @@ make install
 cp lofar_{ext_version}-{pkgrelease}_{platform}.deb {source_dir}/lofar_{version}-{pkgrelease}_{platform}.deb
 
 cd
-sudo rm -rf LOFAR
+#sudo rm -rf LOFAR
 """
 
 template_postinstall = """
