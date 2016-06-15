@@ -1,7 +1,12 @@
 ---
 # tasks file for casa
 - name: download casa tar file
-  get_url: url=https://svn.cv.nrao.edu/casa/linux_distro/old/casapy-42.2.30986-1-64b.tar.gz dest=/tmp/casapy-42.2.30986-1-64b.tar.gz sha256sum=e178b8005efeb9eee60f809f1eef6d55a5cd29b9b62b1a5a3103277635188f0c
+  get_url: >
+    url=https://svn.cv.nrao.edu/casa/linux_distro/old/casapy-42.2.30986-1-64b.tar.gz 
+    dest=/tmp/casapy-42.2.30986-1-64b.tar.gz 
+    sha256sum=e178b8005efeb9eee60f809f1eef6d55a5cd29b9b62b1a5a3103277635188f0c
+  
+#https://svn.cv.nrao.edu/casa/distro/linux/release/el6/casa-release-4.5.3-el6.tar.gz
   
 - name: unpack the casa tar file
   unarchive: src=/tmp/casapy-42.2.30986-1-64b.tar.gz dest=/opt copy=no
