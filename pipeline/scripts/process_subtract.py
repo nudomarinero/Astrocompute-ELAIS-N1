@@ -133,6 +133,6 @@ if __name__ == "__main__":
     message = "Subtract pipeline on band {} successfully finished".format(band)
     notify(message, subject=message)
     logging.info("Subtract pipeline finished; prepared to terminate")
-    launch(terminate_instance)
+    #launch(terminate_instance)
     
 
