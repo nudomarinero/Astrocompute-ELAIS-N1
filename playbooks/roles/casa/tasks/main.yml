@@ -2,22 +2,20 @@
 # tasks file for casa
 - name: download casa tar file
   get_url: >
-    url=https://svn.cv.nrao.edu/casa/linux_distro/old/casapy-42.2.30986-1-64b.tar.gz 
-    dest=/tmp/casapy-42.2.30986-1-64b.tar.gz 
-    sha256sum=e178b8005efeb9eee60f809f1eef6d55a5cd29b9b62b1a5a3103277635188f0c
-  
-#https://svn.cv.nrao.edu/casa/distro/linux/release/el6/casa-release-4.5.3-el6.tar.gz
+    url=https://svn.cv.nrao.edu/casa/distro/linux/release/el6/casa-release-4.5.3-el6.tar.gz 
+    dest=/tmp/casa-release-4.5.3-el6.tar.gz 
+    sha256sum=25267bb9f49c9b154dc28a625491e58f1f2c5a2376abc5155e5255e6ad4691aa
   
 - name: unpack the casa tar file
-  unarchive: src=/tmp/casapy-42.2.30986-1-64b.tar.gz dest=/opt copy=no
+  unarchive: src=/tmp/casa-release-4.5.3-el6.tar.gz dest=/opt copy=no
   sudo: True
 
 - name: create symbolic link in /opt
-  file: src=/opt/casapy-42.2.30986-1-64b dest=/opt/casapy state=link
+  file: src=/opt/casa-release-4.5.3-el6 dest=/opt/casapy state=link
   sudo: True
 
 - name: Remove temporary package
-  file: path=/tmp/casapy-42.2.30986-1-64b.tar.gz state=absent
+  file: path=/tmp/casa-release-4.5.3-el6.tar.gz state=absent
 
 - name: add /opt/casapy/bin to system path
   lineinfile: >
