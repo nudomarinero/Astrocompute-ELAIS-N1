@@ -75,6 +75,20 @@ ansible-playbook run_pretarget.yml
 
 After the data is downladed the pipeline can be run.
 
+### Subtraction of model
+
+The third step of the calibration create a low and a high resolution model of the field which are subtracted. The output is a merged model and the residual data. It also outputs a high and a low resolution image of the field.
+
+There are two main yml: subtract_all.yml and subtract_one.yml. The first is used to run the subtraction of several bands in parallel and the second to run the subtraction in just one band. 
+
+The configuration of this step, including the names of the bands to run is saved in subtract_config.yml
+
+After modifying ```subtract_config.yml```, launch the subtract step with:
+```
+ansible-playbook subtract_all.yml
+```
+
+
 TODO
 ----
 
