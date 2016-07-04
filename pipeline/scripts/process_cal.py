@@ -128,7 +128,7 @@ if __name__ == "__main__":
     logging.info("Calibrator pipeline started")
     launch(download_data)
     launch(run_pipeline)
-    launch(upload_data)
+    #launch(upload_data)
     #launch(umount_and_remove_disk) # Not implemented yet
     message = "Calibrator pipeline on band {} successfully finished".format(band)
     notify(message, subject=message)
