@@ -45,8 +45,8 @@ createmap_cal.control.pattern         =   {{ cal_input_pattern }}
 # run NDPPP on the calibrator data
 # My data is raw, non pre-processed data, so the parset looks different!
 ndppp_prep_cal.control.type                    = dppp
-ndppp_prep_cal.control.max_per_node            = 8                   
-ndppp_prep_cal.control.environment             = {OMP_NUM_THREADS: 2}  
+ndppp_prep_cal.control.max_per_node            = 16                   
+ndppp_prep_cal.control.environment             = {OMP_NUM_THREADS: 1}  
 ndppp_prep_cal.control.error_tolerance         = {{ error_tolerance }}
 ndppp_prep_cal.control.mapfiles_in             = [createmap_cal.output.mapfile]
 ndppp_prep_cal.control.inputkeys               = [msin]
@@ -79,7 +79,7 @@ ndppp_prep_cal.argument.flagamp.amplmin        = 1e-30
 
 #Predict
 predict4_cal.control.type                                   =  python-calibrate-stand-alone  
-predict4_cal.control.max_per_node                           =  8
+predict4_cal.control.max_per_node                           =  16
 predict4_cal.control.error_tolerance                        =  {{ error_tolerance }}
 predict4_cal.argument.observation                           =  ndppp_prep_cal.output.mapfile
 predict4_cal.argument.force                                 =  True 
@@ -89,7 +89,7 @@ predict4_cal.argument.catalog                               =  {{ predict4_skymo
 # run the A-team clipper to flag data affected by the a-team
 ateamclip_cal.control.kind               =  recipe
 ateamclip_cal.control.type               =  executable_args
-ateamclip_cal.control.max_per_node       =  15
+ateamclip_cal.control.max_per_node       =  16
 ateamclip_cal.control.mapfile_in         =  ndppp_prep_cal.output.mapfile
 ateamclip_cal.control.executable         =  {{ Ateamclipper_script }}
 ateamclip_cal.control.error_tolerance    =  {{ error_tolerance }}
@@ -98,7 +98,7 @@ ateamclip_cal.control.inputkey           =  allms
 
 #now run BBS on the NDPPP-ed calibrator data.
 calib_cal.control.type                                   =  python-calibrate-stand-alone  
-calib_cal.control.max_per_node                           =  8
+calib_cal.control.max_per_node                           =  16
 calib_cal.control.error_tolerance                        =  {{ error_tolerance }}
 calib_cal.argument.force                                 =  True 
 calib_cal.argument.observation                           =  ndppp_prep_cal.output.mapfile
