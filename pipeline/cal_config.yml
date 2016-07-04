@@ -7,3 +7,4 @@ cals: [
       ]
 count: "{{ cals | length }}"
 bucket_name: "lofar-elais-n1-calibration"
+pipeline_name: "pre_facet_cal_rawdata"

@@ -95,8 +95,7 @@
 - name: Setup scratch disk and libraries
   hosts: cal
   vars: 
-  - credentials_file: creds.yml
-  - pipeline_name: "pre_facet_subtract"
+  - credentials_file: creds.yml 
   vars_files:
   - "{{ credentials_file }}"
   - "{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('cal') }}.yml"

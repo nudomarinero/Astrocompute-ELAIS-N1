@@ -10,11 +10,11 @@ s3cmd mb s3://{{ bucket_name }}
 s3cmd put /mnt/scratch/data/log/profile.log s3://{{ bucket_name }}/${dataset_name}/logs/${calibrator_name}/
 s3cmd put /mnt/scratch/data/log/pipeline* s3://{{ bucket_name }}/${dataset_name}/logs/${calibrator_name}/pipeline/
 # Upload the data
-s3cmd put /mnt/scratch/data/cal/{{ main_pipeline_name }}/*.h5 s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}/h5/
-s3cmd put /mnt/scratch/data/cal/{{ resume_pipeline_name }}/*.npy s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}/npy/
+s3cmd put /mnt/scratch/data/cal/{{ pipeline_name }}/*.h5 s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}/h5/
+s3cmd put /mnt/scratch/data/cal/{{ pipeline_name }}/*.npy s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}/npy/
 # Upload the plots
-s3cmd put /mnt/scratch/data/cal/{{ resume_pipeline_name }}/*.png s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}/plots/png/
-s3cmd put /mnt/scratch/data/cal/{{ resume_pipeline_name }}/*.pdf s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}/plots/pdf/
+s3cmd put /mnt/scratch/data/cal/{{ pipeline_name }}/*.png s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}/plots/png/
+s3cmd put /mnt/scratch/data/cal/{{ pipeline_name }}/*.pdf s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}/plots/pdf/
 
 #freqs_for_amplitude_array.npy
 #caldata_transfer_amplitude_array.npy
