@@ -19,7 +19,6 @@
       instance_tags: 
         type: "{{ calibration_type }}"
         env: production
-        dataset: "{{ dataset_name }}"
       wait: yes
       monitoring: yes
       exact_count: "{{ count }}"
@@ -41,10 +40,12 @@
       resource: "{{ item.0.id }}"
       region: us-east-1
       tags:
-        dataset: "{{ item.1.0 }}"
-        Name: "{{ calibration_type }}_{{ item.1.0 }}_{{ item.1.1 }}"
-        iname: "{{ calibration_type }}_{{ item.1.0 }}_{{ item.1.1 }}"
-        band: "{{ item.1.2 }}"
+        dataset: "{{ item.1 }}"
+        cal_name: "{{ item.2 }}"
+        Name: "{{ calibration_type }}_{{ item.1 }}_{{ item.2 }}"
+        iname: "{{ calibration_type }}_{{ item.1 }}_{{ item.2 }}"
+        band: "{{ item.3 }}"
+        data_id: "{{ item.3 }}"
     with_together:
       - '{{ ec2.tagged_instances }}'
       - '{{ cals }}'
@@ -56,7 +57,7 @@
     route53:
       command: create
       zone: "lofarcloud.uk"
-      record: "{{ calibration_type }}_{{ item.1.0 }}_{{ item.1.1 }}.lofarcloud.uk"
+      record: "{{ calibration_type }}_{{ item.1 }}_{{ item.2 }}.lofarcloud.uk"
       type: A
       ttl: 300
       value: "{{ item.0.public_ip }}"
@@ -82,7 +83,7 @@
       instance: "{{ item.0.id }}"
       volume_size: "{{ volume_size }}"
       volume_type: "{{ volume_type }}"
-      name: "{{ calibration_type }}_{{ item.1.0 }}_{{ item.1.1 }}"
+      name: "{{ calibration_type }}_{{ item.1 }}_{{ item.2 }}"
       device_name: '{{device_name}}'
     with_together:
       - '{{ ec2.tagged_instances }}'
@@ -96,7 +97,6 @@
   vars: 
   - credentials_file: creds.yml
   - pipeline_name: "pre_facet_subtract"
-  - dataset_name: "a"
   vars_files:
   - "{{ credentials_file }}"
   - "{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('cal') }}.yml"
