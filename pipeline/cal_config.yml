@@ -1,0 +1,9 @@
+---
+cals: [
+        ["012", "cal1", "L229671"],
+        #["012", "cal2", "", ],
+        #["013", "cal1", ""],
+        #["013", "cal2", ""],
+      ]
+count: "{{ cals | length }}"
+bucket_name: "lofar-elais-n1-calibration"

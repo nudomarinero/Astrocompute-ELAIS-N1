@@ -1,0 +1,287 @@
+---
+- name: Setup spot calibration instances cal step
+  hosts: localhost
+  vars:
+  - instance_type: "m4_4xlarge"
+  - calibration_type: "cal"
+  vars_files:
+  - "{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('cal') }}.yml"
+  - "{{ calibration_type|default('cal') }}_config.yml"
+  tasks:  
+  - name: Launch spot instances
+    ec2:
+      image: "{{ ami }}"
+      region: us-east-1
+      instance_type: "{{ instance_type_v }}"
+      spot_price: "{{ spot_price_v }}"
+      key_name: "{{ key_name }}"
+      group: [ska]
+      instance_tags: 
+        type: "{{ calibration_type }}"
+        env: production
+        dataset: "{{ dataset_name }}"
+      wait: yes
+      monitoring: yes
+      exact_count: "{{ count }}"
+      count_tag: { type: "{{ calibration_type }}" }
+    register: ec2
+    tags:
+    - launch
+  
+  - name: add the instance to the inventory
+    add_host: name={{ item.public_ip }} groups=cal,production
+    with_items: '{{ec2.tagged_instances}}'
+    when: item.public_ip is defined
+    tags:
+    - launch
+    
+  - name: tag instances
+    no_log: true
+    ec2_tag:
+      resource: "{{ item.0.id }}"
+      region: us-east-1
+      tags:
+        dataset: "{{ item.1.0 }}"
+        Name: "{{ calibration_type }}_{{ item.1.0 }}_{{ item.1.1 }}"
+        iname: "{{ calibration_type }}_{{ item.1.0 }}_{{ item.1.1 }}"
+        band: "{{ item.1.2 }}"
+    with_together:
+      - '{{ ec2.tagged_instances }}'
+      - '{{ cals }}'
+    tags:
+    - launch
+    - tag
+
+  - name: update dns records
+    route53:
+      command: create
+      zone: "lofarcloud.uk"
+      record: "{{ calibration_type }}_{{ item.1.0 }}_{{ item.1.1 }}.lofarcloud.uk"
+      type: A
+      ttl: 300
+      value: "{{ item.0.public_ip }}"
+      overwrite: True
+    with_together:
+      - '{{ ec2.tagged_instances }}'
+      - '{{ cals }}'
+    tags:
+    - launch
+    - dns   
+    
+  - name: wait for ssh server to be running
+    wait_for: host={{ item.public_dns_name }} port=22 search_regex=OpenSSH
+    with_items: '{{ec2.tagged_instances}}'
+    when: item.public_dns_name is defined   
+    tags:
+    - launch
+    - mount_disk
+
+  - name: Attach data disk
+    ec2_vol:
+      region: us-east-1
+      instance: "{{ item.0.id }}"
+      volume_size: "{{ volume_size }}"
+      volume_type: "{{ volume_type }}"
+      name: "{{ calibration_type }}_{{ item.1.0 }}_{{ item.1.1 }}"
+      device_name: '{{device_name}}'
+    with_together:
+      - '{{ ec2.tagged_instances }}'
+      - '{{ cals }}'
+    tags:
+    - launch
+    - mount_disk    
+
+- name: Setup scratch disk and libraries
+  hosts: cal
+  vars: 
+  - credentials_file: creds.yml
+  - pipeline_name: "pre_facet_subtract"
+  - dataset_name: "a"
+  vars_files:
+  - "{{ credentials_file }}"
+  - "{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('cal') }}.yml"
+  - "{{ calibration_type|default('cal') }}_config.yml"
+     
+  tasks:
+  - name: Create filesystem
+    filesystem: >
+      fstype=ext4 
+      dev='{{device_name}}'
+    become: True
+    tags:
+    - setup
+    - create_disk
+
+  - name: Mount scratch area
+    mount: name=/mnt 
+           src='{{device_name}}'
+           fstype=ext4 
+           state=mounted
+    become: True
+    tags:
+    - setup
+    - disk
+    - create_disk
+    - mount_disk
+           
+  - name: Create data area
+    file: path=/mnt/scratch/data
+          state=directory 
+          owner=ubuntu 
+          group=ubuntu
+          recurse=True
+    become: True
+    tags:
+    - setup
+    - disk
+    - create_disk
+    - mount_disk
+    
+  - name: Create temporary area
+    file: path=/mnt/scratch/tmp
+          state=directory 
+          owner=ubuntu 
+          group=ubuntu
+          recurse=True
+    become: True
+    tags:
+    - setup
+    - disk
+    - create_disk
+    - mount_disk
+  
+  - name: Install missing packages
+    apt: pkg={{ item }}
+    become: True
+    with_items:
+    - language-pack-en
+    - s3cmd
+    - htop
+    tags:
+    - setup
+    - install
+    
+  - name: Install Python missing packages
+    pip: name={{ item }} extra_args="--upgrade"
+    become: True
+    with_items:
+    - tmuxp
+    - sh
+    #- "git+https://github.com/ericmandel/pyds9.git#egg=pyds9"
+    tags:
+    - setup
+    - install
+  
+  - name: Create AWS credentials directory
+    file: path=/home/ubuntu/.aws state=directory
+    tags:
+    - setup
+    - credentials
+    
+  - name: Update AWS credentials
+    copy: >
+      content="{{ aws_credentials }}" 
+      dest=/home/ubuntu/.aws/credentials
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0600
+    tags:
+    - setup
+    - credentials
+  
+  - name: Generate s3cmd configuration
+    template: >
+      src=templates/s3cfg.j2 
+      dest=/home/ubuntu/.s3cfg
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0600
+    tags:
+    - setup
+    - credentials
+    
+  - name: Create topicarn SNS config
+    template: >
+      src=templates/sns_conf.j2 
+      dest=/home/ubuntu/.sns_conf
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0600
+    tags:
+    - setup
+    - credentials 
+    
+  - name: Get repo pre-factor
+    git: >
+      repo=https://github.com/lofar-astron/prefactor.git
+      dest=/home/ubuntu/prefactor
+      version=v2.0-devel
+      depth=1
+    tags:
+    - setup
+    - repos
+  
+  - name: Get repo AWS
+    git: >
+      repo=https://github.com/nudomarinero/Astrocompute-ELAIS-N1.git
+      dest=/home/ubuntu/astrocompute
+      depth=1
+    tags:
+    - setup
+    - repos
+
+  - name: Create data download directory
+    file: >
+      path=/mnt/scratch/data/raw
+      state=directory
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    tags:
+    - setup
+    - download
+  
+  - name: setup calibration pipeline
+    file: >
+      path=/mnt/scratch/data/{{ item }}
+      state=directory
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    with_items:
+    - log
+    - cal
+    - runtime
+    - process
+    tags:
+    - setup
+    - setup_pipeline
+
+  - name: Generate download script
+    template: >
+      src=templates/download_data_calibrator_ms.sh.j2 
+      dest=/home/ubuntu/download_data_calibrator_ms.sh
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    tags:
+    - setup
+    - download_create
+    
+  - name: Generate upload script
+    template: >
+      src=templates/upload_data_cal.sh.j2 
+      dest=/home/ubuntu/upload_data_cal.sh
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    tags:
+    - setup
+    - upload_create
+    
+  - name: Run the rest of the pipeline in a tmux session
+    command: "bash -c 'tmuxp load /home/ubuntu/astrocompute/pipeline/files/tmuxp_cal.yml'"
+    async: 15
+    poll: 0
+    tags:
+    - run
