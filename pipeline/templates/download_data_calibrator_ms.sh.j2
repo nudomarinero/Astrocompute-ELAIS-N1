@@ -6,9 +6,4 @@ id=`python /home/ubuntu/astrocompute/pipeline/scripts/get_band.py`
 cd
 aws s3 ls s3://lofar-elais-n1/${id}/ | awk -v id="$id" '{print "http://s3.amazonaws.com/lofar-elais-n1/"id"/"$4}' > data_list.txt
 /home/ubuntu/astrocompute/pipeline/scripts/parallel_download.sh /home/ubuntu/data_list.txt
-cd /mnt/scratch/data/raw
-for i in $(ls -1 *.tar)
-    do echo ${i}
-    tar -xf ${i} && rm ${i}
-done
 touch /mnt/scratch/data/raw/downloaded.txt

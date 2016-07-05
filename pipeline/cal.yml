@@ -259,7 +259,7 @@
   - name: Generate download script
     template: >
       src=templates/download_data_calibrator_ms.sh.j2 
-      dest=/home/ubuntu/download_data_calibrator_ms.sh
+      dest=/home/ubuntu/download_data_cal.sh
       owner=ubuntu 
       group=ubuntu 
       mode=0755
@@ -269,7 +269,7 @@
     
   - name: Generate upload script
     template: >
-      src=templates/upload_data_cal.sh.j2 
+      src=templates/upload_data_cal_first_round.sh.j2 
       dest=/home/ubuntu/upload_data_cal.sh
       owner=ubuntu 
       group=ubuntu 

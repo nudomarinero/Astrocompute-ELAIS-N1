@@ -86,7 +86,7 @@ def download_data():
     Download the pretarget data using the script created
     """
     # TODO: Initial checks and cleaning
-    download = sh.Command("/home/ubuntu/download_data_calibrator_ms.sh")
+    download = sh.Command("/home/ubuntu/download_data_cal.sh")
     for line in download(_iter=True):
         print(line)
     # TODO: Final checks and notification
@@ -128,11 +128,11 @@ if __name__ == "__main__":
     logging.info("Calibrator pipeline started")
     launch(download_data)
     launch(run_pipeline)
-    #launch(upload_data)
+    launch(upload_data)
     #launch(umount_and_remove_disk) # Not implemented yet
     message = "Calibrator pipeline on band {} successfully finished".format(band)
     notify(message, subject=message)
     logging.info("Calibrator pipeline finished; prepared to terminate")
-    #launch(terminate_instance)
+    launch(terminate_instance)
     
 

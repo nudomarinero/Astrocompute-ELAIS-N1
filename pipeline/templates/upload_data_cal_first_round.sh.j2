@@ -1,0 +1,32 @@
+#!/bin/bash
+# Copy the important data to a S3 bucket
+id=`python /home/ubuntu/astrocompute/pipeline/scripts/get_tag.py data_id`
+dataset_name=`python /home/ubuntu/astrocompute/pipeline/scripts/get_tag.py dataset`
+calibrator_name=`python /home/ubuntu/astrocompute/pipeline/scripts/get_tag.py cal_name`
+
+# Create bucket
+s3cmd mb s3://{{ bucket_name }}
+# Upload the logs
+s3cmd put /mnt/scratch/data/log/profile.log s3://{{ bucket_name }}/${dataset_name}/logs/${calibrator_name}_first/
+s3cmd put /mnt/scratch/data/log/pipeline* s3://{{ bucket_name }}/${dataset_name}/logs/${calibrator_name}_first/pipeline/
+# Upload the data
+s3cmd put /mnt/scratch/data/cal/{{ pipeline_name }}/*.h5 s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}_first/h5/
+s3cmd put /mnt/scratch/data/cal/{{ pipeline_name }}/*.npy s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}_first/npy/
+# Upload the plots
+s3cmd put /mnt/scratch/data/cal/{{ pipeline_name }}/*.png s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}_first/plots/png/
+s3cmd put /mnt/scratch/data/cal/{{ pipeline_name }}/*.pdf s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}_first/plots/pdf/
+
+#freqs_for_amplitude_array.npy
+#caldata_transfer_amplitude_array.npy
+#fitted_data_dclock_caldata_transfer_1st.npy
+#freqs_for_phase_array.npy
+#caldata_transfer_phase_array.npy
+
+#caldata_transfer_amplitude_array.npy         
+#fitted_data_dclock_caldata_transfer_1st.sm.npy  
+#freqs_for_amplitude_array.npy
+#caldata_transfer_phase_array.npy             
+#fitted_data_dTEC_caldata_transfer_1st.npy       
+#freqs_for_phase_array.npy
+#fitted_data_dclock_caldata_transfer_1st.npy  
+#fitted_data_dTEC_caldata_transfer_1st.sm.npy
