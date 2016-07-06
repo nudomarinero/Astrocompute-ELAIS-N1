@@ -6,7 +6,8 @@ from __future__ import print_function
 import os
 import numpy as np
 from pyrap import tables
-import sys
+import argparse
+from glob import glob
 
 def main(ms):
     """
@@ -37,5 +38,16 @@ def check_ms(ms):
 
 
 if __name__ == "__main__":
-    msname = str(sys.argv[1])
-    check_ms(msname)
+    parser = argparse.ArgumentParser(description='Check the frequency properties of MS files')
+    parser.add_argument('-d', '--directory', action='store_true', help='directory with MS')
+    parser.add_argument('ms', help='MS or directory')
+    args = parser.parse_args()
+    # TODO: Check directory
+    if args.directory:
+        list_ms = glob(args.ms+"/*.ms")
+        list_ms2 = glob(args.ms+"/*.MS")
+        list_ms.extend(list_ms2)
+        for ms in list_ms:
+            check_ms(ms)
+    else:
+        check_ms(args.ms)
