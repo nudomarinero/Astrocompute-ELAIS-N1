@@ -76,9 +76,9 @@ def compute_freqs(group, sb_per_group=10, channels_per_group=50):
         central_freq_aux = get_central_freq(group-1, sb_per_group=sb_per_group)
     # Compute the channel step
     cstep = np.absolute(central_freq - central_freq_aux)/channels_per_group
-    
-    freq_comp = np.linspace(central_freq-(channels_per_group-0.5)*cstep, 
-                           central_freq+(channels_per_group-0.5)*cstep, 
+    channel_shift = channels_per_group/2-0.5
+    freq_comp = np.linspace(central_freq-channel_shift*cstep, 
+                           central_freq+channel_shift*cstep, 
                            channels_per_group,
                            dtype="Float64")
     return freq_comp
@@ -88,8 +88,7 @@ def get_info(ms, read_cpg=True):
     Get the group, number of sub-bands per group and number of channels 
     per groups for a given ms
     """
-    msname = os.path.basename(ms)
-    result = re.findall("_SBgr(\d+)-(\d+)_", msname)
+    result = re.findall("_SBgr(\d+)-(\d+)_", ms)
     if result:
         group = int(result[0][0])
         sb_per_group = int(result[0][1])
@@ -120,13 +119,18 @@ def show_ms(ms, machine_readable=False):
                               channels_per_group=channels_per_group)
     print("Computed frequencies")
     print(freq_comp)
+    print("Frequency correction")
+    print(frequencies-freq_comp)
 
 def correct_ms(ms):
     """
     Correct the frequencies of a given MS.
     """
-    frequencies, spacing, widths = read_ms(ms)
-    # TODO: Correct
+    group, sb_per_group, channels_per_group = get_info(ms)
+    freq_comp = compute_freqs(group, 
+                              sb_per_group=sb_per_group, 
+                              channels_per_group=channels_per_group)
+    write_ms(ms, freq_comp)
 
 
 if __name__ == "__main__":
