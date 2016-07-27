@@ -48,7 +48,7 @@ def get_central_freq(group, sb_per_group=10):
     """
     Get the central frequency of a group
     """
-    mfreq = np.load(os.path.join(THIS_DIR, "mfreq.py")).astype("Float64")
+    mfreq = np.load(os.path.join(THIS_DIR, "mfreq.npy")).astype("Float64")
     if sb_per_group % 2 == 0:
         return (mfreq[group*sb_per_group+sb_per_group//2-1]+
                 mfreq[group*sb_per_group+sb_per_group//2])/2.
