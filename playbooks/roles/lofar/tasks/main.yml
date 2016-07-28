@@ -3,11 +3,11 @@
 
 - name: install LSMTool
   pip: name='https://github.com/darafferty/LSMTool/archive/master.zip' extra_args='--allow-external --upgrade'
-  sudo: True
+  become: True
   
 - name: install LoSoTo
   pip: name='https://github.com/revoltek/losoto/archive/master.zip' extra_args='--allow-external --upgrade'
-  sudo: True
+  become: True
 
 - name: Download source of WSClean
   get_url: >
@@ -17,7 +17,7 @@
     
 - name: Compile and install WSClean
   script: wsclean.sh creates=/usr/bin/wsclean
-  sudo: True
+  become: True
   
 - name: download LOFAR package
   get_url: >
@@ -26,18 +26,18 @@
 
 - name: Install LOFAR package
   apt: deb=/tmp/lofar_2.17-1trusty_amd64.deb
-  sudo: True
+  become: True
 
 - name: Remove temporary package
   file: path=/tmp/lofar_2.17-1trusty_amd64.deb state=absent
 
 - name: copy LOFAR profile file
   copy: src=lofar_profile dest=/etc/profile.d/Z98-lofar.sh owner=root group=root mode=0755
-  sudo: True
+  become: True
   
 - name: install factor
   pip: name='https://github.com/revoltek/factor/archive/master.zip' extra_args='--allow-external --upgrade'
-  sudo: True
+  become: True
   
 # TODO: Patch pipeline here
 #- name: patch pipeline file to use factor
@@ -47,4 +47,4 @@
     #owner=root 
     #group=root 
     #mode=0644
-  #sudo: True
+  #become: True
