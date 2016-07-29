@@ -37,3 +37,6 @@
     regexp='^CASARCFILES="/etc/casarc"'
     line="CASARCFILES=\"/etc/casarc\""
   sudo: True
+  
+- name: casa default configuration
+  unarchive: src=casa.tar.gz dest=~/
