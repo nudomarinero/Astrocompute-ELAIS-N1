@@ -2,7 +2,7 @@
 # tasks file for postgres8
 - name: Install the dependencies to build Postgres 8.4.10
   apt: pkg={{ item }}
-  sudo: True
+  become: True
   with_items:
     - build-essential
     - clang
@@ -23,7 +23,7 @@
   args:
     chdir: "/tmp/postgresql-8.4.10"
     creates: "/opt/postgres/bin/psql"
-  sudo: True
+  become: True
   with_items:
     - ./configure CC='clang' --prefix=/opt/postgres
     - make
@@ -33,7 +33,7 @@
   command: "/bin/rm -rf {{ item }}"
   args:
     removes: "/tmp/postgresql-8.4.10"
-  sudo: True
+  become: True
   with_items:
     - "/tmp/postgresql-8.4.10"
     - "/tmp/postgresql-8.4.10.tar.gz"
@@ -45,4 +45,4 @@
     backrefs=yes
     regexp='PATH=(["]*)((?!.*?/opt/postgres/bin).*?)(["]*)$'
     line="PATH=\1\2:/opt/postgres/bin\3"
-  sudo: True
+  become: True

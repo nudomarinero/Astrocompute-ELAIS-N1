@@ -2,11 +2,11 @@
 # tasks file for lofar_base
 - name: update box
   apt: upgrade=dist update_cache=yes
-  sudo: True
+  become: True
 
 - name: install dependencies
   apt: pkg={{ item }}
-  sudo: True
+  become: True
   with_items:
     - fail2ban
     - gfortran 
@@ -59,7 +59,7 @@
       
 - name: install Python packages
   apt: pkg={{ item }}
-  sudo: True
+  become: True
   with_items:  
     - ipython 
     - python-matplotlib 
@@ -87,11 +87,11 @@
 
 - name: Update pip to the last version
   script: update_pip.sh
-  sudo: True
+  become: True
   
 - name: install additional Python packages with pip
   pip: name={{ item }} extra_args="--upgrade"
-  sudo: True
+  become: True
   with_items:  
     - pyopenssl 
     - ndg-httpsclient
@@ -115,11 +115,11 @@
     
 - name: install LOFAR dependencies repository
   apt_repository: repo='ppa:radio-astro/main'
-  sudo: True
+  become: True
 
 - name: install LOFAR dependencies
   apt: pkg={{ item }} update_cache=yes
-  sudo: True
+  become: True
   with_items:
     - casacore2
     - libcasacore2-dev
