@@ -1,2 +1,20 @@
 ---
+# Setup
+title:        Astrocompute ELAIS-N1
+tagline:      An Astrocompute proposal supported by the Square Kilometre Array and Amazon Web Services
+baseurl:      ""
+paginate:     1
 exclude: [Gemfile]
+
+# About/contact
+author:
+  name:       Jose Sabater
+  url:        http://www.lofarcloud.uk 
+
+# Gems
+gems:
+  - jekyll-paginate
+
+#Others
+markdown: kramdown
+
