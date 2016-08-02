@@ -1,0 +1,16 @@
+## Pages
+_site/
+Gemfile.lock
+
+# OS-specific
+.DS_Store
+.directory
+
+# Editors
+.*.s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+*.kate-swp
+
