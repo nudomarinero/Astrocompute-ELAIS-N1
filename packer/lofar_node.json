@@ -3,7 +3,7 @@
     {
       "type": "amazon-ebs",
       "region": "us-east-1",
-      "source_ami": "ami-fce3c696",
+      "source_ami": "ami-2d39803a",
       "instance_type": "m3.medium",
       "ami_block_device_mappings": [ {
             "device_name": "/dev/sda1",
@@ -18,7 +18,7 @@
             "delete_on_termination": true
         } ],
       "ssh_username": "ubuntu",
-      "ami_name": "lofar-node-2.17-{{isotime \"2006-01-02\"}}",
+      "ami_name": "lofar-node-2.18-{{isotime \"2006-01-02\"}}",
       "tags": {
         "Name": "lofar-node"
       }

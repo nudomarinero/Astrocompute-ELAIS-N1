@@ -21,15 +21,15 @@
   
 - name: download LOFAR package
   get_url: >
-    url=http://www.roe.ac.uk/~jsm/lofar_dist/trusty/lofar_2.17-1trusty_amd64.deb 
-    dest=/tmp/lofar_2.17-1trusty_amd64.deb
+    url=http://www.roe.ac.uk/~jsm/lofar_dist/trusty/lofar_2.18-1trusty_amd64.deb 
+    dest=/tmp/lofar_2.18-1trusty_amd64.deb
 
 - name: Install LOFAR package
-  apt: deb=/tmp/lofar_2.17-1trusty_amd64.deb
+  apt: deb=/tmp/lofar_2.18-1trusty_amd64.deb
   become: True
 
 - name: Remove temporary package
-  file: path=/tmp/lofar_2.17-1trusty_amd64.deb state=absent
+  file: path=/tmp/lofar_2.18-1trusty_amd64.deb state=absent
 
 - name: copy LOFAR profile file
   copy: src=lofar_profile dest=/etc/profile.d/Z98-lofar.sh owner=root group=root mode=0755
