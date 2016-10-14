@@ -96,7 +96,7 @@
     - pyopenssl 
     - ndg-httpsclient
     - pyasn1
-    - http://www.parallelpython.com/downloads/pp/pp-1.6.4.tar.gz
+    - http://www.parallelpython.com/downloads/pp/pp-1.6.5.tar.gz
     - unittest-xml-reporting
     - psutil
     - progressbar
