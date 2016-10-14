@@ -8,14 +8,14 @@ title: Astrocompute ELAIS-N1
 Information about the [SKA](https://www.skatelescope.org/)-[AWS](http://aws.amazon.com/) [Astrocompute proposal](https://www.skatelescope.org/ska-aws-astrocompute-call-for-proposals/) called: \"Calibration of LOFAR ELAIS-N1 data in the Amazon cloud\". Maintained by J. Sabater (Institute for Astronomy, University of Edinburgh).
 
 ## LOFAR AMIs
-We have created an AMI with the LOFAR software pre-installed: `ami-8be114e6`. It is based on the Ubuntu 14.04 LTS official AMI.
+We have created an AMI with the LOFAR software pre-installed: `ami-05144012`. It is based on the Ubuntu 14.04 LTS official AMI.
 
 Software installed:
 
 * casacore libraries.
 * casarest libraries.
 * pyrap.
-* LOFAR software (release 2.17 pre-release).
+* LOFAR software (release 2.18 pre-release).
 * [CASA](http://casa.nrao.edu/).
 * [LSMTool](https://github.com/darafferty/LSMTool).
 * [LoSoTo](https://github.com/revoltek/losoto).
@@ -27,11 +27,13 @@ Software installed:
 * GRID certificates and tools.
 * SRM tools.
 * AWS tools and Python libraries.
-* Postgresql 8.4.10 required by some LOFAR BBS tasks.
+* Postgresql 8.4.10 formerly required by some LOFAR BBS tasks.
 
 ### Legacy AMIs
 We keep some old AMIs for compatibility reasons:
 
+* LOFAR 2.17: `ami-bfc200d2`
+* LOFAR 2.17 pre-release: `ami-8be114e6`
 * LOFAR 2.15 node: `ami-5c261436`
 * LOFAR 2.15 head: `ami-bf3507d5`
 * LOFAR 2.12 node: `ami-431b6229`
