@@ -30,17 +30,14 @@ def get_data():
                       p.io_counters()[0],
                       p.io_counters()[1],
                       p.io_counters()[2],
-                      p.io_counters()[3],
-                      p.io_counters()[4],
-                      p.io_counters()[5]] 
+                      p.io_counters()[3]] 
                      for p in psutil.process_iter() if p.username() == user]
                     )
     timestamp = time.time()
     (cpu_percent, 
      mem, memvirt, memory_percent, 
      read_count, write_count, 
-     read_bytes, write_bytes, 
-     read_time, write_time) = data.sum(axis=0)
+     read_bytes, write_bytes) = data.sum(axis=0)
    
     return (host, 
             timestamp, 
@@ -53,10 +50,8 @@ def get_data():
             (disk_total-disk_avail)/float(disk_total)*100.,
             read_count, 
             write_count, 
-            read_bytes/1048576., 
-            write_bytes/1048576., 
-            read_time, 
-            write_time
+            read_bytes/1073741824., 
+            write_bytes/1073741824.
             )
                       
 
@@ -64,15 +59,15 @@ def run():
     if logtofile:
         f = open(file_name, "wb")
         f.write("node,timestamp,cpu_percent,memory,memory_percent,disk,disk_percent,"
-                "read_count,write_count,read_MB,write_MB,read_time,write_time\n")
+                "read_count,write_count,read_GB,write_GB\n")
     try:
         while True:
             #print(get_data())
             print("{0} - {1:f} {2:6.2f} {3:7.3f} {5:6.2f} {7:7.3f} {8:6.2f} "
-                  "{9:7.1f} {10:7.1f} {11:6.2f} {12:6.2f} {13:6.2f} {14:6.2f}".format(*get_data()))
+                  "{9:10.0f} {10:10.0f} {11:8.2f} {12:8.2f}".format(*get_data()))
             if logtofile:
                 f.write("{0},{1:f},{2:6.2f},{3:7.3f},{5:6.2f},{7:7.3f},{8:6.2f},"
-                  "{9:7.1f},{10:7.1f},{11:6.2f},{12:6.2f},{13:6.2f},{14:6.2f}\n".format(*get_data()))
+                  "{9:10.0f},{10:10.0f},{11:8.2f},{12:8.2f}\n".format(*get_data()))
                 f.flush()
             time.sleep(INTERVAL)
     except KeyboardInterrupt:
