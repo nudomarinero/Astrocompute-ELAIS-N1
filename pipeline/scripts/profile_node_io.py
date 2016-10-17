@@ -63,11 +63,11 @@ def run():
     try:
         while True:
             #print(get_data())
-            print("{0} - {1:f} {2:6.2f} {3:7.3f} {5:6.2f} {7:7.3f} {8:6.2f} "
-                  "{9:10.0f} {10:10.0f} {11:8.2f} {12:8.2f}".format(*get_data()))
+            print("{0} - {1:f} {2:6.2f} {3:7.3f} {5:6.2f} {7:9.3f} {8:6.2f} "
+                  "{9:11.0f} {10:11.0f} {11:8.2f} {12:8.2f}".format(*get_data()))
             if logtofile:
-                f.write("{0},{1:f},{2:6.2f},{3:7.3f},{5:6.2f},{7:7.3f},{8:6.2f},"
-                  "{9:10.0f},{10:10.0f},{11:8.2f},{12:8.2f}\n".format(*get_data()))
+                f.write("{0},{1:f},{2:6.2f},{3:7.3f},{5:6.2f},{7:9.3f},{8:6.2f},"
+                  "{9:11.0f},{10:11.0f},{11:8.2f},{12:8.2f}\n".format(*get_data()))
                 f.flush()
             time.sleep(INTERVAL)
     except KeyboardInterrupt:
