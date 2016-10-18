@@ -112,6 +112,8 @@
     - pyFFTW
     - shapely
     - descartes
+    - tmuxp
+    - sh
     
 - name: install LOFAR dependencies repository
   apt_repository: repo='ppa:radio-astro/main'
