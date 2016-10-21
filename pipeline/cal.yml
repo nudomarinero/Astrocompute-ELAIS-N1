@@ -106,6 +106,7 @@
     filesystem: >
       fstype=ext4 
       dev='{{device_name}}'
+      opts="-m 0"
     become: True
     tags:
     - setup
