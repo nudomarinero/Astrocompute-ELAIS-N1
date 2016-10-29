@@ -8,11 +8,11 @@
   
 - name: unpack the casa tar file
   unarchive: src=/tmp/casa-release-4.5.3-el6.tar.gz dest=/opt copy=no
-  sudo: True
+  become: True
 
 - name: create symbolic link in /opt
   file: src=/opt/casa-release-4.5.3-el6 dest=/opt/casapy state=link
-  sudo: True
+  become: True
 
 - name: Remove temporary package
   file: path=/tmp/casa-release-4.5.3-el6.tar.gz state=absent
@@ -24,11 +24,11 @@
     backrefs=yes
     regexp='PATH=(["]*)((?!.*?/opt/casapy/bin).*?)(["]*)$'
     line="PATH=\1\2:/opt/casapy/bin\3"
-  sudo: True
+  become: True
 
 - name: copy casarc file
   copy: src=casarc dest=/etc/casarc owner=root group=root mode=0644
-  sudo: True
+  become: True
   
 - name: add CASARCFILES to system environment variables
   lineinfile: >
@@ -36,7 +36,7 @@
     state=present
     regexp='^CASARCFILES="/etc/casarc"'
     line="CASARCFILES=\"/etc/casarc\""
-  sudo: True
+  become: True
   
 - name: casa default configuration
   unarchive: src=casa.tar.gz dest=~/
