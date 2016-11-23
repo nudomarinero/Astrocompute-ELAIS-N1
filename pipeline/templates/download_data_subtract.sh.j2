@@ -1,0 +1,21 @@
+#!/bin/bash
+# Copy the important data from a S3 bucket
+# Download the data
+#group=`python /home/ubuntu/astrocompute/pipeline/scripts/get_band.py`
+#for i in $(python /home/ubuntu/astrocompute/pipeline/scripts/get_groups.py)
+#    do echo $i
+{% for gr in bands %}
+aws s3 cp s3://{{ bucket_name }}/{{ dataset_name }}/data_subtracted/L*_SBgr{{ gr }}-10_uv.MS.pre-cal.ms.tar /mnt/scratch/data/raw
+aws s3 cp s3://{{ bucket_name }}/{{ dataset_name }}/subtract/models/L*_SBgr{{ gr }}-10_uv.MS.pre-cal.wsclean_low2-model.merge /mnt/scratch/data/raw
+{% endfor %}
+cd /mnt/scratch/data/raw
+for i in $(ls -1 *.tar)
+    do echo ${i}
+    tar -xf ${i} && rm ${i}
+    if [ -d mnt ]; then
+        mv mnt/scratch/data/process/*.ms .
+        rm -r mnt
+    fi
+done
+
+touch /mnt/scratch/data/raw/downloaded.txt
