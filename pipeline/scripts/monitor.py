@@ -118,6 +118,4 @@ if __name__ == "__main__":
             logging.debug("Instance code: {}; Disk usage: {:6.4f}".format(code, fraction))
             time.sleep(INTERVAL)
     except KeyboardInterrupt:
-        logger.flush()
-        logger.close()
-
+        logging.shutdown()
