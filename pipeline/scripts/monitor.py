@@ -68,7 +68,7 @@ def check_spot_code():
 
     instances = conn.get_all_spot_instance_requests()
     for instance in instances:
-        if instance.id == iid:
+        if instance.instance_id == iid:
             return instance.status.code
 
 def check_disk_usage(disk):
@@ -118,6 +118,6 @@ if __name__ == "__main__":
             logging.debug("Instance code: {}; Disk usage: {:6.4f}".format(code, fraction))
             time.sleep(INTERVAL)
     except KeyboardInterrupt:
-        logging.flush()
-        logging.close()
+        logger.flush()
+        logger.close()
 
