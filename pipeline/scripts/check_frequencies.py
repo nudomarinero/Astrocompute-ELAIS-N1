@@ -34,7 +34,7 @@ def read_ms(ms):
     msfr.close()
     return frequencies, spacing, widths
 
-def write_ms(ms, freqs):
+def write_ms(ms, freqs, widths=None):
     """
     Write the frequency center for each channel and the widths.
     """
@@ -43,6 +43,9 @@ def write_ms(ms, freqs):
     # Check size of the freqs
     aux_freqs = np.expand_dims(freqs, axis=0)
     msfr.putcol('CHAN_FREQ', aux_freqs)
+    if widths is not None:
+        aux_widths = np.expand_dims(widths, axis=0)
+        msfr.putcol('CHAN_WIDTH', aux_widths)
 
 def get_central_freq(group, sb_per_group=10):
     """
@@ -122,21 +125,29 @@ def show_ms(ms, machine_readable=False):
     print("Frequency correction")
     print(frequencies-freq_comp)
 
-def correct_ms(ms):
+def correct_ms(ms, widths=False):
     """
     Correct the frequencies of a given MS.
+    It could also correct the widths.
     """
     group, sb_per_group, channels_per_group = get_info(ms)
     freq_comp = compute_freqs(group, 
                               sb_per_group=sb_per_group, 
                               channels_per_group=channels_per_group)
     write_ms(ms, freq_comp)
-
+    if widths:
+        frequencies, spacing, widths = read_ms(ms)
+        widths_new = np.zeros_like(widths)
+        widths_new[:-1] = spacing
+        widths_new[-1] = spacing[-1]
+        write_ms(ms, freq_comp, widths=widths_new)
+        
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Check the frequency properties of MS files')
     parser.add_argument('-d', '--directory', action='store_true', help='directory with MS')
     parser.add_argument('-c', '--correct', action='store_true', help='Correct the frequencies of the MS')
+    parser.add_argument('-w', '--widths', action='store_true', help='Correct the widths of the MS')
     parser.add_argument('ms', help='MS or directory')
     args = parser.parse_args()
     # TODO: Check directory
@@ -146,11 +157,11 @@ if __name__ == "__main__":
         list_ms.extend(list_ms2)
         for ms in list_ms:
             if args.correct:
-                correct_ms(ms)
+                correct_ms(ms, args.widths)
             else:
                 show_ms(ms)
     else:
         if args.correct:
-            correct_ms(args.ms)
+            correct_ms(args.ms, args.widths)
         else:
             show_ms(args.ms)
