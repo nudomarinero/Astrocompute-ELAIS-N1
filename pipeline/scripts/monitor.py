@@ -23,7 +23,7 @@ if os.path.exists("/home/ubuntu/logging_monitor.conf"):
 else:
     # Start
     logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)   
+    logger.setLevel(logging.INFO)   
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     # Log to STDOUT
     ch = logging.StreamHandler()
@@ -93,7 +93,7 @@ def notify_spot_shutdown(code):
     """
     Notify if the instance is going to shut down
     """
-    logging.info("Instance shutdown issued.")
+    logging.warning("Instance shutdown issued.")
     message = ("Spot instance shutdown\n"+
         "Dataset: {}\n".format(dataset)+
         "Data id: {}\n".format(band)+
@@ -105,7 +105,7 @@ def notify_disk_90(fraction):
     """
     Notify if the instance is going to shut down
     """
-    logging.info("Disk almost full. Fraction: {:6.4f}".format(fraction))
+    logging.warning("Disk almost full. Fraction: {:6.4f}".format(fraction))
     message = ("Disk almost full\n"+
         "Dataset: {}\n".format(dataset)+
         "Data id: {}\n".format(band)+
@@ -117,7 +117,7 @@ def notify_factor_stoped():
     """
     Notify factor has stoped
     """
-    logging.info("Factor stoped")
+    logging.warning("Factor stoped")
     message = ("Factor stoped\n"+
         "Dataset: {}\n".format(dataset)+
         "Data id: {}\n".format(band)+
@@ -146,7 +146,7 @@ if __name__ == "__main__":
                 init_factor = False
             if (not init_factor) and check:
                 init_factor = True
-            logging.debug("Instance code: {}; Disk usage: {:6.4f}; Factor running: {}".format(code, fraction, check))
+            logging.info("Instance code: {}; Disk usage: {:6.4f}; Factor running: {}".format(code, fraction, check))
             time.sleep(INTERVAL)
     except KeyboardInterrupt:
         logging.shutdown()
