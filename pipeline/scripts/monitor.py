@@ -10,6 +10,7 @@ import boto.sns
 import logging
 import traceback
 import ConfigParser
+import psutil
 from get_band import get_tag
 
 #logging.basicConfig(
@@ -80,42 +81,72 @@ def check_disk_usage(disk):
     disk_avail = statvfs.f_frsize * statvfs.f_bavail
     return (disk_total-disk_avail)/float(disk_total)
     
+def check_factor_running():
+    """
+    Check if factor is running
+    """
+    check = any(["runfactor" in psutil.Process(pid).name() for pid in psutil.pids()])
+    return check
+    
     
 def notify_spot_shutdown(code):
     """
     Notify if the instance is going to shut down
     """
-    if code == u"marked-for-termination":
-        logging.info("Instance shutdown issued.")
-        message = ("Spot instance shutdown\n"+
-            "Dataset: {}\n".format(dataset)+
-            "Data id: {}\n".format(band)+
-            "Inst id: {}\n".format(iid))
-        subject = "Spot instance shutdown"
-        notify(message, subject=subject)
+    logging.info("Instance shutdown issued.")
+    message = ("Spot instance shutdown\n"+
+        "Dataset: {}\n".format(dataset)+
+        "Data id: {}\n".format(band)+
+        "Inst id: {}\n".format(iid))
+    subject = "Spot instance shutdown"
+    notify(message, subject=subject)
 
 def notify_disk_90(fraction):
     """
     Notify if the instance is going to shut down
     """
-    if fraction >= 0.9:
-        logging.info("Disk almost full. Fraction: {:6.4f}".format(fraction))
-        message = ("Disk almost full\n"+
-            "Dataset: {}\n".format(dataset)+
-            "Data id: {}\n".format(band)+
-            "Inst id: {}\n".format(iid))
-        subject = "Disk almost full"
-        notify(message, subject=subject)
+    logging.info("Disk almost full. Fraction: {:6.4f}".format(fraction))
+    message = ("Disk almost full\n"+
+        "Dataset: {}\n".format(dataset)+
+        "Data id: {}\n".format(band)+
+        "Inst id: {}\n".format(iid))
+    subject = "Disk almost full"
+    notify(message, subject=subject)
+
+def notify_factor_stoped():
+    """
+    Notify factor has stoped
+    """
+    logging.info("Factor stoped")
+    message = ("Factor stoped\n"+
+        "Dataset: {}\n".format(dataset)+
+        "Data id: {}\n".format(band)+
+        "Inst id: {}\n".format(iid))
+    subject = "Factor stoped"
+    notify(message, subject=subject)
+    init_factor = False
 
 if __name__ == "__main__":
     logging.info("Monitoring started")
+    init_factor = False
     try:
         while True:
+            # Check spot instance stoping
             code = check_spot_code()
-            notify_spot_shutdown(code)
+            if code == u"marked-for-termination":
+                notify_spot_shutdown(code)
+            # Check disk becoming full
             fraction = check_disk_usage(disk)
-            notify_disk_90(fraction)
-            logging.debug("Instance code: {}; Disk usage: {:6.4f}".format(code, fraction))
+            if fraction >= 0.9:
+                notify_disk_90(fraction)
+            # Check factor running
+            check = check_factor_running()
+            if init_factor and not check:
+                notify_factor_stoped()
+                init_factor = False
+            if (not init_factor) and check:
+                init_factor = True
+            logging.debug("Instance code: {}; Disk usage: {:6.4f}; Factor running: {}".format(code, fraction, check))
             time.sleep(INTERVAL)
     except KeyboardInterrupt:
         logging.shutdown()
