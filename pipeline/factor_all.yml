@@ -12,6 +12,7 @@
             "028", "029", "030", "031"]
   #- bands: ["000", "001", "002", "003"]
   - band: "0"
+  - obsid: "L229387"
   - instance_type: "m4_4xlarge"
   - calibration_type: "factor"
   - dataset_name: "011"
@@ -97,6 +98,7 @@
             "024", "025", "026", "027",
             "028", "029", "030", "031"]
   - band: "0"
+  - obsid: "L229387"
   - credentials_file: creds.yml
   - pipeline_name: "factor"
   - bucket_name: "lofar-elais-n1-calibration"
