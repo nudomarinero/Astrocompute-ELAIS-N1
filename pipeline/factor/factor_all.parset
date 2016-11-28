@@ -1,0 +1,20 @@
+[global]
+dir_working = /mnt/scratch/data/cal
+dir_ms = /mnt/scratch/data/raw
+
+[directions]
+max_radius_deg = 5.0
+flux_min_jy = 0.35
+flux_min_for_merging_Jy = 0.1
+size_max_arcmin = 0.8
+separation_max_arcmin = 9.0
+max_num = 40
+ndir_max = 40
+
+[imaging]
+make_mosaic = True
+facet_imager = wsclean 
+facet_cellsize_arcsec = [1.5, 4.0]
+facet_taper_arcsec = [0, 20]
+facet_robust = [-0.5, -1.0]
+selfcal_robust_wsclean = -0.5

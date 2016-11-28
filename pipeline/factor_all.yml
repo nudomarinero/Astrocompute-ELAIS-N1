@@ -1,0 +1,295 @@
+---
+- name: Setup spot calibration instances factor step
+  hosts: localhost
+  vars:
+  - bands: ["000", "001", "002", "003",
+            "004", "005", "006", "007",
+            "008", "009", "010", 
+            "012", "013", "014", "015",
+            "016", "017", "018", "019",
+            "020", "021", "022", "023",
+            "024", "025", "026", "027",
+            "028", "029", "030", "031"]
+  #- bands: ["000", "001", "002", "003"]
+  - band: "0"
+  - instance_type: "m4_4xlarge"
+  - calibration_type: "factor"
+  - dataset_name: "011"
+  vars_files:
+  - "{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('factor') }}.yml"
+  tasks:  
+  - name: Launch spot instances
+    ec2:
+      image: "{{ ami }}"
+      region: us-east-1
+      instance_type: "{{ instance_type_v }}"
+      spot_price: "{{ spot_price_v }}"
+      key_name: "{{ key_name }}"
+      group: [ska]
+      instance_tags: 
+        Name: "{{ calibration_type }}{{ band }}"
+        type: "{{ calibration_type }}"
+        env: production
+        iname: "{{ calibration_type }}{{ band }}"
+        band: "{{ band }}"
+        dataset: "{{ dataset_name }}"
+      wait: yes
+      monitoring: yes
+      exact_count: 1
+      count_tag: { type: "{{ calibration_type }}" }
+    register: ec2
+    tags:
+    - launch
+  
+  - name: add the instance to the inventory
+    add_host: name={{ item.public_ip }} groups=factor,production
+    with_items: '{{ec2.tagged_instances}}'
+    when: item.public_ip is defined
+    tags:
+    - launch
+  
+  - name: update dns records
+    route53:
+      command: create
+      zone: "lofarcloud.uk"
+      record: "{{ calibration_type }}{{ band }}.lofarcloud.uk"
+      type: A
+      ttl: 300
+      value: "{{ item.public_ip }}"
+      overwrite: True
+    with_items: '{{ec2.tagged_instances}}'
+    tags:
+    - launch
+    - dns
+    
+  - name: wait for ssh server to be running
+    wait_for: host={{ item.public_dns_name }} port=22 search_regex=OpenSSH
+    with_items: '{{ec2.tagged_instances}}'
+    when: item.public_dns_name is defined   
+    tags:
+    - launch
+    - mount_disk
+  
+  - name: Attach data disk
+    ec2_vol:
+      region: us-east-1
+      instance: "{{ item.id }}"
+      volume_size: "{{ volume_size }}"
+      volume_type: "{{ volume_type }}"
+      name: "{{ calibration_type }}{{ band }}"
+      device_name: '{{device_name}}'
+    with_items: '{{ec2.tagged_instances}}'
+    register: ec2_vol
+    tags:
+    - launch
+    - mount_disk
+
+- name: Setup scratch disk and libraries
+  hosts: factor
+  vars: 
+  #- bands: ["000", "001", "002", "003"]
+  - bands: ["000", "001", "002", "003",
+            "004", "005", "006", "007",
+            "008", "009", "010", 
+            "012", "013", "014", "015",
+            "016", "017", "018", "019",
+            "020", "021", "022", "023",
+            "024", "025", "026", "027",
+            "028", "029", "030", "031"]
+  - band: "0"
+  - credentials_file: creds.yml
+  - pipeline_name: "factor"
+  - bucket_name: "lofar-elais-n1-calibration"
+  - dataset_name: "011"
+  vars_files:
+  - "{{ credentials_file }}"
+  - "{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('factor') }}.yml"
+#  - "{{ calibration_type|default('subtract') }}_config.yml"
+     
+  tasks:
+  - name: Create filesystem
+    filesystem: >
+      fstype=ext4 
+      dev='{{device_name}}'
+      opts="-m 0"
+    become: True
+    tags:
+    - setup
+    - create_disk
+
+  - name: Mount scratch area
+    mount: name=/mnt 
+           src='{{device_name}}'
+           fstype=ext4 
+           state=mounted
+    become: True
+    tags:
+    - setup
+    - disk
+    - create_disk
+    - mount_disk
+           
+  - name: Create data area
+    file: path=/mnt/scratch/data
+          state=directory 
+          owner=ubuntu 
+          group=ubuntu
+          recurse=True
+    become: True
+    tags:
+    - setup
+    - disk
+    - create_disk
+    - mount_disk
+    
+  - name: Create temporary area
+    file: path=/mnt/scratch/tmp
+          state=directory 
+          owner=ubuntu 
+          group=ubuntu
+          recurse=True
+    become: True
+    tags:
+    - setup
+    - disk
+    - create_disk
+    - mount_disk
+  
+  - name: Install missing packages
+    apt: pkg={{ item }}
+    become: True
+    with_items:
+    - language-pack-en
+    - s3cmd
+    - htop
+    tags:
+    - setup
+    - install
+    
+  - name: Install Python missing packages
+    pip: name={{ item }} extra_args="--upgrade"
+    become: True
+    with_items:
+    - tmuxp
+    - sh
+    #- "git+https://github.com/ericmandel/pyds9.git#egg=pyds9"
+    tags:
+    - setup
+    - install
+  
+  - name: Create AWS credentials directory
+    file: path=/home/ubuntu/.aws state=directory
+    tags:
+    - setup
+    - credentials
+    
+  - name: Update AWS credentials
+    copy: >
+      content="{{ aws_credentials }}" 
+      dest=/home/ubuntu/.aws/credentials
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0600
+    tags:
+    - setup
+    - credentials
+  
+  - name: Generate s3cmd configuration
+    template: >
+      src=templates/s3cfg.j2 
+      dest=/home/ubuntu/.s3cfg
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0600
+    tags:
+    - setup
+    - credentials
+    
+  - name: Create topicarn SNS config
+    template: >
+      src=templates/sns_conf.j2 
+      dest=/home/ubuntu/.sns_conf
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0600
+    tags:
+    - setup
+    - credentials
+  
+  #- name: Get repo factor
+    #git: >
+      #repo=https://github.com/lofar-astron/factor.git
+      #dest=/home/ubuntu/factor
+      #depth=1
+    #tags:
+    #- setup
+    #- repos
+  
+  - name: Get repo AWS
+    git: >
+      repo=https://github.com/nudomarinero/Astrocompute-ELAIS-N1.git
+      dest=/home/ubuntu/astrocompute
+      depth=1
+    tags:
+    - setup
+    - repos
+
+  - name: Create data download directory
+    file: >
+      path=/mnt/scratch/data/raw
+      state=directory
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    tags:
+    - setup
+    - download
+  
+  - name: setup calibration pipeline
+    file: >
+      path=/mnt/scratch/data/{{ item }}
+      state=directory
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    with_items:
+    - log
+    - cal
+    - runtime
+    - process
+    tags:
+    - setup
+    - setup_pipeline
+
+  - name: Generate download script
+    template: >
+      src=templates/download_data_subtract.sh.j2 
+      dest=/home/ubuntu/download_data_subtract.sh
+      owner=ubuntu 
+      group=ubuntu 
+      mode=0755
+    tags:
+    - setup
+    - download_create
+  
+  - name: update factor
+    pip: name='https://github.com/lofar-astron/factor/archive/master.zip' extra_args='--allow-external --upgrade'
+    become: True
+    
+  #- name: Generate upload script
+    #template: >
+      #src=templates/upload_data_factor.sh.j2 
+      #dest=/home/ubuntu/upload_data_factor.sh
+      #owner=ubuntu 
+      #group=ubuntu 
+      #mode=0755
+    #tags:
+    #- setup
+    #- upload_create
+    
+  #- name: Run the rest of the pipeline in a tmux session
+    #command: "bash -c 'tmuxp load /home/ubuntu/astrocompute/pipeline/files/tmuxp_factor.yml'"
+    #async: 15
+    #poll: 0
+    #tags:
+    #- run
