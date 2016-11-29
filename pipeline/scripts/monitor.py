@@ -34,7 +34,7 @@ else:
     fh = logging.FileHandler(file_name) 
     fh.setFormatter(formatter)
     logger.addHandler(fh)
-    logging.info('\n')
+    #logging.info('\n')
 
 # General configuration
 INTERVAL = 30 # in seconds
