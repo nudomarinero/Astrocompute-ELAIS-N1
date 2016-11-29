@@ -85,7 +85,14 @@ def check_factor_running():
     """
     Check if factor is running
     """
-    check = any(["runfactor" in psutil.Process(pid).name() for pid in psutil.pids()])
+    while True:
+        try:
+            check = any(["runfactor" in psutil.Process(pid).name() for pid in psutil.pids()])
+        except psutil.NoSuchProcess:
+            pass
+        else:
+            break
+        
     return check
     
     
