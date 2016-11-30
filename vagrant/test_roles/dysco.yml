@@ -1,0 +1,6 @@
+---
+- name: Install dysco software
+  hosts: default
+  roles:
+    - dysco
+

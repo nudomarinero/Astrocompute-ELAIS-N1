@@ -1,0 +1,10 @@
+---
+# tasks file for dysco
+- name: Get repo
+  git: >
+    repo=https://github.com/aroffringa/dysco.git
+    dest=/tmp/dysco
+    depth=1
+- name: Compile and install dysco
+  script: dysco.sh
+  become: True
