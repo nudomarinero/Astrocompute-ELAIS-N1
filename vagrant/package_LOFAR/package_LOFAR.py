@@ -4,10 +4,10 @@ import os
 ### Configuration
 config = {
     "source_dir" : "/vagrant/package_LOFAR",
-    "version" : "2.18",
-    "release" : "2_18_pre",
+    "version" : "2.19",
+    "release" : "2_19",
     "trunk" : True,
-    "ext_version" : "2.18.100",
+    "ext_version" : "2.19.100",
     "pkgrelease" : "1trusty",
     "platform" : "amd64"
     }
