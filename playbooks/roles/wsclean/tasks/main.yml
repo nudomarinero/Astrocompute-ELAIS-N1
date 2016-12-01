@@ -2,8 +2,8 @@
 # tasks file for wsclean
 - name: Download source of WSClean
   get_url: >
-    url=http://sourceforge.net/projects/wsclean/files/wsclean-1.12/wsclean-1.12.tar.bz2/download
-    dest=/tmp/wsclean-1.12.tar.bz2
+    url=http://sourceforge.net/projects/wsclean/files/wsclean-2.0/wsclean-2.0.tar.bz2/download
+    dest=/tmp/wsclean-2.0.tar.bz2
 - name: Compile and install WSClean
   script: wsclean.sh
   become: True
