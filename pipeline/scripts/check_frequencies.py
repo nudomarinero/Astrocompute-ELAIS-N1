@@ -31,10 +31,12 @@ def read_ms(ms):
     frequencies = msfr.getcol('CHAN_FREQ')[0]
     spacing = frequencies[1:]-frequencies[:-1]
     widths = msfr.getcol("CHAN_WIDTH")[0]
+    ref_frequency = msfr.getcol('REF_FREQUENCY')[0]
+    total_bandwidth = msfr.getcol('TOTAL_BANDWIDTH')[0]
     msfr.close()
-    return frequencies, spacing, widths
+    return frequencies, spacing, widths, ref_frequency, total_bandwidth
 
-def write_ms(ms, freqs, widths=None):
+def write_ms(ms, freqs, widths=None, ref_frequency=None, total_bandwidth=None):
     """
     Write the frequency center for each channel and the widths.
     """
@@ -46,6 +48,10 @@ def write_ms(ms, freqs, widths=None):
     if widths is not None:
         aux_widths = np.expand_dims(widths, axis=0)
         msfr.putcol('CHAN_WIDTH', aux_widths)
+    if ref_frequency is not None:
+        msfr.putcol('REF_FREQUENCY', ref_frequency)
+    if total_bandwidth is not None:
+        msfr.putcol('TOTAL_BANDWIDTH', total_bandwidth)
 
 def get_central_freq(group, sb_per_group=10):
     """
@@ -100,20 +106,24 @@ def get_info(ms, read_cpg=True):
         group = None
         sb_per_group = None
     if read_cpg:
-        frequencies, spacing, widths = read_ms(ms)
+        frequencies, spacing, widths, ref_frequency, total_bandwidth = read_ms(ms)
         channels_per_group = len(frequencies)
     else:
         channels_per_group = None
     return group, sb_per_group, channels_per_group
 
 def show_ms(ms, machine_readable=False):
-    frequencies, spacing, widths = read_ms(ms)
+    frequencies, spacing, widths, ref_frequency, total_bandwidth = read_ms(ms)
+    print("Ref. frequency: {}; Total bandwidth: {}".format(ref_frequency, total_bandwidth))
     print("Frequencies ({})".format(len(frequencies)))
     print(frequencies)
     print("Spacing")
     print(spacing)
     print("Widths")
     print(widths)
+    print("Total widths: {}; Total_bandwidth: {}; difference: {}".format(np.sum(widths), 
+                                                                         total_bandwidth, 
+                                                                         np.sum(widths)-total_bandwidth))
     # Detect the group name.
     # Compute the frequencies based on the group name.
     group, sb_per_group, channels_per_group = get_info(ms)
@@ -124,8 +134,13 @@ def show_ms(ms, machine_readable=False):
     print(freq_comp)
     print("Frequency correction")
     print(frequencies-freq_comp)
+    print("Computed ref. frequency")
+    print(np.mean(freq_comp))
+    print("Ref. requency correction")
+    print(ref_frequency-np.mean(freq_comp))
 
-def correct_ms(ms, widths=False):
+
+def correct_ms(ms, widths=False, rf=False, tb=False):
     """
     Correct the frequencies of a given MS.
     It could also correct the widths.
@@ -135,19 +150,33 @@ def correct_ms(ms, widths=False):
                               sb_per_group=sb_per_group, 
                               channels_per_group=channels_per_group)
     write_ms(ms, freq_comp)
+    if widths or rf or tb:
+        frequencies, spacing, widths, ref_frequency, total_bandwidth = read_ms(ms)
+        widths_new = None
+        ref_frequency_new=None
+        total_bandwidth_new=None
     if widths:
-        frequencies, spacing, widths = read_ms(ms)
         widths_new = np.zeros_like(widths)
         widths_new[:-1] = spacing
         widths_new[-1] = spacing[-1]
-        write_ms(ms, freq_comp, widths=widths_new)
-        
+    if rf:
+        ref_frequency_new = np.mean(frequencies)
+    if tb:
+        total_bandwidth_new = np.sum(widths)
+    if widths or rf or tb:
+        write_ms(ms, freq_comp, 
+                 widths=widths_new, 
+                 ref_frequency=ref_frequency_new,
+                 total_bandwidth=total_bandwidth_new)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Check the frequency properties of MS files')
     parser.add_argument('-d', '--directory', action='store_true', help='directory with MS')
     parser.add_argument('-c', '--correct', action='store_true', help='Correct the frequencies of the MS')
     parser.add_argument('-w', '--widths', action='store_true', help='Correct the widths of the MS')
+    parser.add_argument('-r', '--ref-frequency', action='store_true', help='Correct the REF_FREQUENCY of the MS')
+    parser.add_argument('-t', '--total-bandwidth', action='store_true', help='Correct the TOTAL_BANDWIDTH of the MS')
     parser.add_argument('ms', help='MS or directory')
     args = parser.parse_args()
     # TODO: Check directory
@@ -157,11 +186,11 @@ if __name__ == "__main__":
         list_ms.extend(list_ms2)
         for ms in list_ms:
             if args.correct:
-                correct_ms(ms, args.widths)
+                correct_ms(ms, widths=args.widths, rf=args.ref_frequency, tb=args.total_bandwidth)
             else:
                 show_ms(ms)
     else:
         if args.correct:
-            correct_ms(args.ms, args.widths)
+            correct_ms(args.ms, widths=args.widths, rf=args.ref_frequency, tb=args.total_bandwidth)
         else:
             show_ms(args.ms)
