@@ -34,6 +34,10 @@
   script: wsclean.sh creates=/usr/bin/wsclean
   become: True
   
+- name: Install RMextract
+  pip: name='https://github.com/maaijke/RMextract/archive/master.zip' extra_args='--allow-external --install-option="--add-lofar-utils"'
+  become: True
+  
 - name: install factor
   pip: name='https://github.com/revoltek/factor/archive/master.zip' extra_args='--allow-external --upgrade'
   become: True
