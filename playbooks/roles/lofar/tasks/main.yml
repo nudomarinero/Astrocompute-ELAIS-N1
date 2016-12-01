@@ -8,16 +8,6 @@
 - name: install LoSoTo
   pip: name='https://github.com/revoltek/losoto/archive/master.zip' extra_args='--allow-external --upgrade'
   become: True
-
-- name: Download source of WSClean
-  get_url: >
-    url=http://sourceforge.net/projects/wsclean/files/wsclean-1.12/wsclean-1.12.tar.bz2/download 
-    dest=/tmp/wsclean-1.12.tar.bz2
-# Alternative http://www.roe.ac.uk/~jsm/lofar_dist/src/wsclean-1.10.tar.bz2
-    
-- name: Compile and install WSClean
-  script: wsclean.sh creates=/usr/bin/wsclean
-  become: True
   
 - name: download LOFAR package
   get_url: >
@@ -33,6 +23,15 @@
 
 - name: copy LOFAR profile file
   copy: src=lofar_profile dest=/etc/profile.d/Z98-lofar.sh owner=root group=root mode=0755
+  become: True
+  
+- name: Download source of WSClean
+  get_url: >
+    url=http://sourceforge.net/projects/wsclean/files/wsclean-2.0/wsclean-2.0.tar.bz2/download
+    dest=/tmp/wsclean-2.0.tar.bz2
+    
+- name: Compile and install WSClean
+  script: wsclean.sh creates=/usr/bin/wsclean
   become: True
   
 - name: install factor
