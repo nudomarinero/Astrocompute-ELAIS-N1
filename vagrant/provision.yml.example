@@ -1,9 +1,10 @@
 ---
 #- include: test_roles/lofar_base.yml
 #- include: test_roles/lofar.yml
-- include: test_roles/casa.yml
+#- include: test_roles/casa.yml
 #- include: test_roles/grid.yml
 #- include: tests/test_2.yml
 #- include:test_roles/wsclean.yml
 #- include: test_roles/postgres8.yml
 #- include: package_lofar.yml
+- include: test_roles/dysco.yml
