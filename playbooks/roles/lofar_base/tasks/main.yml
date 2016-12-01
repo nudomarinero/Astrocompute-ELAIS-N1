@@ -85,8 +85,12 @@
     - ipython-qtconsole
     - python-h5py
 
-- name: Update pip to the last version
-  script: update_pip.sh
+#- name: Update pip to the last version
+  #script: update_pip.sh
+  #become: True
+  
+- name: Update pip
+  pip: name=pip extra_args="--upgrade"
   become: True
   
 - name: install additional Python packages with pip
@@ -134,5 +138,14 @@
     - montage
     - sagecal
 
+- name: Get repo
+  git: >
+    repo=https://github.com/aroffringa/dysco.git
+    dest=/tmp/dysco
+    depth=1
+  
+- name: Compile and install dysco
+  script: dysco.sh creates=/usr/bin/dscompress
+  become: True
 
 
