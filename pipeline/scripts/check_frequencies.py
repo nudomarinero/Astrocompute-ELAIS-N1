@@ -140,7 +140,7 @@ def show_ms(ms, machine_readable=False):
     print(ref_frequency-np.mean(freq_comp))
 
 
-def correct_ms(ms, widths=False, rf=False, tb=False):
+def correct_ms(ms, w=False, rf=False, tb=False):
     """
     Correct the frequencies of a given MS.
     It could also correct the widths.
@@ -150,12 +150,12 @@ def correct_ms(ms, widths=False, rf=False, tb=False):
                               sb_per_group=sb_per_group, 
                               channels_per_group=channels_per_group)
     write_ms(ms, freq_comp)
-    if widths or rf or tb:
+    if w or rf or tb:
         frequencies, spacing, widths, ref_frequency, total_bandwidth = read_ms(ms)
         widths_new = None
         ref_frequency_new=None
         total_bandwidth_new=None
-    if widths:
+    if w:
         widths_new = np.zeros_like(widths)
         widths_new[:-1] = spacing
         widths_new[-1] = spacing[-1]
@@ -163,7 +163,7 @@ def correct_ms(ms, widths=False, rf=False, tb=False):
         ref_frequency_new = np.mean(frequencies)
     if tb:
         total_bandwidth_new = np.sum(widths)
-    if widths or rf or tb:
+    if w or rf or tb:
         write_ms(ms, freq_comp, 
                  widths=widths_new, 
                  ref_frequency=ref_frequency_new,
@@ -186,11 +186,11 @@ if __name__ == "__main__":
         list_ms.extend(list_ms2)
         for ms in list_ms:
             if args.correct:
-                correct_ms(ms, widths=args.widths, rf=args.ref_frequency, tb=args.total_bandwidth)
+                correct_ms(ms, w=args.widths, rf=args.ref_frequency, tb=args.total_bandwidth)
             else:
                 show_ms(ms)
     else:
         if args.correct:
-            correct_ms(args.ms, widths=args.widths, rf=args.ref_frequency, tb=args.total_bandwidth)
+            correct_ms(args.ms, w=args.widths, rf=args.ref_frequency, tb=args.total_bandwidth)
         else:
             show_ms(args.ms)
