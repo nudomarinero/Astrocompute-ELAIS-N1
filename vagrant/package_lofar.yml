@@ -8,4 +8,4 @@
     command: /usr/bin/python /vagrant/package_LOFAR/package_LOFAR.py
   - name: Compile LOFAR
     command: /vagrant/package_LOFAR/package.sh
-    sudo: True
+    become: True
