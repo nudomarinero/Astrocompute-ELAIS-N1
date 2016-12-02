@@ -48,6 +48,8 @@ def write_ms(ms, freqs, widths=None, ref_frequency=None, total_bandwidth=None):
     if widths is not None:
         aux_widths = np.expand_dims(widths, axis=0)
         msfr.putcol('CHAN_WIDTH', aux_widths)
+        msfr.putcol('EFFECTIVE_BW', aux_widths)
+        msfr.putcol('RESOLUTION', aux_widths)
     if ref_frequency is not None:
         msfr.putcol('REF_FREQUENCY', ref_frequency)
     if total_bandwidth is not None:
