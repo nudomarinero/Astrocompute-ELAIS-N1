@@ -276,8 +276,8 @@
     - setup
     - download_create
   
-  - name: update factor
-    pip: name='https://github.com/lofar-astron/factor/archive/master.zip' extra_args='--allow-external --upgrade'
+  - name: update factor (use json branch)
+    pip: name='https://github.com/lofar-astron/factor/archive/json.zip' extra_args='--allow-external --upgrade'
     become: True
     
   #- name: Generate upload script
