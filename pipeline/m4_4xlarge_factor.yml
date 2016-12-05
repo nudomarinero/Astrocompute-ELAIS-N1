@@ -1,0 +1,10 @@
+---
+# For an m4.4xlarge instance
+volume_size: 10000
+volume_type: "st1"
+# "gp2"
+key_name: "jsmkey"
+instance_type_v: "m4.4xlarge"
+spot_price_v: 1
+device_name: "/dev/xvdb"
+ami: "ami-04dfe713"
