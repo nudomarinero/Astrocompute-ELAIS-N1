@@ -136,6 +136,7 @@ def notify_factor_stoped():
 if __name__ == "__main__":
     logging.info("Monitoring started")
     init_factor = False
+    notified_disk = False
     try:
         while True:
             # Check spot instance stoping
@@ -144,8 +145,11 @@ if __name__ == "__main__":
                 notify_spot_shutdown(code)
             # Check disk becoming full
             fraction = check_disk_usage(disk)
-            if fraction >= 0.9:
+            if fraction >= 0.9 and not notified_disk:
                 notify_disk_90(fraction)
+                notified_disk = True
+            if fraction < 0.9 and notified_disk: # If space is freed
+                notified_disk = False
             # Check factor running
             check = check_factor_running()
             if init_factor and not check:
