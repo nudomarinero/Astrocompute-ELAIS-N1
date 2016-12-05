@@ -5,4 +5,4 @@
     - casa
     - lofar
     - grid
-    - postgres8
+#    - postgres8

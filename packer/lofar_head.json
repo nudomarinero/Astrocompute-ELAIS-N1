@@ -18,9 +18,9 @@
             "delete_on_termination": true
         } ],
       "ssh_username": "ubuntu",
-      "ami_name": "lofar-head-2.18-{{isotime \"2006-01-02\"}}",
+      "ami_name": "lofar-2.19-{{isotime \"2006-01-02\"}}",
       "tags": {
-        "Name": "lofar-head"
+        "Name": "lofar"
       }
     }
   ],
