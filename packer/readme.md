@@ -7,20 +7,14 @@ https://www.packer.io/).
 Usage
 -----
 
-There are two definition files:
-* lofar_node.json - with the CASA and LOFAR software
-* lofar_head.json - Like a node but includes also the Grid utilities
+The definition file is ```lofar.json``` and includes the CASA, the LOFAR 
+software and also the Grid utilities.
 
-To check if there are mistakes in the definition files:
-```packer validate lofar_node.json```
+To check if there are mistakes in the definition file:
+```packer validate lofar.json```
 
 To build the AMI:
-```packer build lofar_node.json```
-
-TODO
-----
-* Check that all the Python dependencies for the final pipeline are 
-installed
+```packer build lofar.json```
 
 Tips
 ----
