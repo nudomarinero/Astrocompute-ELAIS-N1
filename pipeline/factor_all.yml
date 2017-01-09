@@ -276,9 +276,11 @@
     - setup
     - download_create
   
-  - name: update factor (use json branch)
-    pip: name='https://github.com/lofar-astron/factor/archive/json.zip' extra_args='--allow-external --upgrade'
+  - name: update factor (use master branch)
+    pip: name='https://github.com/lofar-astron/factor/archive/master.zip' extra_args='--upgrade'
     become: True
+    tags:
+    - setup
     
   #- name: Generate upload script
     #template: >
@@ -291,9 +293,9 @@
     #- setup
     #- upload_create
     
-  #- name: Run the rest of the pipeline in a tmux session
-    #command: "bash -c 'tmuxp load /home/ubuntu/astrocompute/pipeline/files/tmuxp_factor.yml'"
-    #async: 15
-    #poll: 0
-    #tags:
-    #- run
+  - name: Run the rest of the pipeline in a tmux session
+    command: "bash -c 'tmuxp load /home/ubuntu/astrocompute/pipeline/files/tmuxp_factor.yml'"
+    async: 15
+    poll: 0
+    tags:
+    - run
