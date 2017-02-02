@@ -15,7 +15,7 @@
     - fftw3-dev 
     - flex 
     - libreadline-dev 
-    - libcfitsio3 
+    - libcfitsio-dev 
     - libcfitsio3-dev 
     - libxml2-dev 
     - libpng-dev 
@@ -46,7 +46,7 @@
     - libpq-dev 
     - libunittest++-dev
     - liblog4cplus-dev
-    - libgsl0-dev
+    - libgsl-dev
     - xvfb
     - libffi-dev
     - libssl-dev
@@ -56,6 +56,7 @@
     - language-pack-en
     - s3cmd
     - htop
+    - montage
       
 - name: install Python packages
   apt: pkg={{ item }}
@@ -120,22 +121,22 @@
     - sh
     
 - name: install LOFAR dependencies repository
-  apt_repository: repo='ppa:radio-astro/main'
+  apt_repository: repo='ppa:kernsuite/kern-dev'
   become: True
 
 - name: install LOFAR dependencies
   apt: pkg={{ item }} update_cache=yes
   become: True
   with_items:
-    - casacore2
-    - libcasacore2-dev
+    - casacore-dev
+    - casacore-tools
     - libcasasynthesis1
     - libcasasynthesis-dev
     - python-casacore
     - casarest
     - casacore-data
     - aoflagger
-    - montage
+    - aoflagger-dev
     - sagecal
 
 - name: Get repo

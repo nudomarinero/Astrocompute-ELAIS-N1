@@ -52,12 +52,12 @@ cp {source_dir}/postinstall-pak .
 chmod +x postinstall-pak
 
 sudo checkinstall -D --nodoc --install=no \
---requires="fftw3-dev,libreadline-dev,libcfitsio3,libxml2-dev,libpng-dev,libblas-dev,\
+--requires="fftw3-dev,libreadline-dev,libxml2-dev,libpng-dev,libblas-dev,\
 liblapack-dev,libboost-all-dev,zlib1g-dev,libfreetype6-dev,libncurses5-dev,\
 libatlas-base-dev,wcslib-dev,hdf5-tools,libhdf5-dev,libhdf5-serial-dev,\
 libzmq-dev,liblzo2-dev,valgrind,libssh2-1-dev,libblitz0-dev,libpqxx3-dev,\
-libpq-dev,libunittest++-dev,liblog4cplus-dev,libgsl0-dev,xvfb,casacore2,\
-libcasacore2-dev,python-casacore,aoflagger,libcasasynthesis1" \
+libpq-dev,libunittest++-dev,liblog4cplus-dev,libgsl-dev,xvfb,casacore-tools,\
+casacore-dev,python-casacore,aoflagger,libcasasynthesis1" \
 --maintainer="Jose Sabater Montes\ \<jsm@iaa.es\>" \
 --pkgname=lofar --pkgversion={ext_version} --pkgrelease={pkgrelease} \
 --exclude=/home --showinstall=no -y --backup=no \
