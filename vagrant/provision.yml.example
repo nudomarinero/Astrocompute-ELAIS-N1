@@ -1,4 +1,12 @@
 ---
+- name: Install python for Ansible
+  hosts: default
+  gather_facts: False
+  tasks:
+  - name: Install python for Ansible
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+    changed_when: False
+    become: True
 #- include: test_roles/lofar_base.yml
 #- include: test_roles/lofar.yml
 #- include: test_roles/casa.yml
