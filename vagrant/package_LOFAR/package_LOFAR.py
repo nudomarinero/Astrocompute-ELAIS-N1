@@ -8,7 +8,7 @@ config = {
     "release" : "2_19",
     "trunk" : True,
     "ext_version" : "2.19.100",
-    "pkgrelease" : "1trusty",
+    "pkgrelease" : "1xenial",
     "platform" : "amd64"
     }
 ###
