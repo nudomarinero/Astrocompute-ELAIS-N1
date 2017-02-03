@@ -42,7 +42,7 @@
     - libssh2-1-dev 
     - libblitz0-dev 
     - autogen 
-    - libpqxx3-dev 
+    - libpqxx-dev 
     - libpq-dev 
     - libunittest++-dev
     - liblog4cplus-dev
