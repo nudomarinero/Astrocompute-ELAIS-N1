@@ -1,9 +1,9 @@
 ---
-# For an m4.4xlarge instance
+# For an m3.medium instance
 volume_size: 2000
 volume_type: "st1"
 key_name: "jsmkey"
-instance_type_v: "m4.4xlarge"
-spot_price_v: 1
+instance_type_v: "m3.medium"
+spot_price_v: 0.03
 device_name: "/dev/xvdb"
 ami: "ami-f7d4d0e0"
