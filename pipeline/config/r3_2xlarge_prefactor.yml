@@ -1,9 +1,11 @@
 ---
-# For an m4.4xlarge instance
+# For an r3.2xlarge instance
 volume_size: 2000
-volume_type: "gp2"
+volume_type: "st1"
 key_name: "jsmkey"
 instance_type_v: "r3.2xlarge"
+device_name: "/dev/xvdf"
 spot_price_v: 1
 n_cores: 8
 memory: 61
+ami: "ami-f7d4d0e0"
