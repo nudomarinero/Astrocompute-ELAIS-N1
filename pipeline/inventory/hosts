@@ -17,7 +17,7 @@ tag_type_cal
 [tag_type_cal]
 
 
-[pretarget:children]
+[prefactor:children]
 tag_type_prefactor
 
 [tag_type_prefactor]
