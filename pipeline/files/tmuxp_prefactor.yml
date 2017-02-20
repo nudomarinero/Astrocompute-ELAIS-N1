@@ -1,0 +1,18 @@
+---
+session_name: prefactor
+windows:
+  - window_name: profile
+    panes:
+    - shell_command:
+      - cd /mnt/scratch/data/log
+      - sudo python /home/ubuntu/astrocompute/pipeline/scripts/profile_node_io.py
+  - window_name: htop
+    panes:
+    - shell_command:
+      - htop
+  - window_name: pipeline
+    panes:
+    - shell_command:
+      - cd /home/ubuntu/astrocompute/pipeline/scripts
+      - python process_prefactor.py
+
