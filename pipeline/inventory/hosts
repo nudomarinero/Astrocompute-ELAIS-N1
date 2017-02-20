@@ -18,9 +18,9 @@ tag_type_cal
 
 
 [pretarget:children]
-tag_type_pretarget
+tag_type_prefactor
 
-[tag_type_pretarget]
+[tag_type_prefactor]
 
 
 [subtract:children]
