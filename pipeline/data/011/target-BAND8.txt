@@ -28,3 +28,13 @@ http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB347_uv.MS.dppp.t
 http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB348_uv.MS.dppp.tar
 http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB349_uv.MS.dppp.tar
 http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB350_uv.MS.dppp.tar
+http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB351_uv.MS.dppp.tar
+http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB352_uv.MS.dppp.tar
+http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB353_uv.MS.dppp.tar
+http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB354_uv.MS.dppp.tar
+http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB355_uv.MS.dppp.tar
+http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB356_uv.MS.dppp.tar
+http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB357_uv.MS.dppp.tar
+http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB358_uv.MS.dppp.tar
+http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB359_uv.MS.dppp.tar
+http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB360_uv.MS.dppp.tar
