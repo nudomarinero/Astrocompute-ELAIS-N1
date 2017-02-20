@@ -22,14 +22,14 @@ pipeline.steps=[createmap_target, ndppp_prep_target, trans, parmmap, calibtarget
 ! ATeam_predict_parset = /home/ubuntu/prefactor/parsets/ateamclip.parset
 ! gsm_cal_parset       = /home/ubuntu/prefactor/parsets/gsmcal.parset
 ! ATeam_skymodel       = /home/ubuntu/prefactor/skymodels/Ateam_LBA_CC.skymodel
-! losoto_importer      = /home/ubuntu/prefactor/bin/losotoImporter.py
-! fitclock_script      = /home/ubuntu/prefactor/bin/fit_clocktec_initialguess_losoto.py
-! fitamps_script       = /home/ubuntu/prefactor/bin/amplitudes_losoto_3.py
-! plotsols_script      = /home/ubuntu/prefactor/bin/examine_npys.py
-! fit_XYoffset_script  = /home/ubuntu/prefactor/bin/find_cal_global_phaseoffset_losoto.py
-! transfer_script      = /home/ubuntu/prefactor/bin/transfer_amplitudes+clock+offset_toMS.py
-! ATeam_Clipper        = /home/ubuntu/prefactor/bin/Ateamclipper.py
-! plotphases_script    = /home/ubuntu/prefactor/bin/plot_solutions_all_stations.py
+! losoto_importer      = /home/ubuntu/prefactor/scripts/losotoImporter.py
+! fitclock_script      = /home/ubuntu/prefactor/scripts/fit_clocktec_initialguess_losoto.py
+! fitamps_script       = /home/ubuntu/prefactor/scripts/amplitudes_losoto_3.py
+! plotsols_script      = /home/ubuntu/prefactor/scripts/examine_npys.py
+! fit_XYoffset_script  = /home/ubuntu/prefactor/scripts/find_cal_global_phaseoffset_losoto.py
+! transfer_script      = /home/ubuntu/prefactor/scripts/transfer_amplitudes+clock+offset_toMS.py
+! ATeam_Clipper        = /home/ubuntu/prefactor/scripts/Ateamclipper.py
+! plotphases_script    = /home/ubuntu/prefactor/scripts/plot_solutions_all_stations.py
 ! flagging_strategy    = /opt/LofIm/share/rfistrategies/HBAdefault
 
 # set this to True if you want the pipeline run to continue if single bands fail
