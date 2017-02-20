@@ -96,7 +96,7 @@ def download_data():
     """
     params = "/home/ubuntu/astrocompute/pipeline/data/{}/target-BAND{}.txt".format(dataset, band)
     download = sh.Command("/home/ubuntu/astrocompute/pipeline/scripts/parallel_download.sh")
-    for line in download(_iter=True):
+    for line in download(params, _iter=True):
         print(line)
 
 def unselect():
