@@ -141,7 +141,7 @@ def terminate_instance():
 
 if __name__ == "__main__":
     logging.info("Prefactor pipeline started")
-    launch(download_cal_data)
+    #launch(download_cal_data)
     launch(download_data)
     launch(unselect)
     launch(run_pipeline)
