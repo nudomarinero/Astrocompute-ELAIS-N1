@@ -6,6 +6,7 @@ s3cmd mb s3://{{ bucket_name }}
 # Upload the logs
 s3cmd put /mnt/scratch/data/log/profile.log s3://{{ bucket_name }}/{{ dataset_name }}/logs/prefactor_run{{ run | default("0") }}/band${band}/
 s3cmd put /mnt/scratch/data/log/pipeline* s3://{{ bucket_name }}/{{ dataset_name }}/logs/prefactor_run{{ run | default("0") }}/band${band}/pipeline/
+s3cmd put /home/ubuntu/monitor.log s3://{{ bucket_name }}/{{ dataset_name }}/logs/prefactor_run{{ run | default("0") }}/band${band}/
 # Upload the data
 #L339802_SBgr024-10_uv.dppp.pre-cal.ms
 cd /mnt/scratch/data/process
