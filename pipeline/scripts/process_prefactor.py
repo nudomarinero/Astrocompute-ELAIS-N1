@@ -69,6 +69,7 @@ def launch(step):
         error_message = traceback.format_exc()
         message = ("Exception in LOFAR AWS prefactor pipeline\n"+
             "Dataset: {}\n".format(dataset)+
+            "Band:    {}\n".format(band)+
             "Step:    {}\n".format(fname)+
             "Error:\n"+
             error_message
@@ -142,8 +143,8 @@ def terminate_instance():
 if __name__ == "__main__":
     logging.info("Prefactor pipeline started")
     #launch(download_cal_data)
-    launch(download_data)
-    launch(unselect)
+    #launch(download_data)
+    #launch(unselect)
     launch(run_pipeline)
     launch(upload_data) 
     #launch(umount_and_remove_disk) # Not implemented yet
