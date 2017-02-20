@@ -102,7 +102,6 @@
 - name: Setup scratch disk and libraries
   hosts: prefactor
   vars: 
-  - instance_type: "r3_2xlarge"
   - calibration_type: "prefactor"
   - credentials_file: creds.yml 
   vars_files:
@@ -201,7 +200,6 @@
     git: >
       repo=https://github.com/lofar-astron/prefactor.git
       dest=/home/ubuntu/prefactor
-      version=v2.0-devel
       depth=1
     tags:
     - setup
