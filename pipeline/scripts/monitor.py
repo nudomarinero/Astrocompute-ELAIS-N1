@@ -30,7 +30,7 @@ else:
     ch.setFormatter(formatter)
     logger.addHandler(ch)
     # Log to file
-    file_name = "/home/ubuntu/monitor.log"
+    file_name = "monitor.log"
     fh = logging.FileHandler(file_name) 
     fh.setFormatter(formatter)
     logger.addHandler(fh)
