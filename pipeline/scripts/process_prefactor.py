@@ -27,7 +27,7 @@ else:
     ch.setFormatter(formatter)
     logger.addHandler(ch)
     # Log to file
-    file_name = "/home/ubuntu/pipeline_prefactor.log"
+    file_name = "pipeline_prefactor.log"
     fh = logging.FileHandler(file_name) 
     fh.setFormatter(formatter)
     logger.addHandler(fh)
@@ -142,9 +142,9 @@ def terminate_instance():
 
 if __name__ == "__main__":
     logging.info("Prefactor pipeline started")
-    #launch(download_cal_data)
-    #launch(download_data)
-    #launch(unselect)
+    launch(download_cal_data)
+    launch(download_data)
+    launch(unselect)
     launch(run_pipeline)
     launch(upload_data) 
     #launch(umount_and_remove_disk) # Not implemented yet
