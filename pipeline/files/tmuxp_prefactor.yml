@@ -18,6 +18,6 @@ windows:
   - window_name: pipeline
     panes:
     - shell_command:
-      - cd /home/ubuntu/astrocompute/pipeline/scripts
-      - python process_prefactor.py
+      - cd /mnt/scratch/data/log
+      - python /home/ubuntu/astrocompute/pipeline/scripts/process_prefactor.py
 
