@@ -4,6 +4,7 @@ import boto.utils
 import boto.ec2
 import sh
 from sh import sudo
+from glob import glob
 from get_band import get_tag
 import boto.sns
 import logging
@@ -86,19 +87,28 @@ def download_cal_data():
     Download the cal data using the script created
     """
     # TODO: Initial checks and cleaning
-    download = sh.Command("/home/ubuntu/download_data_cal.sh")
-    for line in download(_iter=True):
-        print(line)
+    cal_list = glob("/mnt/scratch/data/cal/pre_facet_prefactor/*.npy")
+    if len(cal_list) >= 9:
+        download = sh.Command("/home/ubuntu/download_data_cal.sh")
+        for line in download(_iter=True):
+            print(line)
+    else:
+        print("Skip download_cal_data")
     # TODO: Final checks and notification
 
-def download_data():
+def download_data(n_mss=30):
     """
     Download the data
     """
-    params = "/home/ubuntu/astrocompute/pipeline/data/{}/target-BAND{}.txt".format(dataset, band)
-    download = sh.Command("/home/ubuntu/astrocompute/pipeline/scripts/parallel_download.sh")
-    for line in download(params, _iter=True):
-        print(line)
+    
+    ms_list = glob("/mnt/scratch/data/raw/L*_SAP???_SB???_uv.MS.dppp")
+    if len(ms_list) >= n_mss: # TODO: check number
+        params = "/home/ubuntu/astrocompute/pipeline/data/{}/target-BAND{}.txt".format(dataset, band)
+        download = sh.Command("/home/ubuntu/astrocompute/pipeline/scripts/parallel_download.sh")
+        for line in download(params, _iter=True):
+            print(line)
+    else:
+        print("Skip download_data")
 
 def unselect():
     """
