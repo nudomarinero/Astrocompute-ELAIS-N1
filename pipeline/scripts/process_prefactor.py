@@ -88,7 +88,7 @@ def download_cal_data():
     """
     # TODO: Initial checks and cleaning
     cal_list = glob("/mnt/scratch/data/cal/pre_facet_prefactor/*.npy")
-    if len(cal_list) >= 9:
+    if len(cal_list) < 8:
         download = sh.Command("/home/ubuntu/download_data_cal.sh")
         for line in download(_iter=True):
             print(line)
@@ -100,9 +100,8 @@ def download_data(n_mss=30):
     """
     Download the data
     """
-    
     ms_list = glob("/mnt/scratch/data/raw/L*_SAP???_SB???_uv.MS.dppp")
-    if len(ms_list) >= n_mss: # TODO: check number
+    if len(ms_list) < n_mss: # TODO: check number
         params = "/home/ubuntu/astrocompute/pipeline/data/{}/target-BAND{}.txt".format(dataset, band)
         download = sh.Command("/home/ubuntu/astrocompute/pipeline/scripts/parallel_download.sh")
         for line in download(params, _iter=True):
