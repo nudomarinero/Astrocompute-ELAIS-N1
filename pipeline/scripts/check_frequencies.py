@@ -115,7 +115,7 @@ def get_group_sb(ms):
         group = int(result[0][0])
         sb_per_group = int(result[0][1])
     elif result_single:
-        group = int(result_single[0][0])
+        group = int(result_single[0])
         sb_per_group = 1
     else:
         group = None
