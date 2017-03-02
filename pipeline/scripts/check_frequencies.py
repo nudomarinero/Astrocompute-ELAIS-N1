@@ -64,7 +64,7 @@ def get_central_freq(group, sb_per_group=10):
         return (mfreq[group*sb_per_group+sb_per_group//2-1]+
                 mfreq[group*sb_per_group+sb_per_group//2])/2.
     else:
-        return mfreq[group*sb_per_group+sb_per_group//2-1]
+        return mfreq[group*sb_per_group+sb_per_group//2]
 
 def compute_freqs(group, sb_per_group=10, channels_per_group=50):
     """
@@ -73,18 +73,22 @@ def compute_freqs(group, sb_per_group=10, channels_per_group=50):
     central_freq = get_central_freq(group, sb_per_group=sb_per_group)
     
     # Heuristics for the channel positions
-    if group < 30:
-        central_freq_aux = get_central_freq(group+1, sb_per_group=sb_per_group)
-    elif group == 32:
-        ## WARNING
-        central_freq_aux = get_central_freq(group-1, sb_per_group=sb_per_group)
-    elif group == 33:
-        central_freq_aux = get_central_freq(group+1, sb_per_group=sb_per_group)
-    elif (group > 33) and (group <= 37):
-        central_freq_aux = get_central_freq(group-1, sb_per_group=sb_per_group)
+    # TODO: Correct for sb_per_group different than 10
+    if sb_per_group == 10:
+        if group < 30:
+            central_freq_aux = get_central_freq(group+1, sb_per_group=sb_per_group)
+        elif group == 32:
+            ## WARNING
+            central_freq_aux = get_central_freq(group-1, sb_per_group=sb_per_group)
+        elif group == 33:
+            central_freq_aux = get_central_freq(group+1, sb_per_group=sb_per_group)
+        elif (group > 33) and (group <= 37):
+            central_freq_aux = get_central_freq(group-1, sb_per_group=sb_per_group)
+        else:
+            ## ERROR
+            central_freq_aux = get_central_freq(group-1, sb_per_group=sb_per_group)
     else:
-        ## ERROR
-        central_freq_aux = get_central_freq(group-1, sb_per_group=sb_per_group)
+        central_freq_aux = get_central_freq(group+1, sb_per_group=sb_per_group)
     # Compute the channel step
     cstep = np.absolute(central_freq - central_freq_aux)/channels_per_group
     channel_shift = channels_per_group/2-0.5
