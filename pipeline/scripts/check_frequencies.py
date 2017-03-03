@@ -73,7 +73,7 @@ def compute_freqs(group, sb_per_group=10, channels_per_group=50):
     central_freq = get_central_freq(group, sb_per_group=sb_per_group)
     
     # Heuristics for the channel positions
-    # TODO: Correct for sb_per_group different than 10
+    # TODO: Correct for sb_per_group different than 10 or 1
     if sb_per_group == 10:
         if group < 30:
             central_freq_aux = get_central_freq(group+1, sb_per_group=sb_per_group)
@@ -87,6 +87,14 @@ def compute_freqs(group, sb_per_group=10, channels_per_group=50):
         else:
             ## ERROR
             central_freq_aux = get_central_freq(group-1, sb_per_group=sb_per_group)
+    elif sb_per_group == 1:
+        if (group < 319) or (group == 321):
+            central_freq_aux = get_central_freq(group+1, sb_per_group=sb_per_group)
+        elif (group > 321) or (group == 319):
+            central_freq_aux = get_central_freq(group-1, sb_per_group=sb_per_group)
+        else: # Group 320 or out of bounds
+            ## ERROR
+            central_freq_aux = get_central_freq(group+1, sb_per_group=sb_per_group)
     else:
         central_freq_aux = get_central_freq(group+1, sb_per_group=sb_per_group)
     # Compute the channel step
