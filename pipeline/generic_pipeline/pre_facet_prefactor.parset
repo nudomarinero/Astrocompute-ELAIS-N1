@@ -82,7 +82,11 @@
 
 ### Stuff that you probably don't need to modify
 # which steps to run 
-pipeline.steps=[mk_inspect_dir, createmap_target, combine_data_target_map, get_ion_files, trans, ndppp_prep_target, create_ateam_model_map, make_sourcedb_ateam, expand_sourcedb_ateam, predict_ateam, ateamcliptar, combine_target_map, sortmap_target, do_sortmap_maps, dpppconcat, check_unflagged, check_unflagged_map, sky_tar, create_target_model_map, make_sourcedb_target, expand_sourcedb_target, gsmcal_parmmap, gsmcal_solve, gsmcal_apply, h5_imp_gsmsol_map, h5imp_gsmsol, plot_gsm_phases, gsmcal_antmap, make_structurefunction, old_plot_gsmphases, createmap_plots, copy_plots, mk_results_dir, make_results_mapfile, move_results]
+#pipeline.steps=[mk_inspect_dir, createmap_target, combine_data_target_map, get_ion_files, trans, ndppp_prep_target, create_ateam_model_map, make_sourcedb_ateam, expand_sourcedb_ateam, predict_ateam, ateamcliptar, combine_target_map, sortmap_target, do_sortmap_maps, dpppconcat, check_unflagged, check_unflagged_map, sky_tar, create_target_model_map, make_sourcedb_target, expand_sourcedb_target, gsmcal_parmmap, gsmcal_solve, gsmcal_apply, h5_imp_gsmsol_map, h5imp_gsmsol, plot_gsm_phases, gsmcal_antmap, make_structurefunction, old_plot_gsmphases, createmap_plots, copy_plots, mk_results_dir, make_results_mapfile, move_results]
+#
+# make_structurefunction does not work
+pipeline.steps=[mk_inspect_dir, createmap_target, combine_data_target_map, get_ion_files, trans, ndppp_prep_target, create_ateam_model_map, make_sourcedb_ateam, expand_sourcedb_ateam, predict_ateam, ateamcliptar, combine_target_map, sortmap_target, do_sortmap_maps, dpppconcat, check_unflagged, check_unflagged_map, sky_tar, create_target_model_map, make_sourcedb_target, expand_sourcedb_target, gsmcal_parmmap, gsmcal_solve, gsmcal_apply, h5_imp_gsmsol_map, h5imp_gsmsol, plot_gsm_phases, gsmcal_antmap, old_plot_gsmphases, createmap_plots, copy_plots, mk_results_dir, make_results_mapfile, move_results]
+
 
 # create the inspection_directory if needed
 mk_inspect_dir.control.kind               =  plugin
@@ -435,13 +439,13 @@ gsmcal_antmap.control.mapfile_dir        =  input.output.mapfile_dir
 gsmcal_antmap.control.filename           =  gsmcal_antmaps.mapfile
 
 # plot the phase solutions from the phase-only calibration of the target
-make_structurefunction.control.kind               =  recipe
-make_structurefunction.control.type               =  executable_args
-make_structurefunction.control.executable         =  {{ structurefunction_script }}
-make_structurefunction.control.max_per_node       =  {{ num_proc_per_node }}
-make_structurefunction.control.mapfiles_in        =  [gsmcal_parmmap.output.mapfile,gsmcal_antmap.output.mapfile,check_unflagged_map.output.mapfile]
-make_structurefunction.control.inputkeys          =  [inparmdb,inants,outbase]
-make_structurefunction.control.arguments          =  [inparmdb,inants,outbase]
+#make_structurefunction.control.kind               =  recipe
+#make_structurefunction.control.type               =  executable_args
+#make_structurefunction.control.executable         =  {{ structurefunction_script }}
+#make_structurefunction.control.max_per_node       =  {{ num_proc_per_node }}
+#make_structurefunction.control.mapfiles_in        =  [gsmcal_parmmap.output.mapfile,gsmcal_antmap.output.mapfile,check_unflagged_map.output.mapfile]
+#make_structurefunction.control.inputkeys          =  [inparmdb,inants,outbase]
+#make_structurefunction.control.arguments          =  [inparmdb,inants,outbase]
 
 # plot the phase solutions from the phase-only calibration of the target
 old_plot_gsmphases.control.kind               =  recipe
