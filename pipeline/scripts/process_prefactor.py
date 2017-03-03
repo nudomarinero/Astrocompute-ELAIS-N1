@@ -116,6 +116,15 @@ def unselect():
     from unselect_subbands import unselect_subbands
     unselect_subbands("/mnt/scratch/data/raw/")
 
+def correct_data():
+    """
+    Correct the data using the check_frequencies script
+    """
+    correct = sh.Command("/home/ubuntu/astrocompute/pipeline/scripts/correct_data_prefactor.sh")
+    for line in correct("/mnt/scratch/data/raw",
+                        _iter=True):
+        print(line)
+
 def run_pipeline():
     """
     Run the generic pipeline and send notification in case of error
@@ -154,6 +163,7 @@ if __name__ == "__main__":
     launch(download_cal_data)
     launch(download_data)
     launch(unselect)
+    launch(correct_data)
     launch(run_pipeline)
     launch(upload_data) 
     #launch(umount_and_remove_disk) # Not implemented yet
