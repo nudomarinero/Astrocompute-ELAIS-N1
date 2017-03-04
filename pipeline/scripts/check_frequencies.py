@@ -55,22 +55,26 @@ def write_ms(ms, freqs, widths=None, ref_frequency=None, total_bandwidth=None):
     if total_bandwidth is not None:
         msfr.putcol('TOTAL_BANDWIDTH', total_bandwidth)
 
-def get_central_freq(group, sb_per_group=10):
+def get_central_freq(group, sb_per_group=10, corr_factor=0):
     """
     Get the central frequency of a group
     """
     mfreq = np.load(os.path.join(THIS_DIR, "mfreq.npy")).astype("Float64")
     if sb_per_group % 2 == 0:
-        return (mfreq[group*sb_per_group+sb_per_group//2-1]+
-                mfreq[group*sb_per_group+sb_per_group//2])/2.
+        return (mfreq[group*sb_per_group+sb_per_group//2-1+corr_factor]+
+                mfreq[group*sb_per_group+sb_per_group//2+corr_factor])/2.
     else:
-        return mfreq[group*sb_per_group+sb_per_group//2]
+        return mfreq[group*sb_per_group+sb_per_group//2+corr_factor]
 
 def compute_freqs(group, sb_per_group=10, channels_per_group=50):
     """
     Compute the even spacing of frequencies for a given group
     """
-    central_freq = get_central_freq(group, sb_per_group=sb_per_group)
+    if (sb_per_group == 10) and (group >= 32): # Drop wrong band
+        central_freq = get_central_freq(group, sb_per_group=sb_per_group, corr_factor=1)
+    else:
+        central_freq = get_central_freq(group, sb_per_group=sb_per_group)
+        
     
     # Heuristics for the channel positions
     # TODO: Correct for sb_per_group different than 10 or 1
@@ -79,11 +83,11 @@ def compute_freqs(group, sb_per_group=10, channels_per_group=50):
             central_freq_aux = get_central_freq(group+1, sb_per_group=sb_per_group)
         elif group == 32:
             ## WARNING
-            central_freq_aux = get_central_freq(group-1, sb_per_group=sb_per_group)
+            central_freq_aux = get_central_freq(group-1, sb_per_group=sb_per_group, corr_factor=1)
         elif group == 33:
-            central_freq_aux = get_central_freq(group+1, sb_per_group=sb_per_group)
+            central_freq_aux = get_central_freq(group+1, sb_per_group=sb_per_group, corr_factor=1)
         elif (group > 33) and (group <= 37):
-            central_freq_aux = get_central_freq(group-1, sb_per_group=sb_per_group)
+            central_freq_aux = get_central_freq(group-1, sb_per_group=sb_per_group, corr_factor=1)
         else:
             ## ERROR
             central_freq_aux = get_central_freq(group-1, sb_per_group=sb_per_group)
