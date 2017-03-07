@@ -260,8 +260,8 @@
 
   - name: Generate download script
     template: >
-      src=templates/download_data_pretarget.sh.j2 
-      dest=/home/ubuntu/download_data_pretarget.sh
+      src=templates/download_data_prefactor.sh.j2 
+      dest=/home/ubuntu/download_data_prefactor.sh
       owner=ubuntu 
       group=ubuntu 
       mode=0755

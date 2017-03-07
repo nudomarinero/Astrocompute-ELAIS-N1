@@ -86,7 +86,7 @@ def download_data():
     Download the pretarget data using the script created
     """
     # TODO: Initial checks and cleaning
-    download = sh.Command("/home/ubuntu/download_data_pretarget.sh")
+    download = sh.Command("/home/ubuntu/download_data_prefactor.sh")
     for line in download(_iter=True):
         print(line)
     # TODO: Final checks and notification
