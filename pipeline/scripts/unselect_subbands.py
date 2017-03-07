@@ -10,7 +10,7 @@ import sys
 import subprocess
 
 
-def main(directory, threshold=0.001, suffix=".original"):
+def main(directory, threshold=0.0015, suffix=".original"):
     """
     Function to be called from the pipeline
     """
@@ -19,7 +19,7 @@ def main(directory, threshold=0.001, suffix=".original"):
                       suffix=suffix)
 
     
-def unselect(dir_size_list, threshold=0.001):
+def unselect(dir_size_list, threshold=0.0015):
     """
     Select only the filenames with a deviation greater than 0.1% of the 
     value of the median
@@ -27,7 +27,7 @@ def unselect(dir_size_list, threshold=0.001):
     sizes = np.array([int(a[0]) for a in dir_size_list])
     filenames = np.array([a[1] for a in dir_size_list])
     median_sizes = np.median(sizes)
-    return filenames[np.abs(sizes - median_sizes) > (median_sizes*0.001)]
+    return filenames[np.abs(sizes - median_sizes) > (median_sizes*threshold)]
 
 def list_filesizes_dir(directory):
     """
@@ -47,7 +47,7 @@ def move_unselected(filenames, suffix=".original"):
         if not f.endswith(suffix):
             os.rename(f, f+suffix)
 
-def unselect_subbands(directory, threshold=0.001, suffix=".original"):
+def unselect_subbands(directory, threshold=0.0015, suffix=".original"):
     """
     Main function to move the subbands
     """
@@ -55,6 +55,8 @@ def unselect_subbands(directory, threshold=0.001, suffix=".original"):
     filenames = unselect(dir_size_list, threshold=threshold)
     #print(filenames)
     move_unselected(filenames)
+    print("Unselected sub-bands")
+    print(filenames)
 
 if __name__ == "__main__":
     directory = str(sys.argv[1])
