@@ -1,7 +1,7 @@
 ---
 # For an m4.4xlarge instance
 volume_size: 270
-volume_type: "st1"
+volume_type: "gp2"
 key_name: "jsmkey"
 instance_type_v: "m4.4xlarge"
 spot_price_v: 1
