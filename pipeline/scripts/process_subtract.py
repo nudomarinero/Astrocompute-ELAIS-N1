@@ -91,6 +91,13 @@ def download_data():
         print(line)
     # TODO: Final checks and notification
 
+def rename():
+    """
+    Rename bands
+    """
+    from rename_subtract import rename_directory
+    rename_directory("/mnt/scratch/data/raw/")
+
 def run_pipeline():
     """
     Run the generic pipeline and send notification in case of error
@@ -127,6 +134,7 @@ def terminate_instance():
 if __name__ == "__main__":
     logging.info("Subtract pipeline started")
     launch(download_data)
+    launch(rename)
     launch(run_pipeline)
     launch(upload_data)
     #launch(umount_and_remove_disk) # Not implemented yet
