@@ -79,14 +79,11 @@
   hosts: subtract
   vars: 
   - credentials_file: creds.yml
-  - pipeline_name: "pre_facet_subtract"
-  - bucket_name: "lofar-elais-n1-calibration"
-  - dataset_name: "011"
+  - calibration_type: "prefactor"
   vars_files:
   - "{{ credentials_file }}"
-  - "{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('subtract') }}.yml"
-#  - "{{ calibration_type|default('subtract') }}_config.yml"
-     
+  - "{{ calibration_type|default('subtract') }}_config.yml"
+  - "config/{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('subtract') }}.yml"   
   tasks:
   - name: Create filesystem
     filesystem: >

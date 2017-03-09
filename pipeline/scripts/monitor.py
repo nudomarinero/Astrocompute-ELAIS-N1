@@ -87,6 +87,7 @@ def check_factor_running():
     Check if factor is running
     """
     program_dict = {"prefactor":"genericpipeline.py",
+                    "subtract":"genericpipeline.py",
                     "factor":"runfactor"}
     pipeline_program = program_dict.get(pipeline_type, "runfactor")
     while True:
