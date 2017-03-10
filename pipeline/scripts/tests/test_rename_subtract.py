@@ -62,17 +62,26 @@ class TestRenameSubtract(unittest.TestCase):
         f1 = "L000000_SAP000_SB000_uv.MS_12487D6BAt_182MHz.pre-cal.ms.tar"
         self.fileone = os.path.join(self.tmp_dir_one, f1)
         open(self.fileone, "a").close()
+        self.tmp_dir_two = tempfile.mkdtemp()
+        f2 = "L000000_SAP000_SB000_uv.MS_12487D6BAt_182MHz.pre-cal.ms"
+        self.filetwo = os.path.join(self.tmp_dir_two, f2)
+        open(self.filetwo, "a").close()
         
     
     def test_get_name1(self):
         self.assertEqual(get_name(input_names[0]), output_names[0])
-        
+    
+    def test_get_name_no_tar(self):
+        self.assertEqual(get_name("L000000_SAP000_SB321_uv.MS_12487D6BAt_182MHz.pre-cal.ms"), 
+                         "L000000_SBgr033-10_uv.MS.pre-cal.ms")
+
+            
     def test_get_name_all(self):
         for i, input_name in enumerate(input_names):
             self.assertEqual(get_name(input_name), output_names[i])
     
     def test_move_all(self):
-        rename_directory(self.tmp_dir, verbose=False)
+        rename_directory(self.tmp_dir, verbose=True)
         final_names = os.listdir(self.tmp_dir)
         #print(final_names)
         for final_name in final_names:
@@ -83,6 +92,12 @@ class TestRenameSubtract(unittest.TestCase):
         final_names = os.listdir(self.tmp_dir_one)
         #print(final_names)
         self.assertEqual(final_names[0], "L000000_SBgr033-10_uv.MS.pre-cal.ms.tar")
+    
+    def test_move_two(self):
+        rename_ms(self.filetwo, verbose=False)
+        final_names = os.listdir(self.tmp_dir_two)
+        #print(final_names)
+        self.assertEqual(final_names[0], "L000000_SBgr033-10_uv.MS.pre-cal.ms")
     
     def tearDown(self):
         shutil.rmtree(self.tmp_dir)

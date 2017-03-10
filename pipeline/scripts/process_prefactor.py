@@ -136,6 +136,13 @@ def run_pipeline():
                          _iter=True):
         print(line)
 
+def rename():
+    """
+    Rename bands before upload
+    """
+    from rename_subtract import rename_directory
+    rename_directory("/mnt/scratch/data/process")
+
 def upload_data():
     """
     Upload the computed data
@@ -165,11 +172,12 @@ if __name__ == "__main__":
     launch(unselect)
     launch(correct_data)
     launch(run_pipeline)
+    launch(rename)
     launch(upload_data) 
     #launch(umount_and_remove_disk) # Not implemented yet
     message = "Prefactor pipeline on band {} successfully finished".format(band)
     notify(message, subject=message)
     logging.info("Prefactor pipeline finished; prepared to terminate")
-    #launch(terminate_instance)
+    launch(terminate_instance)
     
 
