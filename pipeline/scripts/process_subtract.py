@@ -9,6 +9,7 @@ import boto.sns
 import logging
 import traceback
 import ConfigParser
+from glob import glob
 
 #logging.basicConfig(
     #filename="pipeline.log", 
@@ -94,6 +95,7 @@ def download_data():
 def rename():
     """
     Rename bands
+    Not needed at this stage
     """
     from rename_subtract import rename_directory
     rename_directory("/mnt/scratch/data/raw/")
@@ -134,7 +136,7 @@ def terminate_instance():
 if __name__ == "__main__":
     logging.info("Subtract pipeline started")
     launch(download_data)
-    launch(rename)
+    #launch(rename)
     launch(run_pipeline)
     launch(upload_data)
     #launch(umount_and_remove_disk) # Not implemented yet
