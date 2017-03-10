@@ -87,18 +87,13 @@ def download_data():
     Download the pretarget data using the script created
     """
     # TODO: Initial checks and cleaning
-    download = sh.Command("/home/ubuntu/download_data_prefactor.sh")
-    for line in download(_iter=True):
-        print(line)
+    if not os.path.exists("/mnt/scratch/data/raw/downloaded.txt"):
+        download = sh.Command("/home/ubuntu/download_data_prefactor.sh")
+        for line in download(_iter=True):
+            print(line)
+    else:
+        print("Skip download_cal_data")
     # TODO: Final checks and notification
-
-def rename():
-    """
-    Rename bands
-    Not needed at this stage
-    """
-    from rename_subtract import rename_directory
-    rename_directory("/mnt/scratch/data/raw/")
 
 def run_pipeline():
     """
@@ -136,7 +131,6 @@ def terminate_instance():
 if __name__ == "__main__":
     logging.info("Subtract pipeline started")
     launch(download_data)
-    #launch(rename)
     launch(run_pipeline)
     launch(upload_data)
     #launch(umount_and_remove_disk) # Not implemented yet
