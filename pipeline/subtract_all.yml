@@ -146,28 +146,6 @@
     - create_disk
     - mount_disk
   
-  - name: Install missing packages
-    apt: pkg={{ item }}
-    become: True
-    with_items:
-    - language-pack-en
-    - s3cmd
-    - htop
-    tags:
-    - setup
-    - install
-    
-  - name: Install Python missing packages
-    pip: name={{ item }} extra_args="--upgrade"
-    become: True
-    with_items:
-    - tmuxp
-    - sh
-    #- "git+https://github.com/ericmandel/pyds9.git#egg=pyds9"
-    tags:
-    - setup
-    - install
-  
   - name: Create AWS credentials directory
     file: path=/home/ubuntu/.aws state=directory
     tags:
@@ -211,7 +189,6 @@
     git: >
       repo=https://github.com/lofar-astron/prefactor.git
       dest=/home/ubuntu/prefactor
-      version=v2.0-devel
       depth=1
     tags:
     - setup
