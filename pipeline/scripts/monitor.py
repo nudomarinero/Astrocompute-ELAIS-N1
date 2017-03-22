@@ -93,7 +93,7 @@ def check_factor_running():
     while True:
         try:
             check = any([pipeline_program in psutil.Process(pid).name() for pid in psutil.pids()])
-            check = check or [pipeline_program in a[1] for a in [psutil.Process(pid).cmdline() for pid in psutil.pids()] if len(a) >= 2]
+            check = check or any([pipeline_program in a[1] for a in [psutil.Process(pid).cmdline() for pid in psutil.pids()] if len(a) >= 2])
         except psutil.NoSuchProcess:
             pass
         else:
