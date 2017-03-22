@@ -1,8 +1,8 @@
 ---
-count: 9
-startindex: 0
+count: 1
+startindex: 4
 instance_type: "m4_4xlarge"
-dataset_name: "012"
-calibrator_name: "cal1"
+dataset_name: "014"
+calibrator_name: "cal1_first"
 pipeline_name: "pre_facet_prefactor"
 bucket_name: "lofar-elais-n1-calibration"
