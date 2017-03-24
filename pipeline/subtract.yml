@@ -82,6 +82,7 @@
       volume_type: "{{ volume_type }}"
       name: "{{ calibration_type }}{{ item.1 }}"
       device_name: '{{device_name}}'
+      delete_on_termination: true
     with_together:
       - '{{ ec2.tagged_instances }}'
       - '{{ bands }}'
