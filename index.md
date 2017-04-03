@@ -8,14 +8,14 @@ title: Astrocompute ELAIS-N1
 Information about the [SKA](https://www.skatelescope.org/)-[AWS](http://aws.amazon.com/) [Astrocompute proposal](https://www.skatelescope.org/ska-aws-astrocompute-call-for-proposals/) called: \"Calibration of LOFAR ELAIS-N1 data in the Amazon cloud\". Maintained by J. Sabater (Institute for Astronomy, University of Edinburgh).
 
 ## LOFAR AMIs
-We have created an AMI with the LOFAR software pre-installed: `ami-05144012`. It is based on the Ubuntu 14.04 LTS official AMI.
+We have created an AMI with the LOFAR software pre-installed: `ami-f7d4d0e0`. It is based on the Ubuntu 14.04 LTS official AMI.
 
 Software installed:
 
 * casacore libraries.
 * casarest libraries.
 * pyrap.
-* LOFAR software (release 2.18 pre-release).
+* LOFAR software (release 2.19).
 * [CASA](http://casa.nrao.edu/).
 * [LSMTool](https://github.com/darafferty/LSMTool).
 * [LoSoTo](https://github.com/revoltek/losoto).
@@ -32,6 +32,7 @@ Software installed:
 ### Legacy AMIs
 We keep some old AMIs for compatibility reasons:
 
+* LOFAR 2.18 pre-release: `ami-05144012`
 * LOFAR 2.17: `ami-bfc200d2`
 * LOFAR 2.17 pre-release: `ami-8be114e6`
 * LOFAR 2.15 node: `ami-5c261436`
@@ -51,5 +52,6 @@ The generation of the packages is explained in: https://github.com/nudomarinero/
 The LOFAR data of the ELAIS-N1 field is released in the S3 bucket `lofar-elais-n1`
 
 ## Calibration pipeline
-The calibration of the data is performed in two steps: a) the prefacet calibration and b) the facet calibration. A preliminary version of the prefacet calibration is already implemented in https://github.com/nudomarinero/Astrocompute-ELAIS-N1/tree/master/pipeline",
+The calibration of the data is performed in two steps: a) the prefacet calibration and b) the facet calibration. All the steps are already implemented in: [https://github.com/nudomarinero/Astrocompute-ELAIS-N1/tree/master/pipeline].
+ 
 
