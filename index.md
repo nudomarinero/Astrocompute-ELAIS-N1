@@ -55,5 +55,6 @@ The LOFAR data of the ELAIS-N1 field is released in the S3 bucket `lofar-elais-n
 The calibration of the data is performed in two steps: a) the prefacet calibration and b) the facet calibration. All the steps are already implemented in: [Github pipeline](https://github.com/nudomarinero/Astrocompute-ELAIS-N1/tree/master/pipeline).
 
 ## Publications
+First draft: [lofar_cloud.pdf](http://www.roe.ac.uk/~jsm/lofar/lofar_cloud.pdf)
 
 
