@@ -46,12 +46,14 @@ Note that the AMIs called `node` do not have the GRID, SRM, AWS or Postgresql pa
 
 ### Packaging of LOFAR
 The [radio-astro Ubuntu PPA](https://launchpad.net/~radio-astro/+archive/ubuntu/main) keeps all the LOFAR dependencies packaged and updated. However, we decided to independently generate the LOFAR package for each release to maintain control of the compilation process. 
-The generation of the packages is explained in: https://github.com/nudomarinero/Astrocompute-ELAIS-N1/tree/master/vagrant
+The generation of the packages is explained in: [Github vagrant](https://github.com/nudomarinero/Astrocompute-ELAIS-N1/tree/master/vagrant)
 
 ## Data release
-The LOFAR data of the ELAIS-N1 field is released in the S3 bucket `lofar-elais-n1`
+The LOFAR data of the ELAIS-N1 field is released in the S3 bucket `lofar-elais-n1`. A list with the data can be found in: [data](http://www.lofarcloud.uk/data.html).
 
 ## Calibration pipeline
-The calibration of the data is performed in two steps: a) the prefacet calibration and b) the facet calibration. All the steps are already implemented in: [https://github.com/nudomarinero/Astrocompute-ELAIS-N1/tree/master/pipeline].
- 
+The calibration of the data is performed in two steps: a) the prefacet calibration and b) the facet calibration. All the steps are already implemented in: [Github pipeline](https://github.com/nudomarinero/Astrocompute-ELAIS-N1/tree/master/pipeline).
+
+## Publications
+
 
