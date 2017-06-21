@@ -12,6 +12,7 @@ from glob import glob
 
 output_name_template = "L{}_SBgr{:03d}-10_uv.MS.pre-cal.ms"
 output_name_template_tar = "L{}_SBgr{:03d}-10_uv.MS.pre-cal.ms.tar"
+output_name_template_model = "L{}_SBgr{:03d}-10_uv.MS.pre-cal.wsclean_low2-model.merge"
 freq2band={115:0, 117:1, 119:2, 121:3, 123:4, 125:5, 127:6, 129:7, 
            131:8, 133:9, 135:10, 137:11, 139:12, 141:13, 143:14, 
            145:15, 147:16, 149:17, 151:18, 153:19, 154:20, 156:21, 
@@ -26,6 +27,8 @@ def get_name(input_name):
     freq = int(freq_str)
     if input_name.endswith(".tar"):
         out = output_name_template_tar.format(L, freq2band[freq])
+    elif input_name.endswith(".merge"):
+        out = output_name_template_model.format(L, freq2band[freq])  
     else:
         out = output_name_template.format(L, freq2band[freq])
     return out
