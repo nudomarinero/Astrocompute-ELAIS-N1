@@ -5,7 +5,7 @@
   - instance_type: "m4_4xlarge"
   - calibration_type: "cal"
   vars_files:
-  - "{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('cal') }}.yml"
+  - "config/{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('cal') }}.yml"
   - "{{ calibration_type|default('cal') }}_config.yml"
   tasks:  
   - name: Launch spot instances
@@ -98,7 +98,7 @@
   - credentials_file: creds.yml 
   vars_files:
   - "{{ credentials_file }}"
-  - "{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('cal') }}.yml"
+  - "config/{{ instance_type|default('m4_4xlarge') }}_{{ calibration_type|default('cal') }}.yml"
   - "{{ calibration_type|default('cal') }}_config.yml"
      
   tasks:

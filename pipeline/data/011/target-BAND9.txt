@@ -1,4 +1,3 @@
-http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB360_uv.MS.dppp.tar
 http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB361_uv.MS.dppp.tar
 http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB362_uv.MS.dppp.tar
 http://s3.amazonaws.com/lofar-elais-n1/L229387/L229387_SAP000_SB363_uv.MS.dppp.tar

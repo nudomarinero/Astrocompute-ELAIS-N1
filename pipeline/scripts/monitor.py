@@ -30,7 +30,7 @@ else:
     ch.setFormatter(formatter)
     logger.addHandler(ch)
     # Log to file
-    file_name = "/home/ubuntu/monitor.log"
+    file_name = "monitor.log"
     fh = logging.FileHandler(file_name) 
     fh.setFormatter(formatter)
     logger.addHandler(fh)
@@ -48,6 +48,7 @@ region = boto.utils.get_instance_metadata()['placement']['availability-zone'][:-
 iid = boto.utils.get_instance_metadata()['instance-id']
 band = get_tag("band")
 dataset = get_tag("dataset")
+pipeline_type = get_tag("type")
 
 ## Auxiliary functions
 def notify(message, subject=None):
@@ -85,9 +86,14 @@ def check_factor_running():
     """
     Check if factor is running
     """
+    program_dict = {"prefactor":"genericpipeline.py",
+                    "subtract":"genericpipeline.py",
+                    "factor":"runfactor"}
+    pipeline_program = program_dict.get(pipeline_type, "runfactor")
     while True:
         try:
-            check = any(["runfactor" in psutil.Process(pid).name() for pid in psutil.pids()])
+            check = any([pipeline_program in psutil.Process(pid).name() for pid in psutil.pids()])
+            check = check or any([pipeline_program in a[1] for a in [psutil.Process(pid).cmdline() for pid in psutil.pids()] if len(a) >= 2])
         except psutil.NoSuchProcess:
             pass
         else:
@@ -95,7 +101,7 @@ def check_factor_running():
         
     return check
     
-    
+# Notifications
 def notify_spot_shutdown(code):
     """
     Notify if the instance is going to shut down
@@ -124,12 +130,13 @@ def notify_factor_stoped():
     """
     Notify factor has stoped
     """
-    logging.warning("Factor stoped")
-    message = ("Factor stoped\n"+
+    logging.warning("Pipeline stoped")
+    message = ("Pipeline stoped\n"+
         "Dataset: {}\n".format(dataset)+
         "Data id: {}\n".format(band)+
+        "Type id: {}\n".format(pipeline_type)+
         "Inst id: {}\n".format(iid))
-    subject = "Factor stoped"
+    subject = "Pipeline stoped"
     notify(message, subject=subject)
     init_factor = False
 
@@ -137,6 +144,7 @@ if __name__ == "__main__":
     logging.info("Monitoring started")
     init_factor = False
     notified_disk = False
+    pipeline_name = "generic_pipeline"
     try:
         while True:
             # Check spot instance stoping
@@ -157,7 +165,7 @@ if __name__ == "__main__":
                 init_factor = False
             if (not init_factor) and check:
                 init_factor = True
-            logging.info("Instance code: {}; Disk usage: {:6.4f}; Factor running: {}".format(code, fraction, check))
+            logging.info("Instance code: {}; Disk usage: {:6.4f}; Pipeline running: {}".format(code, fraction, check))
             time.sleep(INTERVAL)
     except KeyboardInterrupt:
         logging.shutdown()

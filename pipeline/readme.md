@@ -13,81 +13,58 @@ The pipeline is run in several steps:
 * Subtraction of the self-cal model
 * Facet calibration
 
-By now (April 2016) the first two steps are implemented but under heavy development. Use with care.
+By now (March 2017) the first three steps are implemented (although there are some upcoming modifications) and the last is under development. Use with care.
 
 ### Calibration of the calibrator
 
 The first step is the calibration of the calibrator target to get the phase offsets between polarizations, the amplitude bandpass and the clock corrections.
 
-Launch the instance:
+Configure the calibrators to use by editing ```cal_config.yml```
+
+Run the calibration with:
 ```
-ansible-playbook launch_cal.yml
+ansible-playbook cal.yml
 ```
 
-Setup the instance to install some additional packages needed and the credentials:
-```
-ansible-playbook setup_cal.yml
-```
-
-Launch the steps needed before the calibation:
-```
-ansible-playbook run_cal.yml
-```
-
-At this point the pipeline have to be manually run from within the instance:
-```
-cd ~/astrocompute/pipeline/generic_pipeline/
-genericpipeline.py -c pipeline.cfg pre_facet_cal_rawdata.parset
-```
-If there were problems with the first round or a subband was clearly bad, it is possible to edit the pipeline and run only the required part using the pipeline ```pre_facet_cal_rawdata_2ndround.parset```. This will be automated in the future.
-
-
-Move the final results to S3:
-```
-ansible-playbook finish_cal.yml
-```
-
-The instance has to be shutdown now.
+The final results will be stored in S3. However, the disks used (EBS) have to be manually removed.
 
 TODO:
 * Automatic removal of bad subbands
-* Alerts when the computing is finished
-* Automatic shutdown of instances
+* Automatically unmount and remove disks
 
 ### Pre-processing of the target
 
-This is the second step of the calibration. It is composed of two main steps. The pre-processing and the self-calibration. If the processing fails at some point after the first step is finished, the calibration can be continued from this point using an adapted alternative pipeline (```pre-facet-pretarget_resume2.parset```).
+This is the second step of the calibration. It is composed of two main steps. The pre-processing and the self-calibration. 
+
+Copy and edit ```prefactor_config.yml```
 
 Launch the instance:
 ```
-ansible-playbook launch_pretarget.yml
+ansible-playbook prefactor.yml
 ```
 
-Setup the instance to install some additional packages needed and the credentials:
-```
-ansible-playbook setup_pretarget.yml
-```
+The data is uploaded to S3 but the disks have to be manually deleted.
 
-Launch the steps needed before the calibation:
-```
-ansible-playbook run_pretarget.yml
-```
+This step still has some problems with irregular datasets. In those cases the frequencies of the measurement sets have to be manually edited.
 
-After the data is downladed the pipeline can be run.
+TODO:
+* Sove problem with frequencies
+* Automatically unmount and remove disks
 
 ### Subtraction of model
 
 The third step of the calibration create a low and a high resolution model of the field which are subtracted. The output is a merged model and the residual data. It also outputs a high and a low resolution image of the field.
 
-There are two main yml: subtract_all.yml and subtract_one.yml. The first is used to run the subtraction of several bands in parallel and the second to run the subtraction in just one band. 
-
 The configuration of this step, including the names of the bands to run is saved in subtract_config.yml
 
 After modifying ```subtract_config.yml```, launch the subtract step with:
 ```
-ansible-playbook subtract_all.yml
+ansible-playbook subtract.yml
 ```
 
+### Factor
+
+Factor runs the facet calibration using the subtracted data. This step is still under development.
 
 TODO
 ----

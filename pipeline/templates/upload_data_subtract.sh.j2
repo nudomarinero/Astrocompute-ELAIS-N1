@@ -4,9 +4,7 @@ band=`python /home/ubuntu/astrocompute/pipeline/scripts/get_band.py`
 # Create bucket
 s3cmd mb s3://{{ bucket_name }}
 # Upload the logs
-s3cmd put /mnt/scratch/data/log/profile.log s3://{{ bucket_name }}/{{ dataset_name }}/logs/subtract/gr${band}/
-s3cmd put /home/ubuntu/pipeline_subtract.log s3://{{ bucket_name }}/{{ dataset_name }}/logs/subtract/gr${band}/
-s3cmd put /mnt/scratch/data/log/pipeline* s3://{{ bucket_name }}/{{ dataset_name }}/logs/subtract/gr${band}/pipeline/
+s3cmd put /mnt/scratch/data/log/* s3://{{ bucket_name }}/{{ dataset_name }}/logs/subtract/gr${band}/
 # Upload the data
 #L339802_SBgr024-10_uv.dppp.pre-cal.ms
 cd /mnt/scratch/data/raw

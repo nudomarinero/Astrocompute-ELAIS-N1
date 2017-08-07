@@ -1,9 +1,6 @@
 from __future__ import print_function
 from itertools import izip_longest
-
-
-data_file_name = "target"
-n = 40
+import os
 
 def grouper(n, iterable, fillvalue=None):
     """
@@ -14,11 +11,25 @@ def grouper(n, iterable, fillvalue=None):
     args = [iter(iterable)] * n
     return izip_longest(fillvalue=fillvalue, *args)
 
-if __name__ == "__main__":
-    with open(data_file_name+".txt", "r") as data_file:
+def main(path, data_file_name, n=40):
+    """
+    Apply the grouper to the specified file
+    """
+    with open("{}/{}.txt".format(path, data_file_name), "r") as data_file:
         for i, g in enumerate(grouper(n, data_file, fillvalue='')):
             lines = list(g)
             lines[-1] = lines[-1][:-1] # Remove the new line from the last line
-            with open("{}-BAND{}.txt".format(data_file_name, i), 'w') as fout:
+            with open("{}/{}-BAND{}.txt".format(path, data_file_name, i), 'w') as fout:
                 fout.writelines(lines)
+
+if __name__ == "__main__":
+    import sys
+    data_file_name = "target"
+    n = 40
+    path = sys.argv[1]
+    
+    main(path, data_file_name, n=n)
+    
+    
+    
             

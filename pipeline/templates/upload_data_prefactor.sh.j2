@@ -1,0 +1,23 @@
+#!/bin/bash
+# Copy the important data to a S3 bucket
+band=`python /home/ubuntu/astrocompute/pipeline/scripts/get_band.py`
+# Create bucket
+s3cmd mb s3://{{ bucket_name }}
+# Upload the logs
+s3cmd put /mnt/scratch/data/log/* s3://{{ bucket_name }}/{{ dataset_name }}/logs/prefactor_run{{ run | default("0") }}/band${band}/
+# Upload the data
+#L339802_SBgr024-10_uv.dppp.pre-cal.ms
+cd /mnt/scratch/data/process
+for i in $(ls -d1 *.ms)
+    do echo ${i}
+    j=$(basename "${i}")
+    echo ${j}
+    tar -cf ${j}.tar ${i}
+    s3cmd put ${j}.tar s3://{{ bucket_name }}/{{ dataset_name }}/data/
+    rm ${j}.tar
+done
+# Upload the plots
+s3cmd put /mnt/scratch/data/plots/*.png s3://{{ bucket_name }}/{{ dataset_name }}/plots/prefactor_run{{ run | default("0") }}/band${band}/
+# Upload other data
+s3cmd put /mnt/scratch/data/cal/{{ pipeline | default("pre_facet_prefactor") }}/h5imp_gsmsol_losoto.h5 s3://{{ bucket_name }}/{{ dataset_name }}/solutions/prefactor_run{{ run | default("0") }}/band${band}/
+s3cmd put /mnt/scratch/data/ionex/* s3://{{ bucket_name }}/{{ dataset_name }}/ionex/prefactor_run{{ run | default("0") }}/band${band}/

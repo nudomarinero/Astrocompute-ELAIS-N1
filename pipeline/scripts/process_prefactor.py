@@ -4,12 +4,12 @@ import boto.utils
 import boto.ec2
 import sh
 from sh import sudo
+from glob import glob
 from get_band import get_tag
 import boto.sns
 import logging
 import traceback
 import ConfigParser
-from glob import glob
 
 #logging.basicConfig(
     #filename="pipeline.log", 
@@ -28,7 +28,7 @@ else:
     ch.setFormatter(formatter)
     logger.addHandler(ch)
     # Log to file
-    file_name = "/home/ubuntu/pipeline_subtract.log"
+    file_name = "pipeline_prefactor.log"
     fh = logging.FileHandler(file_name) 
     fh.setFormatter(formatter)
     logger.addHandler(fh)
@@ -68,7 +68,7 @@ def launch(step):
     except:
         logging.error("Exception in step {}".format(fname))
         error_message = traceback.format_exc()
-        message = ("Exception in LOFAR AWS subtract pipeline\n"+
+        message = ("Exception in LOFAR AWS prefactor pipeline\n"+
             "Dataset: {}\n".format(dataset)+
             "Band:    {}\n".format(band)+
             "Step:    {}\n".format(fname)+
@@ -76,24 +76,54 @@ def launch(step):
             error_message
             )
         notify(message, 
-               subject="Exception LOFAR AWS subtract; step: {}; band: {}".format(fname, band))
+               subject="Exception LOFAR AWS prefactor; step: {}".format(fname))
         raise
     logging.info("Finish step {}".format(fname))   
     
     
 ## Steps
-def download_data():
+def download_cal_data():
     """
-    Download the pretarget data using the script created
+    Download the cal data using the script created
     """
     # TODO: Initial checks and cleaning
-    if not os.path.exists("/mnt/scratch/data/raw/downloaded.txt"):
-        download = sh.Command("/home/ubuntu/download_data_prefactor.sh")
+    cal_list = glob("/mnt/scratch/data/cal/pre_facet_prefactor/*.npy")
+    if len(cal_list) < 8:
+        download = sh.Command("/home/ubuntu/download_data_cal.sh")
         for line in download(_iter=True):
             print(line)
     else:
         print("Skip download_cal_data")
     # TODO: Final checks and notification
+
+def download_data(n_mss=30):
+    """
+    Download the data
+    """
+    ms_list = glob("/mnt/scratch/data/raw/L*_SAP???_SB???_uv.MS.dppp")
+    if len(ms_list) < n_mss: # TODO: check number
+        params = "/home/ubuntu/astrocompute/pipeline/data/{}/target-BAND{}.txt".format(dataset, band)
+        download = sh.Command("/home/ubuntu/astrocompute/pipeline/scripts/parallel_download.sh")
+        for line in download(params, _iter=True):
+            print(line)
+    else:
+        print("Skip download_data")
+
+def unselect():
+    """
+    Unselect bad subbands
+    """
+    from unselect_subbands import unselect_subbands
+    unselect_subbands("/mnt/scratch/data/raw/")
+
+def correct_data():
+    """
+    Correct the data using the check_frequencies script
+    """
+    correct = sh.Command("/home/ubuntu/astrocompute/pipeline/scripts/correct_data_prefactor.sh")
+    for line in correct("/mnt/scratch/data/raw",
+                        _iter=True):
+        print(line)
 
 def run_pipeline():
     """
@@ -102,15 +132,22 @@ def run_pipeline():
     pipeline = sh.Command("/opt/LofIm/bin/genericpipeline.py")
     for line in pipeline("-c",
                           "/home/ubuntu/astrocompute/pipeline/generic_pipeline/pipeline.cfg",
-                          "/home/ubuntu/astrocompute/pipeline/generic_pipeline/pre_facet_subtract.parset",
+                          "/home/ubuntu/astrocompute/pipeline/generic_pipeline/pre_facet_prefactor.parset",
                          _iter=True):
         print(line)
+
+def rename():
+    """
+    Rename bands before upload
+    """
+    from rename_subtract import rename_directory
+    rename_directory("/mnt/scratch/data/process")
 
 def upload_data():
     """
     Upload the computed data
     """
-    upload = sh.Command("/home/ubuntu/upload_data_subtract.sh")
+    upload = sh.Command("/home/ubuntu/upload_data_prefactor.sh")
     for line in upload(_iter=True):
         print(line)
 
@@ -129,14 +166,18 @@ def terminate_instance():
 
 
 if __name__ == "__main__":
-    logging.info("Subtract pipeline started")
+    logging.info("Prefactor pipeline started")
+    launch(download_cal_data)
     launch(download_data)
+    launch(unselect)
+    launch(correct_data)
     launch(run_pipeline)
-    launch(upload_data)
+    launch(rename)
+    launch(upload_data) 
     #launch(umount_and_remove_disk) # Not implemented yet
-    message = "Subtract pipeline on band {} successfully finished".format(band)
+    message = "Prefactor pipeline on band {} successfully finished".format(band)
     notify(message, subject=message)
-    logging.info("Subtract pipeline finished; prepared to terminate")
+    logging.info("Prefactor pipeline finished; prepared to terminate")
     launch(terminate_instance)
     
 

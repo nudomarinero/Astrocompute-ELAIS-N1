@@ -68,3 +68,6 @@ vagrant/package_LOFAR/postinstall-pak
 vagrant/provision.yml
 pipeline/ansible.cfg
 pipeline/creds.yml
+pipeline/prefacctor_config.yml
+pipeline/subtract_config.yml
+
