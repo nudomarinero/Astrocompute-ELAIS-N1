@@ -57,6 +57,7 @@
     - s3cmd
     - htop
     - montage
+    - libarmadillo-dev
       
 - name: install Python packages
   apt: pkg={{ item }}
@@ -119,6 +120,9 @@
     - descartes
     - tmuxp
     - sh
+    - psycopg2
+    - python-monetdb
+    - https://github.com/lofar-astron/PyBDSF/archive/master.zip
     
 - name: install LOFAR dependencies repository
   apt_repository: repo='ppa:kernsuite/kern-dev'
@@ -138,15 +142,7 @@
     - aoflagger
     - aoflagger-dev
     - sagecal
+    - dysco
 
-- name: Get repo
-  git: >
-    repo=https://github.com/aroffringa/dysco.git
-    dest=/tmp/dysco
-    depth=1
-  
-- name: Compile and install dysco
-  script: dysco.sh creates=/usr/bin/dscompress
-  become: True
 
 
