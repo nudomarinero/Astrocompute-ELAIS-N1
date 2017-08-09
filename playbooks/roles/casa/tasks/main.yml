@@ -1,42 +1,57 @@
 ---
 # tasks file for casa
 - name: download casa tar file
-  get_url: >
-    url=https://svn.cv.nrao.edu/casa/distro/linux/release/el6/casa-release-4.5.3-el6.tar.gz 
-    dest=/tmp/casa-release-4.5.3-el6.tar.gz 
-    sha256sum=25267bb9f49c9b154dc28a625491e58f1f2c5a2376abc5155e5255e6ad4691aa
+  get_url:
+    url: https://svn.cv.nrao.edu/casa/distro/linux/release/el7/casa-release-4.7.2-el7.tar.gz
+    dest: /tmp/casa-release-4.7.2-el7.tar.gz 
+    sha256sum: ecc09370e8c8ad86d961c5e1e95c63fdaa50b3ee34826c62f5730ba93c83ea64
   
 - name: unpack the casa tar file
-  unarchive: src=/tmp/casa-release-4.5.3-el6.tar.gz dest=/opt copy=no
+  unarchive: 
+    src: /tmp/casa-release-4.7.2-el7.tar.gz 
+    dest: /opt 
+    copy: no
   become: True
 
 - name: create symbolic link in /opt
-  file: src=/opt/casa-release-4.5.3-el6 dest=/opt/casapy state=link
+  file: 
+    src: /opt/casa-release-4.7.2-el7 
+    dest: /opt/casapy 
+    state: link
   become: True
 
 - name: Remove temporary package
-  file: path=/tmp/casa-release-4.5.3-el6.tar.gz state=absent
+  file: 
+    path: /tmp/casa-release-4.7.2-el7.tar.gz 
+    state: absent
 
 - name: add /opt/casapy/bin to system path
-  lineinfile: >
-    dest=/etc/environment
-    state=present
-    backrefs=yes
-    regexp='PATH=(["]*)((?!.*?/opt/casapy/bin).*?)(["]*)$'
-    line="PATH=\1\2:/opt/casapy/bin\3"
+  lineinfile:
+    dest: /etc/environment
+    state: present
+    backrefs: yes
+    regexp: 'PATH=(["]*)((?!.*?/opt/casapy/bin).*?)(["]*)$'
+    line: 'PATH=\1\2:/opt/casapy/bin\3'
   become: True
 
 - name: copy casarc file
-  copy: src=casarc dest=/etc/casarc owner=root group=root mode=0644
+  copy: 
+    src: casarc 
+    dest: /etc/casarc 
+    owner: root 
+    group: root 
+    mode: 0644
   become: True
   
 - name: add CASARCFILES to system environment variables
-  lineinfile: >
-    dest=/etc/environment
-    state=present
-    regexp='^CASARCFILES="/etc/casarc"'
-    line="CASARCFILES=\"/etc/casarc\""
+  lineinfile:
+    dest: /etc/environment
+    state: present
+    regexp: '^CASARCFILES="/etc/casarc"'
+    line: 'CASARCFILES=\"/etc/casarc\"'
   become: True
   
 - name: casa default configuration
-  unarchive: src=casa.tar.gz dest=~/
+  unarchive: 
+    src: casa.tar.gz 
+    dest: ~/
