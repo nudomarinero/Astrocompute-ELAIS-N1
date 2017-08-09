@@ -1,45 +1,63 @@
 ---
 # tasks file for grid
 - name: update box
-  apt: upgrade=dist update_cache=yes cache_valid_time=3600
+  apt: 
+    upgrade: dist 
+    update_cache: yes 
+    cache_valid_time: 3600
   become: True
 
 - name: Get globus repository
-  get_url: >
-    url=http://toolkit.globus.org/ftppub/gt6/installers/repo/globus-toolkit-repo_latest_all.deb 
-    dest=/tmp/globus-toolkit-repo_latest_all.deb
+  get_url:
+    url: http://toolkit.globus.org/ftppub/gt6/installers/repo/deb/globus-toolkit-repo_latest_all.deb 
+    dest: /tmp/globus-toolkit-repo_latest_all.deb
+    sha256sum: e9960edf56c467d24174194b808236dcf8c682fa8599cad7f738669a3f729fd7
 
 - name: install globus repository
-  apt: deb=/tmp/globus-toolkit-repo_latest_all.deb
+  apt: 
+    deb: /tmp/globus-toolkit-repo_latest_all.deb
   become: True
   
 - name: Remove globus temporary package
-  command: /bin/rm /tmp/globus-toolkit-repo_latest_all.deb
+  file:
+    path: /tmp/globus-toolkit-repo_latest_all.deb
+    state: absent
 
 - name: install dependencies
-  apt: pkg={{ item }} update_cache=yes
+  apt: 
+    pkg: '{{ item }}'
+    update_cache: yes
   become: True
   with_items:
     - globus-gass-copy-progs 
     - voms-clients
-    - openjdk-6-jre
+    - openjdk-8-jre
     - globus-data-management-client
+    - python-pip
     #- globus-ftp-client-progs
 
 - name: correct java version selected
-  alternatives: name=java path=/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java
+  alternatives: 
+    name: java 
+    path: /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
   become: True
 
 - name: install GPG key for the EGI IGTF repository
-  apt_key: url=https://dist.eugridpma.info/distribution/igtf/current/GPG-KEY-EUGridPMA-RPM-3 state=present
+  apt_key: 
+    url: https://dist.eugridpma.info/distribution/igtf/current/GPG-KEY-EUGridPMA-RPM-3 
+    state: present
   become: True
   
 - name: install EGI IGTF repository
-  apt_repository: repo='deb http://repository.egi.eu/sw/production/cas/1/current egi-igtf core' state=present
+  apt_repository: 
+    repo: 'deb http://repository.egi.eu/sw/production/cas/1/current egi-igtf core'
+    state: present
   become: True
   
 - name: install ca
-  apt: pkg=ca-policy-egi-core update_cache=yes
+  apt: 
+    pkg: ca-policy-egi-core 
+    update_cache: yes
   become: True
 
 ## This is not working due to a BUG in Ansible. Corrected only in the 
@@ -55,54 +73,69 @@
     #create=True
   #become: True 
 - name: copy vomses file
-  copy: src=vomses dest=/etc/vomses owner=root group=root mode=0644
+  copy: 
+    src: vomses 
+    dest: /etc/vomses 
+    owner: root 
+    group: root 
+    mode: 0644
   become: True
   
 - name: Update certificates for voms sara line 1
-  lineinfile: >
-    dest=/etc/grid-security/vomsdir/lofar/voms.grid.sara.nl.lsc 
-    line="/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl"
-    regexp='^/O=dutchgrid/O=hosts/OU=sara\.nl/CN=voms\.grid\.sara\.nl'
-    owner=root
-    state=present
-    insertafter=EOF
-    create=True
+  lineinfile:
+    dest: /etc/grid-security/vomsdir/lofar/voms.grid.sara.nl.lsc 
+    line: '/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl'
+    regexp: '^/O=dutchgrid/O=hosts/OU=sara\.nl/CN=voms\.grid\.sara\.nl'
+    owner: root
+    state: present
+    insertafter: EOF
+    create: True
   become: True
 
 - name: Update certificates for voms sara line 2
-  lineinfile: >
-    dest=/etc/grid-security/vomsdir/lofar/voms.grid.sara.nl.lsc 
-    line="/C=NL/O=NIKHEF/CN=NIKHEF medium-security certification auth"
-    regexp='^/C=NL/O=NIKHEF/CN=NIKHEF medium-security certification auth'
-    owner=root
-    state=present
-    insertafter=EOF
-    create=True
+  lineinfile:
+    dest: /etc/grid-security/vomsdir/lofar/voms.grid.sara.nl.lsc 
+    line: '/C=NL/O=NIKHEF/CN=NIKHEF medium-security certification auth'
+    regexp: '^/C=NL/O=NIKHEF/CN=NIKHEF medium-security certification auth'
+    owner: root
+    state: present
+    insertafter: EOF
+    create: True
   become: True
 
 - name: download SRM package
-  get_url: >
-    url=http://www.lofar.org/operations/lib/exe/fetch.php?media=public:srmclient-2.2.25.tar.gz 
-    dest=/tmp/srmclient-2.2.25.tar.gz
+  get_url:  
+    url: 'https://www.astron.nl/lofarwiki/lib/exe/fetch.php?media=public:srmclient-2.6.28.tar.gz'
+    validate_certs: False # Mmmm...
+    dest: /tmp/srmclient-2.6.28.tar.gz
+    sha256sum: b77fb162cf6dd1e37721d0e73d7a4c2d7b7cc101130b8aa9e6c861c90ded7c0f
     
 - name: unpack the SRM tar file
-  unarchive: src=/tmp/srmclient-2.2.25.tar.gz dest=/opt copy=no
+  unarchive: 
+    src: /tmp/srmclient-2.6.28.tar.gz 
+    dest: /opt 
+    copy: no
   become: True
 
 - name: create symbolic link in /opt
-  file: src=/opt/srmclient-2.2.25 dest=/opt/srm state=link
+  file: 
+    src: /opt/srmclient-2.6.28 
+    dest: /opt/srm 
+    state: link
   become: True
   
 - name: Remove SRM temporary package
-  command: /bin/rm /tmp/srmclient-2.2.25.tar.gz removes=/tmp/srmclient-2.2.25.tar.gz
+  file:
+    path: /tmp/srmclient-2.6.28.tar.gz
+    state: absent
 
 - name: add /opt/srm/usr/bin to system path
-  lineinfile: >
-    dest=/etc/environment
-    state=present
-    backrefs=yes
-    regexp='PATH=(["]*)((?!.*?/opt/srm/usr/bin).*?)(["]*)$'
-    line="PATH=\1\2:/opt/srm/usr/bin\3"
+  lineinfile:
+    dest: /etc/environment
+    state: present
+    backrefs: yes
+    regexp: 'PATH=(["]*)((?!.*?/opt/srm/usr/bin).*?)(["]*)$'
+    line: 'PATH=\1\2:/opt/srm/usr/bin\3'
   become: True
 
 ## Possible BUG in this version of SRM
@@ -114,7 +147,10 @@
     #line="SRM_PATH=\"/opt/srm\""
   #become: True
 - name: create symbolic link in /opt
-  file: src=/opt/srm/usr/share/srm dest=/usr/share/srm state=link
+  file: 
+    src: /opt/srm/usr/share/srm 
+    dest: /usr/share/srm 
+    state: link
   become: True
 
 ## Possible environment variables to set ?
@@ -125,7 +161,9 @@
 #VOMS_USERCONF=$HOME/.glite
 
 - name: install AWS tools with pip
-  pip: name={{ item }} extra_args="--upgrade"
+  pip: 
+    name: '{{ item }}'
+    extra_args: "--upgrade"
   become: True
   with_items:
     - boto
@@ -133,4 +171,7 @@
     - FileChunkIO
     
 - name: Byobu default configuration
-  unarchive: src=byobu.tar.gz dest=~/
+  unarchive: 
+    src: byobu.tar.gz 
+    dest: ~/
+    
