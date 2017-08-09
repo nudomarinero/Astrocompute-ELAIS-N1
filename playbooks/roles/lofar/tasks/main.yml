@@ -2,52 +2,60 @@
 # tasks file for lofar
 
 - name: install LSMTool
-  pip: name='https://github.com/darafferty/LSMTool/archive/master.zip' extra_args='--allow-external --upgrade'
+  pip: 
+    name: 'https://github.com/darafferty/LSMTool/archive/master.zip'
+    extra_args: '--allow-external --upgrade'
   become: True
   
 - name: install LoSoTo
-  pip: name='https://github.com/revoltek/losoto/archive/master.zip' extra_args='--allow-external --upgrade'
+  pip: 
+    name: 'https://github.com/revoltek/losoto/archive/master.zip'
+    extra_args: '--allow-external --upgrade'
   become: True
   
 - name: download LOFAR package
-  get_url: >
-    url=http://www.roe.ac.uk/~jsm/lofar_dist/trusty/lofar_2.19-1trusty_amd64.deb 
-    dest=/tmp/lofar_2.19-1trusty_amd64.deb
+  get_url:
+    url: http://www.roe.ac.uk/~jsm/lofar_dist/xenial/lofar_2.21-1xenial_amd64.deb 
+    dest: /tmp/lofar_2.21-1xenial_amd64.deb
+    sha256sum: b284918e0dcc5925a3d60431013d5cf0f7eecc55b2a4792e48cf8e23e43525fc
 
 - name: Install LOFAR package
-  apt: deb=/tmp/lofar_2.19-1trusty_amd64.deb
+  apt: 
+    deb: /tmp/lofar_2.21-1xenial_amd64.deb
   become: True
 
 - name: Remove temporary package
-  file: path=/tmp/lofar_2.19-1trusty_amd64.deb state=absent
+  file: 
+    path: /tmp/lofar_2.21-1xenial_amd64.deb 
+    state: absent
 
 - name: copy LOFAR profile file
-  copy: src=lofar_profile dest=/etc/profile.d/Z98-lofar.sh owner=root group=root mode=0755
+  copy: 
+    src: lofar_profile 
+    dest: /etc/profile.d/Z98-lofar.sh 
+    owner: root 
+    group: root 
+    mode: 0755
   become: True
   
 - name: Download source of WSClean
   get_url:
-    url: "http://sourceforge.net/projects/wsclean/files/wsclean-2.2/wsclean-2.2.1.tar.bz2/download"
-    dest: "/tmp/wsclean-2.2.1.tar.bz2"
+    url: "http://sourceforge.net/projects/wsclean/files/wsclean-2.4/wsclean-2.4.tar.bz2/download"
+    dest: "/tmp/wsclean-2.4.tar.bz2"
+    sha256sum: 0174a0f06b4e2e43af027d879cb9064d50d09fbfde25c788ab5a0ac97e49059f
     
 - name: Compile and install WSClean
   script: wsclean.sh creates=/usr/bin/wsclean
   become: True
   
 - name: Install RMextract
-  pip: name='https://github.com/maaijke/RMextract/archive/master.zip' extra_args='--allow-external --install-option="--add-lofar-utils"'
+  pip: 
+    name: 'https://github.com/maaijke/RMextract/archive/master.zip'
+    extra_args: '--allow-external --install-option="--add-lofar-utils"'
   become: True
   
 - name: install factor
-  pip: name='https://github.com/revoltek/factor/archive/master.zip' extra_args='--allow-external --upgrade'
+  pip: 
+    name: 'https://github.com/lofar-astron/factor/archive/master.zip' 
+    extra_args: '--allow-external --upgrade'
   become: True
-  
-# TODO: Patch pipeline here
-#- name: patch pipeline file to use factor
-  #copy: >
-    #src=utilities.py 
-    #dest=/opt/LofIm-2_12/lib/python2.7/dist-packages/lofarpipe/support/utilities.py
-    #owner=root 
-    #group=root 
-    #mode=0644
-  #become: True

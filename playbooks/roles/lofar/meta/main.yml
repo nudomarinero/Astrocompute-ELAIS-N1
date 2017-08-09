@@ -23,18 +23,7 @@ galaxy_info:
   platforms:
   - name: Ubuntu
     versions:
-  #  - all
-  #  - lucid
-  #  - maverick
-  #  - natty
-  #  - oneiric
-  #  - precise
-  #  - quantal
-  #  - raring
-  #  - saucy
-    - trusty
-  #  - utopic
-  #  - vivid
+    - xenial
   #- name: Debian
   #  versions:
   #  - all
