@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  author: J. Sabater
+  description: ddfacet pipeline with DDFacet and KillMS
+  company: University of Edinburgh
+  license: GPL3
+  min_ansible_version: 1.2
+  platforms:
+  - name: Ubuntu
+    versions:
+    - xenial
+  categories:
+  - development
+  - packaging
+  - system
+dependencies: [] 
+#- lofar
+
+  

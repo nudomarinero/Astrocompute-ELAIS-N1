@@ -1,0 +1,91 @@
+---
+# tasks file for ddfacet_dependencies
+
+- name: update box
+  apt: 
+    upgrade: dist 
+    update_cache: yes
+  become: True
+
+- name: install dependencies
+  apt: 
+    pkg: '{{ item }}'
+  become: True
+  with_items:
+    - python-meqtrees-cattery
+    - meqtrees
+    - python-tigger
+    - python-kittens
+    - python-owlcat
+    - gfortran 
+
+- name: install Python dependencies
+  pip: 
+    name: '{{ item }}'
+    extra_args: '--upgrade'
+  with_items:
+  - numpy
+  - SharedArray
+  - Polygon2
+  - pyFFTW
+  - nose
+  - astropy
+  - deap
+  - ipdb
+  - pymoresane
+  - pyephem
+  - numexpr
+  - cython
+  - pyfits
+  - matplotlib
+  - scipy
+  - astLib
+  - psutil
+  - py-cpuinfo
+  - pyregion
+  - emcee
+  - reproject
+  - pyFFTW
+  - SharedArray
+  become: True
+
+- name: install Python dependencies (that are in Kern)
+  pip: 
+    name: '{{ item }}'
+    extra_args: '--upgrade'
+  with_items:
+  - astro-tigger
+  - astro-kittens
+  - meqtrees-cattery
+  - owlcat
+  - python-casacore
+  become: True
+
+- name: Create base ddf directory
+  file:
+    path: /opt/ddf
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+  become: True
+
+- name: Get repo
+  git:
+    repo: https://github.com/mhardcastle/ddf-pipeline.git
+    dest: /opt/ddf/ddf-pipeline
+  become: True
+    
+- name: Compile and install ddf pipeline
+  script: ddf_pipeline.sh
+  become: True
+  
+- name: copy ddf profile file
+  copy: 
+    src: ddf_profile 
+    dest: /etc/profile.d/Z99-ddf.sh 
+    owner: root 
+    group: root 
+    mode: 0755
+  become: True
+

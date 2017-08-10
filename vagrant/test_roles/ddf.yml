@@ -1,0 +1,6 @@
+---
+- name: Install ddf software
+  hosts: default
+  roles:
+    - ddf
+
