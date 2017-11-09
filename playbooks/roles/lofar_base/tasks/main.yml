@@ -122,6 +122,7 @@
     - sh
     - psycopg2
     - python-monetdb
+    - xmlrunner
     - https://github.com/lofar-astron/PyBDSF/archive/master.zip
     
 - name: install LOFAR dependencies repository
