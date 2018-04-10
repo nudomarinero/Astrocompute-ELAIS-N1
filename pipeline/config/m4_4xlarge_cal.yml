@@ -1,6 +1,6 @@
 ---
 # For an m4.4xlarge instance
-volume_size: 400
+volume_size: 500
 volume_type: "st1"
 key_name: "jsmkey"
 instance_type_v: "m4.4xlarge"
