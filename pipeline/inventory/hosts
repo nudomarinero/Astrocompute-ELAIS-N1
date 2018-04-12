@@ -1,4 +1,5 @@
-localhost ansible_connection=local ansible_python_interpreter=/home/jsm/programs/soft/anaconda/bin/python
+localhost ansible_connection=local ansible_python_interpreter=/home/jsm/programs/soft/anaconda3/envs/py27/bin/python
+
 [ska:children]
 tag_type_ska
 
