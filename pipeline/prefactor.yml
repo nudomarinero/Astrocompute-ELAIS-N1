@@ -14,7 +14,7 @@
       instance_type: "{{ instance_type_v }}"
       spot_price: "{{ spot_price_v }}"
       key_name: "{{ key_name }}"
-      group: [ska]
+      group: ["{{ security_group }}"]
       instance_tags: 
         type: "{{ calibration_type }}"
         env: production
