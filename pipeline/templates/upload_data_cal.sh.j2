@@ -14,8 +14,8 @@ s3cmd put /mnt/scratch/data/cal/{{ pipeline_name }}/*.h5 s3://{{ bucket_name }}/
 s3cmd put /mnt/scratch/data/cal/{{ pipeline_name }}/*.npy s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}/npy/
 # Upload the plots
 s3cmd put /mnt/scratch/data/cal/{{ pipeline_name }}/*.png s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}/plots/png/
-s3cmd put /mnt/scratch/data/cal/{{ pipeline_name }}/*.pdf s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}/plots/pdf/
-
+#s3cmd put /mnt/scratch/data/cal/{{ pipeline_name }}/*.pdf s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}/plots/pdf/
+s3cmd put /mnt/scratch/data/cal/{{ pipeline_name }}/caldata_transfer_amplitude_array.txt s3://{{ bucket_name }}/${dataset_name}/${calibrator_name}/plots/
 #freqs_for_amplitude_array.npy
 #caldata_transfer_amplitude_array.npy
 #fitted_data_dclock_caldata_transfer_1st.npy
