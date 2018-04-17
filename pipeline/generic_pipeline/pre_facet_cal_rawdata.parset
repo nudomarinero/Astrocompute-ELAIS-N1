@@ -29,21 +29,21 @@
 # pathes to the scripts etc.
 # #### ToDo: get the scripts onto CEP3 and adjust the pathes here!
 ! calib_cal_parset     = /home/ubuntu/prefactor/parsets/calibcal.parset
-! losoto_importer      = /home/ubuntu/prefactor/bin/losotoImporter.py
+! losoto_importer      = /home/ubuntu/prefactor/scripts/losotoImporter.py
 ! fitclock_script      = /home/ubuntu/prefactor/scripts/fit_clocktec_initialguess_losoto.py
 ! fitamps_script       = /home/ubuntu/prefactor/scripts/amplitudes_losoto_3.py
 ! plotsols_script      = /home/ubuntu/prefactor/scripts/examine_npys.py
 ! fit_XYoffset_script  = /home/ubuntu/prefactor/scripts/find_cal_global_phaseoffset_losoto.py
 ! plotphases_script    = /home/ubuntu/prefactor/scripts/plot_solutions_all_stations.py
-! losoto_executable    = /home/ubuntu/prefactor/bin/losoto
+! losoto_executable    = /usr/local/bin/losoto
 
 
 # number of processes to use per step per node
 ! num_proc_per_node        = 16
 # number of processes to use per step per node for tasks with high i/o (dppp or cp) or memory (eg calibration)
-! num_proc_per_node_limit  = 4
+! num_proc_per_node_limit  = 8
 # number of threads per process for NDPPP
-! max_dppp_threads         =  4
+! max_dppp_threads         =  2
 
 # set this to True if you want the pipeline run to continue if single bands fail
 ! error_tolerance           =  False
