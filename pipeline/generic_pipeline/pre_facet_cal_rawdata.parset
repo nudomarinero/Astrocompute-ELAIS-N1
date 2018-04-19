@@ -28,7 +28,7 @@
 
 # pathes to the scripts etc.
 # #### ToDo: get the scripts onto CEP3 and adjust the pathes here!
-! calib_cal_parset     = /home/ubuntu/prefactor/parsets/calibcal.parset
+! calib_cal_parset     = /home/ubuntu/astrocompute/pipeline/generic_pipeline/parsets/calibcal.parset
 ! losoto_importer      = /home/ubuntu/prefactor/scripts/losotoImporter.py
 ! fitclock_script      = /home/ubuntu/prefactor/scripts/fit_clocktec_initialguess_losoto.py
 ! fitamps_script       = /home/ubuntu/prefactor/scripts/amplitudes_losoto_3.py
