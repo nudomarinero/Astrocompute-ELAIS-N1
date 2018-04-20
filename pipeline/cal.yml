@@ -215,6 +215,7 @@
     git: >
       repo=https://github.com/lofar-astron/prefactor.git
       dest=/home/ubuntu/prefactor
+      version=a7d6402dc55402ade53b256c30eeb7d421baa915
       depth=1
     tags:
     - setup
