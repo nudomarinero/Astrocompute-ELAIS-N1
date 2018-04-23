@@ -1,7 +1,10 @@
 from __future__ import print_function
-from itertools import izip_longest
 import os
 import re
+try: # Python 3
+    from itertools import zip_longest
+except ImportError:
+    from itertools import izip_longest as zip_longest
 
 def grouper(n, iterable, fillvalue=None):
     """
@@ -10,7 +13,7 @@ def grouper(n, iterable, fillvalue=None):
     """
     # grouper(3, 'ABCDEFG', 'x') --> ABC DEF Gxx
     args = [iter(iterable)] * n
-    return izip_longest(fillvalue=fillvalue, *args)
+    return zip_longest(fillvalue=fillvalue, *args)
 
 def empirical_grouper(lines, n=40):
     """
