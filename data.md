@@ -5,6 +5,10 @@ title: ELAIS-N1 public data
 
 # ELAIS-N1 public data
 
+The data corresponds to the cycle 2 of observations of the ELAIS-N1 field with the LOFAR telescope. Some cycle 0 observations are also included. 
+
+Each observation run is divided in one 5 minute observation of a target calibrator, a 8 hours observation (sometimes less) of the ELAIS-N1 field, and an additional observation of a different target calibrator. Each of these three targets is divided in 371 sub-bands centred at ~150 MHz. The calibrator observations are in practically raw format with minimal preprocessing (64 channels per sub-band and 1 second scan time). The ELAIS-N1 observations were minimally preprocessed and averaged (15 channels per sub-band and 2 seconds scan time).
+
 The ELAIS-N1 data presented here is publicly available for download:
 * [L133270_SAP000_SB000_uv.MS.tar](http://s3.amazonaws.com/lofar-elais-n1/L133270/L133270_SAP000_SB000_uv.MS.tar) size: 613662720
 * [L133270_SAP000_SB001_uv.MS.tar](http://s3.amazonaws.com/lofar-elais-n1/L133270/L133270_SAP000_SB001_uv.MS.tar) size: 613662720
